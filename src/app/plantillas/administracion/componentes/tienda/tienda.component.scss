@@ -379,7 +379,9 @@ max-width:100px;
   }
 }
 
-
+::ng-deep .overflow-content{
+  max-height: 500px !important;
+}
 .prod_card{
   height: 120px !important;
 }

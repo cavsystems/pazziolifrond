@@ -210,30 +210,7 @@ export class TiendaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (
-      typeof navigator !== 'undefined' &&
-      navigator.mediaDevices &&
-      typeof navigator.mediaDevices.enumerateDevices === 'function'
-    ) {
-      navigator.mediaDevices
-        .enumerateDevices()
-        .then((devices) => {
-          this.devices = devices.filter(
-            (device) => device.kind === 'videoinput'
-          );
-          this.selectedDevice = this.devices[0]; // Selecciona la primera cámara
-          this.seleccionardb();
-        })
-        .catch((err) => {
-          console.error('Error enumerando dispositivos de video:', err);
-          this.seleccionardb();
-        });
-    } else {
-      console.error(
-        'navigator.mediaDevices no está disponible en este entorno.'
-      );
-      this.seleccionardb();
-    }
+    this.seleccionardb();
   }
 
   seleccionardb() {

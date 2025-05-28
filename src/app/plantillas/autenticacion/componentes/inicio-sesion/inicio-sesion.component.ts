@@ -55,9 +55,8 @@ export class InicioSesionComponent implements OnInit {
     this.selectSedes.disable();
   }
   traerempresas() {
-    this.serviauth
-      .traerempresa(this.inputdocumento.value)
-      .subscribe((datos) => {
+    this.serviauth.traerempresa(this.inputdocumento.value).subscribe(
+      (datos) => {
         if (datos.data.length > 0) {
           this.data = datos.data;
           this.inputUsuario.enable();
@@ -77,7 +76,15 @@ export class InicioSesionComponent implements OnInit {
             this.mensaje = '';
           }, 4000);
         }
-      });
+      },
+      (error) => {
+        this.mensaje = error.error.mensaje;
+        this.limpiarimputs();
+        setTimeout(() => {
+          this.mensaje = '';
+        }, 4000);
+      }
+    );
   }
   limpiarimputs() {
     this.inputUsuario.setValue('');

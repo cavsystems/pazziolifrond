@@ -261,25 +261,6 @@
                 Pedidos por confirmar
               </button>
             </div>
-            <!--explicacion de cada directiva formats le indica al scanner que tipo de codigo quiero detectar  QR-CODE solo escannea codigos qr 'CODE_128', 'EAN_13' → códigos de barras usa barcodeformat si prefieres importa los formatos de manera mas controlada [device]="selectedDevice  le dice a escanner que camara usar frontal trasera  electedDevice es un objeto de tipo MediaDeviceInfo, que obtienes usando scanSuccess)="onCodeResult($event)"
-Qué hace: Es un evento de salida que se activa cuando el escáner detecta un código válido.  [autostart]="true"
-Qué hace: Activa automáticamente la cámara y empieza a escanear sin que el usuario tenga que hacer clic.   tryHarder  Esto hace que el escáner sea más exhaustivo, útil para códigos dañados o de baja resolución   Aumenta la resolución del video  Esto se hace pasando restricciones personalizadas en [videoConstraints], por ejemplo:-->
-            <div
-              class="col-boton"
-              style="display: flex; justify-content: center; flex-grow: 1"
-            >
-              <zxing-scanner
-                [formats]="formatsEnabled"
-                [device]="selectedDevice"
-                [tryHarder]="true"
-                [autostart]="true"
-                (scanSuccess)="onCodeResult($event)"
-                [autofocusEnabled]="true"
-                [videoConstraints]="videoConstraints"
-                style="flex-grow: 1"
-              >
-              </zxing-scanner>
-            </div>
           </div>
           <div
             style="
