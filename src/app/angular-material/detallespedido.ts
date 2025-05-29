@@ -52,7 +52,7 @@ interface producto {
           style="width: 100%; height:100%"
         >
           <mat-card-content style="width:100%; height:100%">
-            <mat-list style="width:fit-content; height:100%">
+            <mat-list style="width:100%; height:100%">
               <table style="width:100%;">
                 <thead>
                   <tr>

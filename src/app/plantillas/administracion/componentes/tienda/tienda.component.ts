@@ -658,7 +658,11 @@ export class TiendaComponent implements OnInit {
 
     if (this.codigoitemseled > 0) {
       if (this.codigoitemseled === Number(product.codigo)) {
-        await this.repuestaproductos('CODIGO', Number(product.codigo), true);
+        await this.repuestaproductos(
+          'CODIGO-EQUAL',
+          Number(product.codigo),
+          false
+        );
 
         let index = this.productosMostrar.findIndex(
           (pro) => Number(pro.codigo) === this.codigoitemseled
@@ -867,7 +871,7 @@ export class TiendaComponent implements OnInit {
           codigo: producto.codigo,
           codigoContable: producto.codigocontable,
           referencia: producto.referencia,
-          precio: producto.precio1,
+          precio: producto.precio,
           codigobarra: producto.codigoBarra,
           total: 0,
           producto: producto,
