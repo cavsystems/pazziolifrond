@@ -20,6 +20,7 @@ interface respon {
   providedIn: 'root',
 })
 export class AuthService {
+  mode = { value: 'side' as 'over' | 'push' | 'side' };
   constructor(
     private http: HttpClient,
     private cookieService: CookieService,

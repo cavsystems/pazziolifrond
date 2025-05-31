@@ -206,10 +206,12 @@ export class TiendaComponent implements OnInit {
     public dialog: MatDialog,
     private socketservidbs: serviciodb,
     private socketproduct: Socket_producto,
+    private serviauth:AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.serviauth.mode.value='side'
     this.seleccionardb();
   }
 
@@ -1267,6 +1269,7 @@ import generatePDFtirilla from './pdf/pdftirilla';
 import { generatePDFemail } from './pdf/pdf';
 import { Dialog } from '@angular/cdk/dialog';
 import { DialogoAlertaob } from 'src/app/angular-material/alertaob';
+import { AuthService } from 'src/services/auth/auth.service';
 
 @Component({
   selector: 'dialog-factura',

@@ -20,6 +20,7 @@ import { serviciodb } from 'src/services/serviciosdbs/serviciodb.service';
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Pedidos';
+  mode = { value: 'side' as 'over' | 'push' | 'side' };
   showToolbar: boolean = true;
   public sedes: any;
   public terceroSeleccionado: any;
@@ -34,6 +35,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private serviciodb: serviciodb
   ) {}
   ngOnInit(): void {
+    this.mode.value=this.serviauth.mode.value
     this.serviciodb.tienesedeselccionada().subscribe((data) => {
       this.data = data;
     });

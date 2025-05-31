@@ -13,6 +13,7 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { MatIconModule } from '@angular/material/icon';
 import { IonicModule } from '@ionic/angular';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { CarteraComponent } from './componentes/cartera/cartera.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
     RedireccionComponent,
     PedidosComponent,
     ItemspedidoComponent,
+    CarteraComponent,
   ],
   imports: [
     CommonModule,

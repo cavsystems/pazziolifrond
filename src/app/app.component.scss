@@ -76,3 +76,27 @@
   overflow: auto; /* Aquí se aplicará el scroll */
   min-height: 0; /* Importante para que funcione bien con flexbox */
 }
+//estilos botones navegacion
+.botones-navegacion{
+  text-decoration: none;
+  color:#000;
+  font-size: 1rem;
+ 
+  
+}
+
+
+
+::ng-deep .listitem .mat-list-item-content{
+  justify-content: start !important;
+   transition:  background-color 1s;
+}
+
+::ng-deep .listitem  span  span{
+  display: none !important;
+}
+
+::ng-deep .listitem .mat-list-item-content:hover{
+border-radius: 8px;
+ background-color: rgb(229, 232, 232);
+}

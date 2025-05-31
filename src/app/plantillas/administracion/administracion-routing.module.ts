@@ -3,6 +3,7 @@ import { TiendaComponent } from './componentes/tienda/tienda.component';
 import { RedireccionComponent } from './componentes/redireccion/redireccion.component';
 import { PedidosComponent } from './componentes/pedidos/pedidos.component';
 import { ItemspedidoComponent } from './componentes/itemspedido/itemspedido.component';
+import { CarteraComponent } from './componentes/cartera/cartera.component';
 
 //runGuardsAndResolvers esto me permitira que cada ves que navegue de nuevo aqui se vulva a ejecuta el oningt
 export const AdminRoutes: Routes = [
@@ -27,4 +28,10 @@ export const AdminRoutes: Routes = [
     path: 'pedido/:codigo',
     component: ItemspedidoComponent,
   },
+   {
+    path: 'cartera',
+    component:CarteraComponent,
+
+  },
+
 ];
