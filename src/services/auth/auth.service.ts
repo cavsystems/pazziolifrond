@@ -71,4 +71,10 @@ export class AuthService {
       withCredentials: true,
     });
   }
+
+
+  obtenernivel():Observable<any>{
+    return this.http.get(`${environment.api}/nivel`,{withCredentials:true})
+
+  }
 }

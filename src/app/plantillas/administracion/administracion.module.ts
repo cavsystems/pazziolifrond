@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { IonicModule } from '@ionic/angular';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { CarteraComponent } from './componentes/cartera/cartera.component';
+import { RecibodecajaComponent } from './componentes/recibodecaja/recibodecaja.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { CarteraComponent } from './componentes/cartera/cartera.component';
     PedidosComponent,
     ItemspedidoComponent,
     CarteraComponent,
+    RecibodecajaComponent,
   ],
   imports: [
     CommonModule,

@@ -1,12 +1,15 @@
-table {
-  width: 100%;
+.tituloP{
+    padding-top: 15px;
+    display: flex;
+    font-weight: bold;
+    justify-content: center;
 }
+
 .buscaliente {
   display: flex;
   flex-direction: column;
   width: fit-content;
- 
-  height: 100vw;
+  height: 110vw;
   overflow-x: auto;
 
 }
@@ -26,17 +29,4 @@ table {
   min-width: 600px;
   width: 100%;
   border-collapse: collapse;
-}
-
-.totalCartera{
-  padding-top: 10px;
-  display: flex;
-  font-weight: bold;
-}
-
-.tituloP{
-  padding-top: 15px;
-  display: flex;
-  font-weight: bold;
-  justify-content: center;
 }

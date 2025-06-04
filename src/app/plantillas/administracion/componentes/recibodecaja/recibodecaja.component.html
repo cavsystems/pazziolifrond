@@ -1,0 +1,113 @@
+<div>
+  <mat-card-title class="tituloP">Recibo de caja</mat-card-title>
+</div>
+<div class="row loader-content" style="padding-top: 20px">
+    <!-- CLIENTES -->
+  <div class="buscaliente">
+
+    <mat-card class="search-card col-12"  style="max-width:70%; max-height: fit-content;">
+      <mat-card-header class="search">
+        <mat-card-title class="m-0">Cliente</mat-card-title>
+        <div class="row">
+          <div class="col-12">
+          
+            <mat-form-field appearance="fill" search>
+              <mat-label>Buscar cliente</mat-label>
+              <input
+                matInput
+                placeholder=""
+                (ngModelChange)="autocompletarinputclient()"
+                [(ngModel)]="cliente"
+                />
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+
+         
+          </div>
+        </div>
+      </mat-card-header>
+
+           <mat-card-content class="overflow-content" style="height: auto">
+        <!-- LISTA CLIENTES -->
+        <mat-selection-list #shoes [multiple]="false" class="clientelist">
+          <mat-list-option
+            *ngFor="let _cliente of clientes"
+            [value]="_cliente"
+            (click)="seleccionarCliente(_cliente)"
+            style="width: calc(100% - 32px); margin: auto; border-radius: 8px"
+          >
+            <div>
+              <div mat-line class="bold">{{ _cliente.razonSocial }}</div>
+              <div mat-line><b>Id: </b> {{ _cliente.identificacion }}</div>
+            </div>
+          </mat-list-option>
+        </mat-selection-list>
+      </mat-card-content>
+      <!-- CLIENTE SELECCIONADO -->
+      <mat-card class="b-primary icon-card" style="height: 100px">
+        <mat-card-header style="border: none !important">
+          <div mat-card-avatar>
+            <img
+              *ngIf="clienteSeleccionado.imagen; else sinimagen"
+              [src]="'http://localhost:3000/' + clienteSeleccionado.imagen"
+              style="
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                object-fit: cover;
+              "
+            />
+            <ng-template #sinimagen>
+              
+            </ng-template>
+          </div>
+          <mat-card-title class="client-name">{{
+            clienteSeleccionado.nombre
+          }}</mat-card-title>
+        </mat-card-header>
+      </mat-card>
+    </mat-card>
+    <div class="tabla-scroll" style="width: 100%; margin-top: 10px;">
+        <table mat-table [dataSource]="factura" class="mat-elevation-z8 col-12 tab-factura">
+        <!--- Note that these columns can be defined in any order.
+                The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="*">
+          <th mat-header-cell *matHeaderCellDef>*</th>
+          <td mat-cell><input type="checkbox" [checked]=""></td>
+        </ng-container>
+
+        <ng-container matColumnDef="codigo">
+          <th mat-header-cell *matHeaderCellDef>Número</th>
+          <td mat-cell *matCellDef="let element">{{ element.codigo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="codigoComprobante">
+          <th mat-header-cell *matHeaderCellDef>Comprobante</th>
+          <td mat-cell *matCellDef="let element">{{ element.codigoCopmrobante }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="saldo">
+          <th mat-header-cell *matHeaderCellDef>Saldo</th>
+          <td mat-cell *matCellDef="let element">
+            ${{ element.saldo }}
+          </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="abono">
+          <th mat-header-cell *matHeaderCellDef>Abono</th>
+          <td mat-cell>0</td>
+        </ng-container>
+
+        <ng-container matColumnDef="almacen">
+          <th mat-header-cell *matHeaderCellDef>Almacén</th>
+          <td mat-cell *matCellDef="let element">{{ element.almacen }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </div>
+</div>
