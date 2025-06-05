@@ -57,6 +57,7 @@ export class InicioSesionComponent implements OnInit {
   traerempresas() {
     this.serviauth.traerempresa(this.inputdocumento.value).subscribe(
       (datos) => {
+        console.log(datos);
         if (datos.data.length > 0) {
           this.data = datos.data;
           this.inputUsuario.enable();
