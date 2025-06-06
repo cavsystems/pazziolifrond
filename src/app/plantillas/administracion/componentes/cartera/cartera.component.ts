@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/services/auth/auth.service';
 import { FacturaserviceService } from 'src/services/facturaservice/facturaservice.service';
 import { Socket_producto } from 'src/services/socket/socket.producto.service.ts.service';
@@ -37,7 +37,11 @@ export class CarteraComponent implements OnInit {
   public totalFactura: number = 0;
   public saldo: number = 0;
   public nivel: number = 0;
-
+  clientef = {
+    codigo: 0,
+    saldo: 0,
+    nombre: '',
+  };
   displayedColumns: string[] = [
     'codigo',
     'codigoComprobante',
@@ -59,7 +63,8 @@ export class CarteraComponent implements OnInit {
     private socketServices: SocketService,
     private servifactura: FacturaserviceService,
     private route: ActivatedRoute,
-    private serviouth: AuthService
+    private serviouth: AuthService,
+    private router: Router
   ) {
     this.serviouth.obtenernivel().subscribe((data) => {
       console.log(data);
@@ -76,6 +81,7 @@ export class CarteraComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       const pagina = Number(params['pagina']) || 0;
       this.pagina = pagina;
+
       if (this.pagina <= 0) {
         this.pagina = 1;
       }
@@ -119,19 +125,26 @@ export class CarteraComponent implements OnInit {
   }
   //esta funciones me detectaran que filas utilizar
   isRegularRow = (row: any) => {
-    console.log('filas normales', row);
     return !this.factura.data[row]?.isResumen;
   };
 
   isResumenRow = (row: any) => {
-    console.log(row);
     return this.factura.data[row]?.isResumen === true;
   };
 
   generafilaresume(data: any[]): any[] {
+    let subtotal;
     let grupoActual: string | null = null;
     this.facturatodo = [];
-    let subtotal = 0;
+    if (
+      this.clientef.codigo !== data[0].codigo ||
+      this.clientef.nombre === data[0].cliente
+    ) {
+      subtotal = this.clientef.saldo;
+    } else {
+      subtotal = 0;
+    }
+
     let contador = 0;
     for (let i = 0; i < data.length; i++) {
       let item = data[i];
@@ -149,11 +162,10 @@ export class CarteraComponent implements OnInit {
             totalCliente: subtotal,
           });
           grupoActual = item.cliente;
-          console.log(grupoActual);
 
           subtotal = 0;
           subtotal += item.saldo;
-             this.facturatodo.push(item);
+          this.facturatodo.push(item);
         } else {
           this.facturatodo.push(item);
           subtotal += item.saldo;
@@ -163,18 +175,18 @@ export class CarteraComponent implements OnInit {
     }
 
     if (grupoActual !== null) {
-      this.facturatodo.push(data[data.length - 1]);
       this.facturatodo.push({
         isResumen: true,
         nombre: grupoActual,
         totalCliente: subtotal,
       });
-      grupoActual = null;
 
-      subtotal = 0;
+      this.clientef.codigo = data[contador - 1].codigo;
+      this.clientef.nombre = grupoActual;
+      this.clientef.saldo = subtotal;
+      grupoActual = null;
     }
 
-    console.log(contador);
     return this.facturatodo;
   }
 
@@ -190,13 +202,9 @@ export class CarteraComponent implements OnInit {
     this.clienteSeleccionado.ciudad = cliente.municipio;
     this.clientes = [];
 
-    console.log(this.pagina);
-    console.log(this.clienteSeleccionado.codigo);
-
     this.servifactura
       .traerfacturas(this.pagina, this.clienteSeleccionado.codigo)
       .subscribe((data) => {
-        console.log(data);
         this.obtenertodo = false;
         if (data.respuesta.length > 0) {
           this.pagina = 1;
@@ -213,11 +221,27 @@ export class CarteraComponent implements OnInit {
       generatePDFfa(data);
     });
   }
-
+  navegarpagina1() {
+    if (!this.obtenertodo) {
+      this.router.navigate(['admin/cartera'], {
+        queryParams: { pagina: 1, back: 1 },
+      });
+    }
+  }
   cargarcarteracompleta() {
     this.cliente = '';
     this.clientes = [];
+
     if (this.obtenertodo) {
+      let param = this.route.snapshot.queryParamMap.get('back');
+      if (param && param === '1') {
+        const timeout = setTimeout(() => {
+          this.router.navigate(['admin/cartera'], {
+            queryParams: { pagina: 1 },
+          });
+        }, 0);
+        clearTimeout(timeout);
+      }
       this.servifactura.traertodaslasfacturas(this.pagina).subscribe((data) => {
         this.clienteSeleccionado = {
           nombre: 'Seleccione un cliente',
@@ -234,14 +258,17 @@ export class CarteraComponent implements OnInit {
         this.total_registros = data.nregistros;
         this.totalCartera = data.saldo;
         this.factura.data = this.generafilaresume(data.respuesta);
-        console.log(this.factura.data);
+
+        // this.router.navigate(['admin/cartera'], { queryParams: { pagina: 1 } });
       });
     } else {
       if (this.clienteSeleccionado.codigo === 0) {
         this.factura.data = [];
         this.totalCartera = 0;
         this.total_registros = 0;
-        this.pagina = 1;
+        this.router.navigate(['admin/cartera'], {
+          queryParams: { pagina: 1 },
+        });
       }
     }
   }
