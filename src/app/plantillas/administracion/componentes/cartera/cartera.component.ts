@@ -153,6 +153,7 @@ export class CarteraComponent implements OnInit {
 
           subtotal = 0;
           subtotal += item.saldo;
+             this.facturatodo.push(item);
         } else {
           this.facturatodo.push(item);
           subtotal += item.saldo;
