@@ -5,7 +5,6 @@ table {
   display: flex;
   flex-direction: column;
   width:100%;
- 
   height: 100vw;
 
 
@@ -19,7 +18,10 @@ table {
 
 .tabla-scroll{
   width: 100%;
-  overflow-x:auto;
+ table{
+  overflow-x: visible;
+ }
+  
 
  
   //overflow-x: auto;

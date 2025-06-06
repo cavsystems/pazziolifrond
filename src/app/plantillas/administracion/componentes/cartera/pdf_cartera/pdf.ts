@@ -100,6 +100,10 @@ export const generatePDFfa = (data: any): any => {
   const content: any[] = [];
   //Aquí se va construyendo todo el contenido que aparecerá en el PDF, paso a paso:
   //Se muestra una imagen a la izquierda (el logo) y el recibo con fecha a la derecha.
+  content.push({
+    stack: [{ text: 'Pdf consulta de cartera', fontSize: 20, bold: true }],
+    alignment: 'center',
+  });
 
   content.push({ text: '\n' });
   //Muestra la tabla de productos con sus cantidades y totales.
