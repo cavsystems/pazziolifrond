@@ -31,9 +31,7 @@ export const generatePDFfa = (data: any): any => {
     ],
   ];
 
-  data.respuesta.forEach((fact: any, index: number) => {
-    if (item.cliente !== fact.cliente) {
-      tableBody.push([
+  tableBody.push([
         { text: String(item.codigo), noWrap: false, fontSize: 8 },
         { text: String(item.nombre), noWrap: false, fontSize: 8 },
         { text: String(item.fechaEmision), noWrap: false, fontSize: 8 },
@@ -52,6 +50,9 @@ export const generatePDFfa = (data: any): any => {
         { text: String(item.vendedor), noWrap: false, fontSize: 8 },
         { text: String(item.cliente), noWrap: false, fontSize: 8 },
       ]);
+  data.respuesta.forEach((fact: any, index: number) => {
+    if (item.cliente !== fact.cliente) {
+    
       // Fila de factura
       tableBody.push([
         { text: item.cliente, colSpan: 3, alignment: 'left', bold: true },
@@ -73,8 +74,8 @@ export const generatePDFfa = (data: any): any => {
       item = data.respuesta[contador];
     } else {
       contador++;
-
-      tableBody.push([
+      if(index!==0){
+             tableBody.push([
         { text: String(fact.codigo), noWrap: false, fontSize: 8 },
         { text: String(fact.nombre), noWrap: false, fontSize: 8 },
         { text: String(fact.fechaEmision), noWrap: false, fontSize: 8 },
@@ -93,6 +94,8 @@ export const generatePDFfa = (data: any): any => {
         { text: String(fact.vendedor), noWrap: false, fontSize: 8 },
         { text: String(fact.cliente), noWrap: false, fontSize: 8 },
       ]);
+      }
+     
     }
   });
   //Se calcula la suma total de todos los productos usando reduce.
