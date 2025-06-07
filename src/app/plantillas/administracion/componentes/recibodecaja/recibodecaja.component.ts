@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Socket_producto } from 'src/services/socket/socket.producto.service.ts.service';
 import { SocketService } from 'src/services/socket/socket.service';
+import { FormsModule } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-recibodecaja',
@@ -33,8 +36,21 @@ export class RecibodecajaComponent implements OnInit {
   constructor(
     private socketproduct: Socket_producto,
     private socketServices: SocketService,
+    private snackBar: MatSnackBar,
   ) { }
-
+  public Movimiento = [ 'Seleccione', 'Efectivo', 'T.Credito', 'T.Debito', 'Cheque', 'Banco', 'Descuento'];
+  public movimientoSeleccionado: string = 'Seleccione';
+  displayedColumnsTipoPago: String[] = [
+    'Movimiento',
+    'valor',
+  ];
+  public valor: number= 0;
+  public TipoPago = new MatTableDataSource<any>([]);
+  public movimientoTipoPago= {
+    Movimiento: 'Seleccione un cliente',
+    valor: 0,
+  };
+  public totalRecibo: number=0;
   ngOnInit(): void {
   }
 
@@ -71,5 +87,29 @@ export class RecibodecajaComponent implements OnInit {
     this.clienteSeleccionado.ciudad = cliente.municipio;
     this.clientes = [];
     this.socketServices.guardarcliente(cliente).subscribe();
+  }
+
+  seleccionaritem(item: string){
+    console.log(item);
+    console.log(this.TipoPago.data);
+
+    if(this.valor <= 0){
+      this.snackBar.open("El valor debe ser mayor a cero.","Cerrar", {
+        duration: 3000,
+        panelClass: ['snackbar-error'],
+      });
+      return;
+    }
+
+    const nuevoDato = {
+      Movimiento: item,
+      valor: this.valor,
+    };
+    const datosActuales = this.TipoPago.data;
+    datosActuales.push(nuevoDato);
+    this.TipoPago.data = [...datosActuales];
+    
+    this.valor = 0;
+    this.movimientoSeleccionado = 'Seleccione';
   }
 }
