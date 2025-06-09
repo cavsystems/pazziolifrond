@@ -9,11 +9,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-recibodecaja',
   templateUrl: './recibodecaja.component.html',
-  styleUrls: ['./recibodecaja.component.scss']
+  styleUrls: ['./recibodecaja.component.scss'],
 })
 export class RecibodecajaComponent implements OnInit {
-  cliente:string="";
-  clientes:any[]=[]
+  cliente: string = '';
+  clientes: any[] = [];
   clienteSeleccionado = {
     nombre: 'Seleccione un cliente',
     identificacion: '',
@@ -52,7 +52,7 @@ export class RecibodecajaComponent implements OnInit {
   public valor: number= 0;
   public valorDeduccion:number =0;
   public TipoPago = new MatTableDataSource<any>([]);
-  public movimientoTipoPago= {
+  public movimientoTipoPago = {
     Movimiento: 'Seleccione un cliente',
     valor: 0,
   };
@@ -76,7 +76,7 @@ export class RecibodecajaComponent implements OnInit {
   }
 
   autocompletarinputclient() {
-    if ( this.cliente=== '') {
+    if (this.cliente === '') {
       this.clientes = [];
     } else {
       this.socketproduct
@@ -90,7 +90,7 @@ export class RecibodecajaComponent implements OnInit {
         .subscribe((dato) => {
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
             console.log(JSON.parse(dato).mensajePeticion);
-            this.clientes= JSON.parse(dato).mensajePeticion;
+            this.clientes = JSON.parse(dato).mensajePeticion;
           }
         });
     }
@@ -215,6 +215,26 @@ export class RecibodecajaComponent implements OnInit {
         duration: 3000,
         panelClass: ['snackbar-error'],
       });
+      return;
+    }
+
+    if(this.valorDeduccion>this.totalRecibo){
+      this.snackBar.open("El valor no debe ser mayor al total del recibo.","Cerrar", {
+        duration: 3000,
+        panelClass: ['snackbar-error'],
+      });
+      this.valor=0;
+      this.movimientoSeleccionado="Seleccione";
+      return;
+    }
+
+    if((this.totalTiposPago-this.valorDeduccion)<0){
+      this.snackBar.open("El valor de deduccion no debe ser mayor a tipo de pago.","Cerrar", {
+        duration: 3000,
+        panelClass: ['snackbar-error'],
+      });
+      this.valor=0;
+      this.movimientoSeleccionado="Seleccione";
       return;
     }
 
