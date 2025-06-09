@@ -96,10 +96,18 @@ export class CarteraComponent implements OnInit {
       if (this.obtenertodo && this.clienteSeleccionado.codigo === 0) {
         this.cargarcarteracompleta();
       } else {
-        this.servifactura.traerfacturas(
-          this.pagina,
-          this.clienteSeleccionado.codigo
-        );
+        this.servifactura
+          .traerfacturas(this.pagina, this.clienteSeleccionado.codigo)
+          .subscribe((data) => {
+            //  this.obtenertodo = false;
+            if (data.respuesta.length > 0) {
+              this.pagina = 1;
+              this.total_registros = data.nregistros;
+              this.factura.data = data.respuesta;
+              this.totalCartera = 0;
+              this.totalCartera = data.saldo;
+            }
+          });
       }
     });
   }
@@ -182,7 +190,7 @@ export class CarteraComponent implements OnInit {
       });
 
       this.clientef.codigo = data[contador - 1].codigo;
-      this.clientef.nombre = grupoActual;
+      this.clientef.nombre = data[contador - 1].codigo;
       this.clientef.saldo = subtotal;
       grupoActual = null;
     }
@@ -201,14 +209,15 @@ export class CarteraComponent implements OnInit {
     this.clienteSeleccionado.imagen = cliente.imagen || null;
     this.clienteSeleccionado.ciudad = cliente.municipio;
     this.clientes = [];
-
+    this.router.navigate(['admin/cartera'], {
+      queryParams: { pagina: 1 },
+    });
     this.servifactura
       .traerfacturas(this.pagina, this.clienteSeleccionado.codigo)
       .subscribe((data) => {
         this.obtenertodo = false;
         if (data.respuesta.length > 0) {
           this.pagina = 1;
-          this.obtenertodo = false;
           this.total_registros = data.nregistros;
           this.factura.data = data.respuesta;
           this.totalCartera = 0;
