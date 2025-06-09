@@ -53,14 +53,21 @@
       </mat-card>
     </mat-card>
     <div class="tabla-scroll" style="width: 100%; margin-top: 10px;">
-        <table mat-table [dataSource]="factura" class="mat-elevation-z8 col-12 tab-factura">
+        <table mat-table [dataSource]="factura.data" class="mat-elevation-z8 col-12 tab-factura">
         <!--- Note that these columns can be defined in any order.
                 The actual rendered columns are set as a property on the row definition" -->
 
         <!-- Position Column -->
-        <ng-container matColumnDef="*">
+        <ng-container matColumnDef="selected">
           <th mat-header-cell *matHeaderCellDef>*</th>
-          <td mat-cell><input type="checkbox" [checked]=""></td>
+          <td mat-cell *matCellDef="let element">
+            <input 
+            type="checkbox" 
+            [(ngModel)]="element.selected"
+            (change)="onCheckChange(element)"
+
+            >
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="codigo">
@@ -70,7 +77,14 @@
 
         <ng-container matColumnDef="codigoComprobante">
           <th mat-header-cell *matHeaderCellDef>Comprobante</th>
-          <td mat-cell *matCellDef="let element">{{ element.codigoCopmrobante }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.codigoComprobante }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="totalFactura">
+          <th mat-header-cell *matHeaderCellDef>Total Factura</th>
+          <td mat-cell *matCellDef="let element">
+            ${{ element.totalFactura }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="saldo">
@@ -82,39 +96,76 @@
         
         <ng-container matColumnDef="abono">
           <th mat-header-cell *matHeaderCellDef>Abono</th>
-          <td mat-cell>0</td>
+          <td mat-cell *matCellDef="let element; let i index">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <input matInput
+                        placeholder="Abono"
+                        [(ngModel)]="element.abono"
+                        [disabled]="!element.selected">
+                <button mat-icon-button
+                        matSuffix
+                        (click)="totalizarRecibo(element)"
+                        style="color: blue;">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </mat-form-field>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="almacen">
           <th mat-header-cell *matHeaderCellDef>Almacén</th>
-          <td mat-cell *matCellDef="let element">{{ element.almacen }}</td>
+          <td mat-cell *matCellDef="let element"></td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
     </div>
     <div class="ValorPago" style="margin-top: 20px; display: flex; margin-right: auto;">
-      <mat-form-field appearance="fill" search>
-        <mat-label style="font-size: 1rem">Valor</mat-label>
-        <input
-          matInput
-          #inValor
-          [(ngModel)]='valor'
-          placeholder=""
-          name="inputValor"
-          id="valor"
-          type="number"
-        />
-      </mat-form-field>
-      <mat-label style="margin-left: 10px; margin-top: 15px;">Movimiento:  </mat-label>
-        <mat-select [(ngModel)]="movimientoSeleccionado" (selectionChange)="seleccionaritem($event.value)" value="" style="margin-left: 10px; margin-top: 15px;">
-          <mat-option
-            [value]="item"
-            *ngFor="let item of Movimiento"
-            >{{ item }}</mat-option
-          >
-        </mat-select>
+      <div>
+          
+        <mat-label style="margin-left: 10px; margin-top: 15px;">Tipo Pago:  </mat-label>
+          <mat-select [(ngModel)]="movimientoSeleccionado" (selectionChange)="seleccionaritem($event.value)" style="margin-left: 10px; margin-top: 15px;">
+            <mat-option
+              [value]="item"
+              *ngFor="let item of Movimiento"
+              >{{ item }}</mat-option
+            >
+          </mat-select>
+          <mat-form-field appearance="fill" search>
+          <mat-label style="font-size: 1rem">Valor</mat-label>
+          <input
+            matInput
+            #inValor
+            [(ngModel)]='valor'
+            placeholder=""
+            name="inputValor"
+            id="valor"
+            type="number"
+          />
+        </mat-form-field>
+          
+        <mat-label style="margin-left: 10px; margin-top: 15px;">Deduccion:  </mat-label>
+          <mat-select [(ngModel)]="deduccionSeleccionada" (selectionChange)="seleccionaritemDeduccion($event.value)" value="" style="margin-left: 10px; margin-top: 15px;">
+            <mat-option
+              [value]="item"
+              *ngFor="let item of Deduccion"
+              >{{ item }}</mat-option
+            >
+          </mat-select>
+          <mat-form-field appearance="fill" search>
+          <mat-label style="font-size: 1rem">Valor</mat-label>
+          <input
+            matInput
+            #inValor
+            [(ngModel)]='valorDeduccion'
+            placeholder=""
+            name="inputValor"
+            id="valor"
+            type="number"
+          />
+        </mat-form-field>
+      </div>
         <div class="tabla-scroll-tp" style="width: 50%; margin-top: 5px; margin-left: 30px;">
           <table mat-table [dataSource]="TipoPago" class="mat-elevation-z8 col-12 tab-factura">
           <!--- Note that these columns can be defined in any order.
@@ -130,13 +181,19 @@
           <ng-container matColumnDef="valor">
             <th mat-header-cell *matHeaderCellDef>Valor</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.valor }}
+              {{ element.valor.toLocaleString("de-DE") }}
             </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumnsTipoPago"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumnsTipoPago"></tr>
         </table>
+        <div style="margin-top: 20px; margin-right: auto; display: flex;">
+        <mat-card-title class="totalTipoPago"
+                >Total tipos pago: $
+                {{ totalTiposPago.toLocaleString("de-DE") }}
+        </mat-card-title>
+        </div>
       </div>
     </div>
   <div style="margin-top: 20px; margin-right: auto; display: flex;">

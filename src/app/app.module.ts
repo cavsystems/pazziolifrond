@@ -18,6 +18,7 @@ import { Detallespedido } from './angular-material/detallespedido';
 import { NotFoundComponentComponent } from './not-found-component/not-found-component.component';
 import { DialogoAlertaob } from './angular-material/alertaob';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { TextFieldModule } from '@angular/cdk/text-field';
     ReactiveFormsModule,
     FormsModule,
     TextFieldModule,
+    MatInputModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
