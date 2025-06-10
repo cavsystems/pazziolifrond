@@ -28,4 +28,12 @@ export class FacturaserviceService {
       withCredentials: true,
     });
   }
+
+  traerbancos():Observable<any>{
+        return this.http.get(`${environment.api}/traerbancos`,{withCredentials:true})
+  }
+
+  crearreciboingreso(data:any):Observable<any>{
+    return this.http.post(`${environment.api}/crearreciboingreso`,data,{withCredentials:true})
+  }
 }

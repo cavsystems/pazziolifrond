@@ -4,13 +4,20 @@ import { Socket_producto } from 'src/services/socket/socket.producto.service.ts.
 import { FacturaserviceService } from 'src/services/facturaservice/facturaservice.service';
 import { SocketService } from 'src/services/socket/socket.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DatosPedido } from 'src/app/modelos/datos-peticion copy';
+interface banco{
+  codigo:number;
+  nombre:string;
+  codigoCuenta:number;
 
-
+}
 @Component({
   selector: 'app-recibodecaja',
   templateUrl: './recibodecaja.component.html',
   styleUrls: ['./recibodecaja.component.scss'],
 })
+
+
 export class RecibodecajaComponent implements OnInit {
   cliente: string = '';
   clientes: any[] = [];
@@ -41,13 +48,15 @@ export class RecibodecajaComponent implements OnInit {
     private snackBar: MatSnackBar,
     private servifactura: FacturaserviceService,
   ) { }
-  public Movimiento = ['Seleccione', 'Efectivo', 'T.Credito', 'T.Debito', 'Cheque', 'Banco', 'Descuento'];
+  public Movimiento = ['Seleccione', 'Efectivo', 'T.Credito', 'T.Debito', 'Cheque', 'Banco'];
   public movimientoSeleccionado: string = 'Seleccione';
-  public Deduccion = [ 'Seleccione', 'Descuento', 'Rete Iva', 'Rete Ica', 'Rete Fuente'];
+  public Deduccion = ['Seleccione', 'Descuento', 'Rete Iva', 'Rete Ica', 'Rete Fuente'];
+  public opcionesBanco:banco[]=[]
   public deduccionSeleccionada: string = 'Seleccione';
   displayedColumnsTipoPago: String[] = [
     'Movimiento',
     'valor',
+    'acciones'
   ];
   public valor: number= 0;
   public valorDeduccion:number =0;
@@ -55,6 +64,7 @@ export class RecibodecajaComponent implements OnInit {
   public movimientoTipoPago = {
     Movimiento: 'Seleccione un cliente',
     valor: 0,
+    opcionBanco: "",
   };
   public factura = new MatTableDataSource<any>([]);
   public codigo: number = 0;
@@ -71,7 +81,14 @@ export class RecibodecajaComponent implements OnInit {
   codigoslect:number=0
   pagina!: number;
   public totalTiposPago: number=0;
+  public descuento:number=0
+  public bancoSeleccinado: string="";
+  public listadoOpcionesBancosElegido: [string,number][]=[];
   ngOnInit(): void {
+    this.servifactura.traerbancos().subscribe(datos=>{
+    this.opcionesBanco=datos.respuesta
+
+    })
 
   }
 
@@ -153,7 +170,7 @@ export class RecibodecajaComponent implements OnInit {
       return;
     }
 
-    if(this.valor>this.totalRecibo || (this.valor+this.totalTiposPago)>this.totalRecibo){
+    if(this.valor>this.totalRecibo || (this.valor+this.totalTiposPago+this.descuento)>this.totalRecibo){
       this.snackBar.open("El valor no debe ser mayor al total del recibo.","Cerrar", {
         duration: 3000,
         panelClass: ['snackbar-error'],
@@ -181,7 +198,7 @@ export class RecibodecajaComponent implements OnInit {
     this.totalizarTiposPago();
 
     this.valor = 0;
-    this.valor=(this.totalRecibo-this.totalTiposPago);
+    this.valor=(this.totalRecibo-(this.totalTiposPago+this.descuento));
     this.movimientoSeleccionado = 'Seleccione';
 
     console.log(this.movimientoSeleccionado);
@@ -218,49 +235,21 @@ export class RecibodecajaComponent implements OnInit {
       return;
     }
 
-    if(this.valorDeduccion>this.totalRecibo){
+    if(this.valorDeduccion>this.totalRecibo || (this.valorDeduccion+this.totalTiposPago+this.descuento)>this.totalRecibo){
       this.snackBar.open("El valor no debe ser mayor al total del recibo.","Cerrar", {
         duration: 3000,
         panelClass: ['snackbar-error'],
       });
+      this.valorDeduccion=0;
       this.valor=0;
       this.movimientoSeleccionado="Seleccione";
-      return;
-    }
-
-    if((this.totalTiposPago-this.valorDeduccion)<0){
-      this.snackBar.open("El valor de deduccion no debe ser mayor a tipo de pago.","Cerrar", {
-        duration: 3000,
-        panelClass: ['snackbar-error'],
-      });
-      this.valor=0;
-      this.movimientoSeleccionado="Seleccione";
-      return;
-    }
-
-    if(this.valorDeduccion>this.totalRecibo){
-      this.snackBar.open("El valor no debe ser mayor al total del recibo.","Cerrar", {
-        duration: 3000,
-        panelClass: ['snackbar-error'],
-      });
-      this.valor=0;
-      this.movimientoSeleccionado="Seleccione";
-      return;
-    }
-
-    if((this.totalTiposPago-this.valorDeduccion)<0){
-      this.snackBar.open("El valor de deduccion no debe ser mayor a tipo de pago.","Cerrar", {
-        duration: 3000,
-        panelClass: ['snackbar-error'],
-      });
-      this.valor=0;
-      this.movimientoSeleccionado="Seleccione";
+      this.valor=(this.totalRecibo-(this.totalTiposPago+this.descuento));
       return;
     }
 
     const nuevoDato = {
       Movimiento: item,
-      valor: - this.valorDeduccion,
+      valor: -this.valorDeduccion,
     };
     const datosActuales = this.TipoPago.data;
     datosActuales.push(nuevoDato);
@@ -269,7 +258,23 @@ export class RecibodecajaComponent implements OnInit {
     this.valorDeduccion = 0;
     this.deduccionSeleccionada = 'Seleccione';
 
-    this.totalizarTiposPago();
+    this.totalizarDeducciones();
+
+    this.valor = 0;
+    this.valor=(this.totalRecibo-(this.totalTiposPago+this.descuento));
+    this.movimientoSeleccionado = 'Seleccione';
+  }
+
+  public totalizarDeducciones(){
+    let contador=0
+    this.TipoPago.data.forEach((data)=>{
+      if(data.valor<0){
+        contador+=data.valor*-1
+      }
+    })
+
+  
+    this.descuento=contador;
   }
   totalizarRecibo(valor:any){
      let subvalor=valor.abono
@@ -284,6 +289,9 @@ export class RecibodecajaComponent implements OnInit {
      this.factura.data[index].abono==valor.abono;
     console.log(valor.abono)
     this.totalizarPanelReciboIngreso();
+    this.valor = 0;
+    this.valor=(this.totalRecibo-(this.totalTiposPago+this.descuento));
+    this.movimientoSeleccionado = 'Seleccione';
   }
 
   onCheckChange(element: any){
@@ -306,13 +314,93 @@ export class RecibodecajaComponent implements OnInit {
     console.log(acomulador);
     this.totalRecibo=totalTemp+acomulador;
     console.log(typeof  this.totalRecibo )
+    this.valor = 0;
+    this.valor=(this.totalRecibo-(this.totalTiposPago+this.descuento));
+    this.movimientoSeleccionado = 'Seleccione';
   }
 
   totalizarTiposPago(){
-    console.log(this.totalTiposPago);
-    const totalTemp=this.TipoPago.data.reduce((sum: any, tipo: any) => sum + tipo.valor,0);
-    this.totalTiposPago=totalTemp;
-    this.totalizarPanelReciboIngreso();
+    let contador=0
+    this.TipoPago.data.forEach((data)=>{
+      if(data.valor>0){
+        contador+=data.valor
+      }
+    })
+    
+    this.totalTiposPago=contador;
+    
+  }
+
+  eliminarTipoPago(item: any){
+    console.log("Eliminando item Tipo Pago")
+    console.log(item);
+    const index = this.TipoPago.data.findIndex(data => data.Movimiento === item.Movimiento);
+    console.log(index);
+    this.TipoPago.data.splice(index,1);
+    this.TipoPago.data=this.TipoPago.data;
+    this.TipoPago._updateChangeSubscription();
+    console.log(this.TipoPago);
+    this.totalizarTiposPago();
+    this.valor = 0;
+    if(item.valor<0){
+      this.descuento-=(item.valor*-1)
+    }
+    this.valor=(this.totalRecibo-(this.totalTiposPago+this.descuento));
+    this.movimientoSeleccionado = 'Seleccione';
+  }
+
+  seleccionarOpcionBanco(banco:any, item: any){
+   
+    if(banco === "Seleccione Banco" || banco === "Seleccione"){
+      this.snackBar.open("No es una opcion de banco correcta","Cerrar",{
+        duration:3000,
+        panelClass:['snackbar-error'],
+      });
+    }
+
+    const nuevoDato = {
+        Movimiento: item,
+        valor: this.valor,
+        opcionBanco: banco,
+      };
+
+      item.opcionBanco=banco
+      
+      console.log(item)
+  
+      
+  }
+
+  crearReciboIngreso(){
+    let concepto = "Cancela/Abono: ";
+    let facturasabonadas=this.factura.data.map((data:any)=>{
+      if(data.abono>0 && data.selected===true){
+        concepto+="-"+data.codigo+" "+data.codigoComprobante;
+        return data
+      }
+    });
+  
+    const datapeticion={
+        totalrecibo:  this.totalRecibo,
+        cliente:  this.clienteSeleccionado,
+        tipopago:this.TipoPago,
+        facturas: facturasabonadas,
+        concepto,
+        descuento: this.descuento,
+        observacion:'',
+    }
+    if(this.totalRecibo>0 && this.totalTiposPago>0){
+      this.servifactura.crearreciboingreso(datapeticion).subscribe(
+        data=>{
+          console.log(data)
+        }
+      )
+    }else{
+      this.snackBar.open("No hay datos cargados correctamente para crear el recibo","Cerrar",{
+        duration:3000,
+        panelClass:['snackbar-error'],
+      });
+    }
   }
 
   trackByIndex(index: number, item: any): number {

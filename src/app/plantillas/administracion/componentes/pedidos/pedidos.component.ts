@@ -28,6 +28,7 @@ export class PedidosComponent implements OnInit {
   public pagina: number = 0;
   public descripcio: string = '';
   public esta: string = '';
+  
   public estado = ['PENDIENTE', 'FACTURADO', 'ANULADO', 'TODO'];
   public estado2: string = '';
   displayedColumns: string[] = [
