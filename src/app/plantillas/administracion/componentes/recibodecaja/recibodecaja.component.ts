@@ -5,6 +5,8 @@ import { FacturaserviceService } from 'src/services/facturaservice/facturaservic
 import { SocketService } from 'src/services/socket/socket.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatosPedido } from 'src/app/modelos/datos-peticion copy';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogoAlerta } from 'src/app/angular-material/alerta';
 interface banco {
   codigo: number;
   nombre: string;
@@ -43,7 +45,8 @@ export class RecibodecajaComponent implements OnInit {
     private socketproduct: Socket_producto,
     private socketServices: SocketService,
     private snackBar: MatSnackBar,
-    private servifactura: FacturaserviceService
+    private servifactura: FacturaserviceService,
+      public dialog: MatDialog,
   ) {}
   public Movimiento = [
     'Seleccione',
@@ -399,35 +402,80 @@ export class RecibodecajaComponent implements OnInit {
   }
 
   crearReciboIngreso() {
-    let concepto = 'Cancela/Abono: ';
-    let facturasabonadas = this.factura.data.map((data: any) => {
-      if (data.abono > 0 && data.selected === true) {
-        concepto += '-' + data.codigo + ' ' + data.codigoComprobante;
-        return data;
-      }
-    });
-    console.log(
-      'cliente seleccionado :',
-      JSON.stringify(this.clienteSeleccionado)
-    ); // si falla, este es el problema
-    console.log('tipo pago', JSON.stringify(this.TipoPago.data)); // si falla, este
-    console.log('facturas abonadas', JSON.stringify(facturasabonadas));
-    const datapeticion = {
-      totalrecibo: this.totalRecibo,
-      cliente: this.clienteSeleccionado,
-      tipopago: this.TipoPago.data,
-      facturas: facturasabonadas,
-      concepto,
-      descuento: this.descuento,
-      observacion: '',
-    };
-    if (this.totalRecibo > 0 && this.totalTiposPago > 0) {
-      this.servifactura.crearreciboingreso(datapeticion).subscribe((data) => {
-        console.log(data);
+    if(this.totalRecibo === (this.totalTiposPago+this.descuento)){
+      const dialogrfrecibo=this.dialog.open(DialogoAlerta,{
+            data:{
+              boton1:'No',
+              boton:'Si',
+              mensaje:"Seguro desea crear este recibo de ingreso",
+              tipo:"question"
+            },
+            disableClose:false
+          })
+        dialogrfrecibo.afterClosed().subscribe(
+          data=>{
+            if(!data){
+                return
+            }else{
+
+              let concepto = 'Cancela/Abono: ';
+      let facturasabonadas = this.factura.data.filter((data: any) => {
+        if (data.abono > 0 && data.selected === true) {
+          concepto += '-' + data.codigo + ' ' + data.codigoComprobante;
+          return data;
+        }
       });
-    } else {
+      console.log(
+        'cliente seleccionado :',
+        JSON.stringify(this.clienteSeleccionado)
+      ); // si falla, este es el problema
+      console.log('tipo pago', JSON.stringify(this.TipoPago.data)); // si falla, este
+      console.log('facturas abonadas', JSON.stringify(facturasabonadas));
+      const datapeticion = {
+        totalrecibo: this.totalRecibo,
+        cliente: this.clienteSeleccionado,
+        tipopago: this.TipoPago.data,
+        facturas: facturasabonadas,
+        concepto,
+        descuento: this.descuento,
+        observacion: '',
+      };
+      if (this.totalRecibo > 0 && this.totalTiposPago > 0) {
+        this.servifactura.crearreciboingreso(datapeticion).subscribe((data) => {
+          const dialogrf=this.dialog.open(DialogoAlerta,{
+            data:{
+              boton:'Ok',
+              mensaje:data.mensaje,
+              tipo:"done"
+            },
+            disableClose:false
+          })
+
+          dialogrf.afterClosed().subscribe(
+            data=>{
+              if(data){
+              window.location.reload();
+              }
+            }
+          )
+        });
+      } else {
+        this.snackBar.open(
+          'No hay datos cargados correctamente para crear el recibo',
+          'Cerrar',
+          {
+            duration: 3000,
+            panelClass: ['snackbar-error'],
+          }
+        );
+      }
+
+            }
+          }
+        )
+    }else{
       this.snackBar.open(
-        'No hay datos cargados correctamente para crear el recibo',
+        'El total de los tipo de pago mas las deducciones no es igual al total del recibo',
         'Cerrar',
         {
           duration: 3000,

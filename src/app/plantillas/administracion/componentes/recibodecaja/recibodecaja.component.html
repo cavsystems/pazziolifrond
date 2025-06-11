@@ -1,9 +1,6 @@
 <div>
   <mat-card-title class="tituloP" style="margin-top: 15px;">Recibo de caja</mat-card-title>
 </div>
-<div>
-  <mat-card-title class="tituloP" style="margin-top: 15px; margin-left: auto;">Recibo:</mat-card-title>
-</div>
 <div class="row loader-content" style="padding-top: 20px">
     <!-- CLIENTES -->
   <div class="buscaliente">
@@ -55,7 +52,7 @@
         </mat-card-header>
       </mat-card>
     </mat-card>
-    <div class="tabla-scroll" style="width: 100%; margin-top: 10px;">
+    <div class="tabla-scroll" style="width: 100%; margin-top: 10px;overflow: scroll; max-height: 400px;">
         <table mat-table [dataSource]="factura.data" class="mat-elevation-z8 col-12 tab-factura">
         <!--- Note that these columns can be defined in any order.
                 The actual rendered columns are set as a property on the row definition" -->
@@ -170,7 +167,13 @@
             </mat-select>
         </div>
       </div>
-        <div class="tabla-scroll-tp" style="width: 50%; margin-top: 5px; margin-left: 30px;">
+        <div class="tabla-scroll-tp" style="width: 50%; margin-top: 5px; margin-left:0; flex-wrap: wrap;">
+
+          <div style="
+    overflow: auto;
+    max-width: 500px;
+    max-height: 300px;
+">
           <table mat-table [dataSource]="TipoPago" class="mat-elevation-z8 col-12 tab-factura">
           <!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
@@ -220,7 +223,8 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumnsTipoPago"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumnsTipoPago"></tr>
         </table>
-        <div style="margin-top: 20px; margin-right: auto; display: flex;">
+        </div>
+        <div style="margin-top: 20px;margin-right: auto;display: flex;flex-wrap: wrap;">
         <mat-card-title class="totalTipoPago"
                 >Total tipos pago: $
                 {{ totalTiposPago.toLocaleString("de-DE") }}
