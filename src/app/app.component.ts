@@ -36,7 +36,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private serviciodb: serviciodb
   ) {}
   ngOnInit(): void {
-    this.mode.value=this.serviauth.mode.value
+    this.mode.value = this.serviauth.mode.value;
     this.serviciodb.tienesedeselccionada().subscribe((data) => {
       this.data = data;
         this.opcionesMostrar(data)

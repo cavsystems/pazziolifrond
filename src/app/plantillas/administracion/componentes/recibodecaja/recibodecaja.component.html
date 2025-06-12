@@ -1,16 +1,19 @@
 <div>
-  <mat-card-title class="tituloP" style="margin-top: 15px;">Recibo de caja</mat-card-title>
+  <mat-card-title class="tituloP" style="margin-top: 15px"
+    >Recibo de caja</mat-card-title
+  >
 </div>
 <div class="row loader-content" style="padding-top: 20px">
-    <!-- CLIENTES -->
+  <!-- CLIENTES -->
   <div class="buscaliente">
-
-    <mat-card class="search-card col-12"  style="max-width:70%; max-height: fit-content;">
+    <mat-card
+      class="search-card col-12"
+      style="max-width: 70%; max-height: fit-content"
+    >
       <mat-card-header class="search">
         <mat-card-title class="m-0">Cliente</mat-card-title>
         <div class="row">
           <div class="col-12">
-          
             <mat-form-field appearance="fill" search>
               <mat-label>Buscar cliente</mat-label>
               <input
@@ -18,16 +21,14 @@
                 placeholder=""
                 (ngModelChange)="autocompletarinputclient()"
                 [(ngModel)]="cliente"
-                />
+              />
               <mat-icon matSuffix>search</mat-icon>
             </mat-form-field>
-
-         
           </div>
         </div>
       </mat-card-header>
 
-           <mat-card-content class="overflow-content" style="height: auto">
+      <mat-card-content class="overflow-content" style="height: auto">
         <!-- LISTA CLIENTES -->
         <mat-selection-list #shoes [multiple]="false" class="clientelist">
           <mat-list-option
@@ -44,16 +45,26 @@
         </mat-selection-list>
       </mat-card-content>
       <!-- CLIENTE SELECCIONADO -->
-      <mat-card class="b-primary icon-card" style="height: 50px; margin-top: 2px;">
-        <mat-card-header style="border: none !important;">
+      <mat-card
+        class="b-primary icon-card"
+        style="height: 50px; margin-top: 2px"
+      >
+        <mat-card-header style="border: none !important">
           <mat-card-title class="client-name">{{
             clienteSeleccionado.nombre
           }}</mat-card-title>
         </mat-card-header>
       </mat-card>
     </mat-card>
-    <div class="tabla-scroll" style="width: 100%; margin-top: 10px;overflow: scroll; max-height: 400px;">
-        <table mat-table [dataSource]="factura.data" class="mat-elevation-z8 col-12 tab-factura">
+    <div
+      class="tabla-scroll"
+      style="width: 100%; margin-top: 10px; overflow: scroll; max-height: 400px"
+    >
+      <table
+        mat-table
+        [dataSource]="factura.data"
+        class="mat-elevation-z8 col-12 tab-factura"
+      >
         <!--- Note that these columns can be defined in any order.
                 The actual rendered columns are set as a property on the row definition" -->
 
@@ -61,11 +72,11 @@
         <ng-container matColumnDef="selected">
           <th mat-header-cell *matHeaderCellDef>*</th>
           <td mat-cell *matCellDef="let element">
-            <input 
-            type="checkbox" 
-            [(ngModel)]="element.selected"
-            (change)="onCheckChange(element)"
-            >
+            <input
+              type="checkbox"
+              [(ngModel)]="element.selected"
+              (change)="onCheckChange(element)"
+            />
           </td>
         </ng-container>
 
@@ -76,7 +87,9 @@
 
         <ng-container matColumnDef="codigoComprobante">
           <th mat-header-cell *matHeaderCellDef>Comprobante</th>
-          <td mat-cell *matCellDef="let element">{{ element.codigoComprobante }}</td>
+          <td mat-cell *matCellDef="let element">
+            {{ element.codigoComprobante }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="totalFactura">
@@ -88,26 +101,28 @@
 
         <ng-container matColumnDef="saldo">
           <th mat-header-cell *matHeaderCellDef>Saldo</th>
-          <td mat-cell *matCellDef="let element">
-            ${{ element.saldo }}
-          </td>
+          <td mat-cell *matCellDef="let element">${{ element.saldo }}</td>
         </ng-container>
-        
+
         <ng-container matColumnDef="abono">
           <th mat-header-cell *matHeaderCellDef>Abono</th>
-          <td mat-cell *matCellDef="let element; let i index">
-              <mat-form-field appearance="outline" style="width: 100%;">
-                <input matInput
-                        placeholder="Abono"
-                        [(ngModel)]="element.abono"
-                        [disabled]="!element.selected">
-                <button mat-icon-button
-                        matSuffix
-                        (click)="totalizarRecibo(element)"
-                        style="color: #5db5f2;">
-                  <mat-icon>add</mat-icon>
-                </button>
-              </mat-form-field>
+          <td mat-cell *matCellDef="let element; let i; index">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <input
+                matInput
+                placeholder="Abono"
+                [(ngModel)]="element.abono"
+                [disabled]="!element.selected"
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="totalizarRecibo(element)"
+                style="color: #5db5f2"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
+            </mat-form-field>
           </td>
         </ng-container>
 
@@ -117,133 +132,169 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
     </div>
-    <div class="ValorPago" style="margin-top: 20px; display: flex; margin-right: auto;">
+    <div
+      class="ValorPago"
+      style="margin-top: 20px; display: flex; margin-right: auto"
+    >
       <div>
-        <div style="margin-top: 10px;">
-          <mat-label style="margin-left: 10px; margin-top: 15px;">Deduccion:  </mat-label>
+        <div style="margin-top: 10px">
+          <mat-label style="margin-left: 10px; margin-top: 15px"
+            >Deduccion:
+          </mat-label>
           <mat-form-field appearance="fill" search>
             <mat-label style="font-size: 1rem">Valor</mat-label>
             <input
               matInput
               #inValor
-              [(ngModel)]='valorDeduccion'
+              [(ngModel)]="valorDeduccion"
               placeholder=""
               name="inputValor"
               id="valor"
               type="number"
             />
           </mat-form-field>
-            <mat-select [(ngModel)]="deduccionSeleccionada" (selectionChange)="seleccionaritemDeduccion($event.value)" value="" style="margin-left: 10px; margin-top: 15px;">
-              <mat-option
-                [value]="item"
-                *ngFor="let item of Deduccion"
-                >{{ item }}</mat-option
-              >
-            </mat-select>
+          <mat-select
+            [(ngModel)]="deduccionSeleccionada"
+            (selectionChange)="seleccionaritemDeduccion($event.value)"
+            value=""
+            style="margin-left: 10px; margin-top: 15px"
+          >
+            <mat-option [value]="item" *ngFor="let item of Deduccion">{{
+              item
+            }}</mat-option>
+          </mat-select>
         </div>
-        <div style="margin-top: 20px;">
-          <mat-label style="margin-left: 10px; margin-top: 15px;">Tipo Pago:  </mat-label>
+        <div style="margin-top: 20px">
+          <mat-label style="margin-left: 10px; margin-top: 15px"
+            >Tipo Pago:
+          </mat-label>
           <mat-form-field appearance="fill" search>
             <mat-label style="font-size: 1rem">Valor</mat-label>
             <input
               matInput
               #inValor
-              [(ngModel)]='valor'
+              [(ngModel)]="valor"
               placeholder=""
               name="inputValor"
               id="valor"
               type="number"
             />
           </mat-form-field>
-            <mat-select [(ngModel)]="movimientoSeleccionado" (selectionChange)="seleccionaritem($event.value)" style="margin-left: 10px; margin-top: 15px;">
-              <mat-option
-                [value]="item"
-                *ngFor="let item of Movimiento"
-                >{{ item }}</mat-option
-              >
-            </mat-select>
+          <mat-select
+            [(ngModel)]="movimientoSeleccionado"
+            (selectionChange)="seleccionaritem($event.value)"
+            style="margin-left: 10px; margin-top: 15px"
+          >
+            <mat-option [value]="item" *ngFor="let item of Movimiento">{{
+              item
+            }}</mat-option>
+          </mat-select>
         </div>
       </div>
-        <div class="tabla-scroll-tp" style="width: 50%; margin-top: 5px; margin-left:0; flex-wrap: wrap;">
-
-          <div style="
-    overflow: auto;
-    max-width: 500px;
-    max-height: 300px;
-">
-          <table mat-table [dataSource]="TipoPago" class="mat-elevation-z8 col-12 tab-factura">
-          <!--- Note that these columns can be defined in any order.
+      <div
+        class="tabla-scroll-tp"
+        style="width: 50%; margin-top: 5px; margin-left: 0; flex-wrap: wrap"
+      >
+        <div style="overflow: auto; max-width: 500px; max-height: 300px">
+          <table
+            mat-table
+            [dataSource]="TipoPago"
+            class="mat-elevation-z8 col-12 tab-factura"
+          >
+            <!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
 
-          <!-- Position Column -->
+            <!-- Position Column -->
 
-          <ng-container matColumnDef="Movimiento">
-            <th mat-header-cell *matHeaderCellDef>Movimiento</th>
-            <td mat-cell *matCellDef="let element">{{ element.Movimiento }}</td>
-          </ng-container>
+            <ng-container matColumnDef="Movimiento">
+              <th mat-header-cell *matHeaderCellDef>Movimiento</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.Movimiento }}
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="valor">
-            <th mat-header-cell *matHeaderCellDef>Valor</th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.valor.toLocaleString("de-DE") }}
-            </td>
-          </ng-container>
-          
-          <ng-container matColumnDef="acciones">
-            <th mat-header-cell *matHeaderCellDef>Acciones</th>
-            <td mat-cell *matCellDef="let element" style="display: flex; align-content: center;">
-              <mat-select 
-                [(ngModel)]="bancoSeleccinado" 
-                (selectionChange)="seleccionarOpcionBanco($event.value, element)" 
-                style="margin-left: 10px; margin-top: 15px;" 
-                placeholder="Seleccione Banco"
-                *ngIf=" element.Movimiento === 'Banco'">
-              <mat-option
-                [value]="item"
-                *ngFor="let item of opcionesBanco;"
-                >{{ item.nombre }}</mat-option
+            <ng-container matColumnDef="valor">
+              <th mat-header-cell *matHeaderCellDef>Valor</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.valor.toLocaleString("de-DE") }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td
+                mat-cell
+                *matCellDef="let element"
+                style="display: flex; align-content: center"
               >
-            </mat-select>
-              <button
-                mat-icon-button
-                color="socondary"
-                (click)="eliminarTipoPago(element)">
-                <img
-                  src="../../../../../assets/images/delete_button.svg"
-                  class="imgicon"
-                />
-              </button>
+                <mat-select
+                  [(ngModel)]="bancoSeleccinado"
+                  (selectionChange)="
+                    seleccionarOpcionBanco($event.value, element)
+                  "
+                  style="margin-left: 10px; margin-top: 15px"
+                  placeholder="Seleccione Banco"
+                  *ngIf="element.Movimiento === 'Banco'"
+                >
+                  <mat-option
+                    [value]="item"
+                    *ngFor="let item of opcionesBanco"
+                    >{{ item.nombre }}</mat-option
+                  >
+                </mat-select>
+                <button
+                  mat-icon-button
+                  color="socondary"
+                  (click)="eliminarTipoPago(element)"
+                >
+                  <img
+                    src="../../../../../assets/images/delete_button.svg"
+                    class="imgicon"
+                  />
+                </button>
+              </td>
+            </ng-container>
 
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsTipoPago"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumnsTipoPago"></tr>
-        </table>
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsTipoPago"></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumnsTipoPago"
+            ></tr>
+          </table>
         </div>
-        <div style="margin-top: 20px;margin-right: auto;display: flex;flex-wrap: wrap;">
-        <mat-card-title class="totalTipoPago"
-                >Total tipos pago: $
-                {{ totalTiposPago.toLocaleString("de-DE") }}
-        </mat-card-title>
+        <div
+          style="
+            margin-top: 20px;
+            margin-right: auto;
+            display: flex;
+            flex-wrap: wrap;
+          "
+        >
+          <mat-card-title class="totalTipoPago"
+            >Total tipos pago: $
+            {{ totalTiposPago.toLocaleString("de-DE") }}
+          </mat-card-title>
 
-         <mat-card-title class="totalTipoPago"
-                >Total descuento: $
-                {{ descuento.toLocaleString("de-DE") }}
-        </mat-card-title>
+          <mat-card-title class="totalTipoPago"
+            >Total descuento: $
+            {{ descuento.toLocaleString("de-DE") }}
+          </mat-card-title>
         </div>
       </div>
     </div>
-  <div style="margin-top: 20px; margin-right: auto; display: flex;">
-  <mat-card-title class="totalRecibo"
-          >Total Recibo: $
-          {{ totalRecibo.toLocaleString("de-DE") }}
-  </mat-card-title>
-  </div>
-    <div style="display: flex; flex: 1; justify-content: space-between" class="botonesactions">
+    <div style="margin-top: 20px; margin-right: auto; display: flex">
+      <mat-card-title class="totalRecibo"
+        >Total Recibo: $
+        {{ totalRecibo.toLocaleString("de-DE") }}
+      </mat-card-title>
+    </div>
+    <div
+      style="display: flex; flex: 1; justify-content: space-between"
+      class="botonesactions"
+    >
       <button
         mat-flat-button
         color="primary"
