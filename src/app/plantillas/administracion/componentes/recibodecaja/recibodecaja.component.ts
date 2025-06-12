@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatosPedido } from 'src/app/modelos/datos-peticion copy';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogoAlerta } from 'src/app/angular-material/alerta';
+import { generatePDFingre } from './pdfingresos/pdf';
 interface banco {
   codigo: number;
   nombre: string;
@@ -20,6 +21,9 @@ interface banco {
 export class RecibodecajaComponent implements OnInit {
   cliente: string = '';
   clientes: any[] = [];
+  razon!: string;
+  direccion!: string;
+  nit!: string;
   clienteSeleccionado = {
     nombre: 'Seleccione un cliente',
     identificacion: '',
@@ -46,7 +50,7 @@ export class RecibodecajaComponent implements OnInit {
     private socketServices: SocketService,
     private snackBar: MatSnackBar,
     private servifactura: FacturaserviceService,
-      public dialog: MatDialog,
+    public dialog: MatDialog
   ) {}
   public Movimiento = [
     'Seleccione',
@@ -96,6 +100,9 @@ export class RecibodecajaComponent implements OnInit {
   ngOnInit(): void {
     this.servifactura.traerbancos().subscribe((datos) => {
       this.opcionesBanco = datos.respuesta;
+      this.nit = datos.nit;
+      this.razon = datos.razon;
+      this.direccion = datos.direccion;
     });
   }
 
@@ -402,78 +409,85 @@ export class RecibodecajaComponent implements OnInit {
   }
 
   crearReciboIngreso() {
-    if(this.totalRecibo === (this.totalTiposPago+this.descuento)){
-      const dialogrfrecibo=this.dialog.open(DialogoAlerta,{
-            data:{
-              boton1:'No',
-              boton:'Si',
-              mensaje:"Seguro desea crear este recibo de ingreso",
-              tipo:"question"
-            },
-            disableClose:false
-          })
-        dialogrfrecibo.afterClosed().subscribe(
-          data=>{
-            if(!data){
-                return
-            }else{
+    if (this.totalRecibo === this.totalTiposPago + this.descuento) {
+      const dialogrfrecibo = this.dialog.open(DialogoAlerta, {
+        data: {
+          boton1: 'No',
+          boton: 'Si',
+          mensaje: 'Seguro desea crear este recibo de ingreso',
+          tipo: 'question',
+        },
+        disableClose: false,
+      });
+      dialogrfrecibo.afterClosed().subscribe((data) => {
+        if (!data) {
+          return;
+        } else {
+          let concepto = 'Cancela/Abono: ';
+          let facturasabonadas = this.factura.data.filter((data: any) => {
+            if (data.abono > 0 && data.selected === true) {
+              concepto += '-' + data.codigo + ' ' + data.codigoComprobante;
+              return data;
+            }
+          });
+          console.log(
+            'cliente seleccionado :',
+            JSON.stringify(this.clienteSeleccionado)
+          ); // si falla, este es el problema
+          console.log('tipo pago', JSON.stringify(this.TipoPago.data)); // si falla, este
+          console.log('facturas abonadas', JSON.stringify(facturasabonadas));
+          const datapeticion = {
+            totalrecibo: this.totalRecibo,
+            cliente: this.clienteSeleccionado,
+            tipopago: this.TipoPago.data,
+            facturas: facturasabonadas,
+            concepto,
+            descuento: this.descuento,
+            observacion: '',
+          };
+          if (this.totalRecibo > 0 && this.totalTiposPago > 0) {
+            this.servifactura
+              .crearreciboingreso(datapeticion)
+              .subscribe((datos) => {
+                const dialogrf = this.dialog.open(DialogoAlerta, {
+                  data: {
+                    boton: 'Ok',
+                    mensaje: datos.mensaje,
+                    tipo: 'done',
+                  },
+                  disableClose: false,
+                });
 
-              let concepto = 'Cancela/Abono: ';
-      let facturasabonadas = this.factura.data.filter((data: any) => {
-        if (data.abono > 0 && data.selected === true) {
-          concepto += '-' + data.codigo + ' ' + data.codigoComprobante;
-          return data;
+                dialogrf.afterClosed().subscribe((data) => {
+                  if (data) {
+                    generatePDFingre({
+                      razon: this.razon,
+                      nit: this.nit,
+                      direccion: this.direccion,
+                      recibidoDe: datos.datos[0].recibidoDe,
+                      fechaIngreso: datos.datos[0].fechaIngreso,
+                      valor: datos.datos[0].valor,
+                      tipospagos: this.TipoPago,
+                      direccionc: this.clienteSeleccionado.direccion,
+                      concepto,
+                    });
+                    //window.location.reload();
+                  }
+                });
+              });
+          } else {
+            this.snackBar.open(
+              'No hay datos cargados correctamente para crear el recibo',
+              'Cerrar',
+              {
+                duration: 3000,
+                panelClass: ['snackbar-error'],
+              }
+            );
+          }
         }
       });
-      console.log(
-        'cliente seleccionado :',
-        JSON.stringify(this.clienteSeleccionado)
-      ); // si falla, este es el problema
-      console.log('tipo pago', JSON.stringify(this.TipoPago.data)); // si falla, este
-      console.log('facturas abonadas', JSON.stringify(facturasabonadas));
-      const datapeticion = {
-        totalrecibo: this.totalRecibo,
-        cliente: this.clienteSeleccionado,
-        tipopago: this.TipoPago.data,
-        facturas: facturasabonadas,
-        concepto,
-        descuento: this.descuento,
-        observacion: '',
-      };
-      if (this.totalRecibo > 0 && this.totalTiposPago > 0) {
-        this.servifactura.crearreciboingreso(datapeticion).subscribe((data) => {
-          const dialogrf=this.dialog.open(DialogoAlerta,{
-            data:{
-              boton:'Ok',
-              mensaje:data.mensaje,
-              tipo:"done"
-            },
-            disableClose:false
-          })
-
-          dialogrf.afterClosed().subscribe(
-            data=>{
-              if(data){
-              window.location.reload();
-              }
-            }
-          )
-        });
-      } else {
-        this.snackBar.open(
-          'No hay datos cargados correctamente para crear el recibo',
-          'Cerrar',
-          {
-            duration: 3000,
-            panelClass: ['snackbar-error'],
-          }
-        );
-      }
-
-            }
-          }
-        )
-    }else{
+    } else {
       this.snackBar.open(
         'El total de los tipo de pago mas las deducciones no es igual al total del recibo',
         'Cerrar',
@@ -485,6 +499,13 @@ export class RecibodecajaComponent implements OnInit {
     }
   }
 
+  generarpdfingreso() {
+    generatePDFingre({
+      razon: this.razon,
+      nit: this.nit,
+      direccion: this.direccion,
+    });
+  }
   trackByIndex(index: number, item: any): number {
     return index;
   }
