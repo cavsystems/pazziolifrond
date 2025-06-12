@@ -13,6 +13,34 @@ export const generatePDFingre = (data: any): any => {
   //Se crea el contenido de la tabla, con:
   //Una fila de encabezado (títulos).
   //Una fila por cada producto en el array recibido.
+  console.log(data.tipospagos.data);
+  data.tipospagos.data.forEach((data: any) => {
+    switch (data.Movimiento) {
+      case 'Efectivo':
+        pago += data.Movimiento + '  ';
+        break;
+
+      case 'T.Credito':
+        pago += data.Movimiento + '  ';
+        break;
+
+      case 'T.Debito':
+        pago += data.Movimiento + '  ';
+        break;
+
+      case 'Cheque':
+        pago += data.Movimiento + '  ';
+        break;
+
+      case 'Banco':
+        pago += 'TRANS. BANCARIA' + '  ';
+
+        break;
+
+      default:
+        break;
+    }
+  });
   const nuevaVentana = window.open('', '_blank');
   if (!nuevaVentana) {
     alert('El navegador bloqueó la ventana emergente. Permite pop-ups.');
@@ -159,10 +187,15 @@ export const generatePDFingre = (data: any): any => {
 
   tableBody.push([
     {
-      text: 'FORMA DE PAGO',
+      stack: [
+        { text: 'FORMA DE PAGO', bold: true },
+        {
+          text: pago,
+        },
+      ],
+
       colSpan: 9,
       alignment: 'left',
-      bold: true,
     }, // columna 0
     {},
     {},
