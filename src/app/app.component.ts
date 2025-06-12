@@ -12,6 +12,7 @@ import { DatosAlerta, DialogoAlerta } from './angular-material/alerta';
 import { Socket_producto } from 'src/services/socket/socket.producto.service.ts.service';
 import { AuthService } from 'src/services/auth/auth.service';
 import { serviciodb } from 'src/services/serviciosdbs/serviciodb.service';
+import { Console, log } from 'console';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +22,7 @@ import { serviciodb } from 'src/services/serviciosdbs/serviciodb.service';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Pedidos';
   mode = { value: 'side' as 'over' | 'push' | 'side' };
-  showToolbar: boolean = true;
+  showToolbar: boolean = true; TomarPedidos: boolean = false; ConsultarCartera: boolean = false; CrearReciboIngreso: boolean = false; InventarioFisico: boolean = false;
   public sedes: any;
   public terceroSeleccionado: any;
   private visibilityHandler = this.handleVisibilityChange.bind(this);
@@ -38,8 +39,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.mode.value=this.serviauth.mode.value
     this.serviciodb.tienesedeselccionada().subscribe((data) => {
       this.data = data;
+        this.opcionesMostrar(data)
+      
     });
-
+ 
     document.addEventListener('visibilitychange', this.visibilityHandler);
   }
   ngOnDestroy(): void {
@@ -48,6 +51,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   handleVisibilityChange() {
     this.serviauth.verificarvendedor().subscribe((data) => {
+         this.opcionesMostrar(data)
       if (!data?.response) {
         this.data = null;
         this.router.navigate(['auth/login']);
@@ -59,9 +63,42 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
   salir() {
-    this.serviauth.salir().subscribe((res) => {
-      this.data = null;
-      this.router.navigate(['auth/login']);
-    });
+    const dialogrfrecibo=this.dialog.open(DialogoAlerta,{
+            data:{
+              boton1:'No',
+              boton:'Si',
+              mensaje:"Seguro desea cerrar la sesión?",
+              tipo:"warning"
+            },
+            disableClose:false
+          })
+    dialogrfrecibo.afterClosed().subscribe(
+      data=>{
+        if(!data){
+          return
+        }else{
+          this.serviauth.salir().subscribe((res) => {
+            this.data = null;
+            this.router.navigate(['auth/login']);
+          });
+        }
+      }
+    )
+  }
+  opcionesMostrar(datos:any){
+    console.log("Verificando opciones a mostrar");
+    if(datos?.response){
+      this.TomarPedidos=true
+      this.ConsultarCartera=true
+      this.CrearReciboIngreso=true
+      this.InventarioFisico=true
+      console.log("Entre a true");
+    }else{
+      this.TomarPedidos=false
+      this.ConsultarCartera=false
+      this.CrearReciboIngreso=false
+      this.InventarioFisico=false
+      console.log("Entre a false");
+    }
   }
 }

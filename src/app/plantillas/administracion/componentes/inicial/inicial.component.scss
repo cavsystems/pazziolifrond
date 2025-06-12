@@ -1,0 +1,26 @@
+.tituloP{
+  padding-top: 15px;
+  display: flex;
+  font-weight: bold;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.Contenedor{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card-row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  height: 20%;
+}
+
+.inicial-card{
+  flex: 1 1 calc(50% - 20%);
+  min-width: 300px;
+}

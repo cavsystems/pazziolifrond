@@ -121,7 +121,7 @@ export class InicioSesionComponent implements OnInit {
             this.socketprodu.conectar();
             //console.log(!this.cookieservices.get("connect.sid"))
             window.location.reload();
-
+            
             // this.router.navigateByUrl('admin/tienda');
           }
         },

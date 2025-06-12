@@ -69,7 +69,7 @@ export class Publicguards implements CanActivate {
           return true; // Redirige si la verificación falla
         } else {
           this.socketproduct.conectar();
-          this.router.navigateByUrl('admin/tienda');
+          this.router.navigateByUrl('admin/inicial');
           return false;
         }
       })

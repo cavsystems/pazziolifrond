@@ -344,10 +344,10 @@ export class RecibodecajaComponent implements OnInit {
       }
     });
     console.log(acomulador);
-    this.totalRecibo = totalTemp + acomulador;
+    this.totalRecibo = totalTemp + (acomulador+this.descuento);
     console.log(typeof this.totalRecibo);
     this.valor = 0;
-    this.valor = this.totalRecibo - (this.totalTiposPago + this.descuento);
+    this.valor = this.totalRecibo - (this.totalTiposPago+this.descuento);
     this.movimientoSeleccionado = 'Seleccione';
   }
 
