@@ -48,6 +48,132 @@ export const generatePDFingre = (data: any): any => {
   }
 
   const tableBody: any[][] = [];
+  const tableBody3: any[][] = [];
+  const tablebody2: any[][] = [
+    [
+      { text: 'Codigo puc', style: 'tableHeader', colSpan: 2 },
+      { text: '', style: 'tableHeader' },
+      { text: 'CUENTA', style: 'tableHeader', colSpan: 2 },
+      { text: '', style: 'tableHeader' },
+      { text: 'CREDITO', style: 'tableHeader', colSpan: 1 },
+      { text: 'DEBITO', style: 'tableHeader', colSpan: 1 },
+
+      { text: 'FIRMASELLO', style: 'tableHeader', colSpan: 3 },
+
+      { text: '', style: 'tableHeader' },
+    ],
+  ];
+
+  tablebody2.push([
+    {
+      text: '\u200B',
+      colSpan: 2,
+      border: [true, false, true, true],
+      alignment: 'left',
+      verticalAlignment: 'top',
+      lineHeight: 7,
+      height: 100, // altura fija para la celda (en puntos)
+      minHeight: 100,
+    },
+    {
+      text: '\u200B',
+      alignment: 'left',
+      verticalAlignment: 'top',
+      lineHeight: 7,
+      height: 100, // altura fija para la celda (en puntos)
+      minHeight: 100,
+    },
+    {
+      text: '\u200B',
+      colSpan: 2,
+      border: [true, false, true, true],
+      alignment: 'left',
+      verticalAlignment: 'top',
+      lineHeight: 7,
+      height: 100, // altura fija para la celda (en puntos)
+      minHeight: 100,
+    },
+    {
+      text: '\u200B',
+      alignment: 'left',
+      verticalAlignment: 'top',
+      lineHeight: 7,
+      height: 100, // altura fija para la celda (en puntos)
+      minHeight: 100,
+    },
+    {
+      text: '\u200B',
+      colSpan: 1,
+      border: [true, false, true, true],
+      alignment: 'left',
+      verticalAlignment: 'top',
+      lineHeight: 7,
+      height: 100, // altura fija para la celda (en puntos)
+      minHeight: 100,
+    },
+    {
+      text: '\u200B',
+      colSpan: 1,
+      border: [true, false, true, true],
+      alignment: 'left',
+      verticalAlignment: 'top',
+      lineHeight: 7,
+      height: 100, // altura fija para la celda (en puntos)
+      minHeight: 100,
+    },
+
+    {
+      text: '\u200B',
+      colSpan: 3,
+      border: [true, false, true, true],
+      alignment: 'left',
+      verticalAlignment: 'top',
+      lineHeight: 7,
+      height: 100, // altura fija para la celda (en puntos)
+      minHeight: 100,
+    },
+
+    {
+      text: '\u200B',
+      alignment: 'left',
+      verticalAlignment: 'top',
+      lineHeight: 7,
+      height: 100, // altura fija para la celda (en puntos)
+      minHeight: 100,
+    },
+  ]);
+  tablebody2.push([
+    {
+      text: 'OBSERVACION:',
+      colSpan: 9,
+      border: [true, true, true, true],
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+  ]);
+
+  tablebody2.push([
+    {
+      text: 'ELABORADO POR:' + '  ' + data.usuario + '(' + data.vendedor + ')',
+      colSpan: 9,
+      minHeight: 60,
+      border: [true, true, true, true],
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+  ]);
   // Fila de factura
   tableBody.push([
     {
@@ -69,7 +195,7 @@ export const generatePDFingre = (data: any): any => {
     {}, // columnas 1-4 (vacías para colSpan)
     {},
     {
-      text: `$${data.valor.toLocaleString('de-DE')}`,
+      text: `VALOR:$${data.valor.toLocaleString('de-DE')}`,
       colSpan: 3,
       alignment: 'right',
     }, // columna 5
@@ -241,7 +367,6 @@ export const generatePDFingre = (data: any): any => {
     ],
   });
 
-  content.push({ text: '\n' });
   //Muestra la tabla de productos con sus cantidades y totales.
   //layout: 'lightHorizontalLines' agrega líneas horizontales ligeras para separar filas.
   content.push({
@@ -262,12 +387,35 @@ export const generatePDFingre = (data: any): any => {
             return '#aaa';
           },
         },
-        margin: [0, 10, 10, 10],
+        margin: [0, 10, 10, 0],
       },
     ],
   });
-  //Muestra el total de la compra alineado a la derecha.
+  content.push({
+    columns: [
+      {
+        width: '*',
+        table: {
+          headerRows: 1,
+          widths: ['*', '*', '*', '*', '*', '*', '*', '*', '*'],
+          body: tablebody2,
+        },
+        alignment: 'left',
+        layout: {
+          hLineColor: function (i: number, node: any) {
+            return '#aaa';
+          },
+          vLineColor: function (i: number, node: any) {
+            return '#aaa';
+          },
+        },
+        margin: [0, 0, 10, 0],
+      },
+    ],
+  });
 
+  //Muestra el total de la compra alineado a la derecha.
+  content.push({ text: '\n' });
   //Define estilos reutilizables usados en el contenido: encabezados, subencabezados, etc.
   const styles = {
     header: {

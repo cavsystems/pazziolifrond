@@ -19,6 +19,8 @@ interface banco {
   styleUrls: ['./recibodecaja.component.scss'],
 })
 export class RecibodecajaComponent implements OnInit {
+  vendedor!: string;
+  usuario!: string;
   cliente: string = '';
   clientes: any[] = [];
   razon!: string;
@@ -449,6 +451,7 @@ export class RecibodecajaComponent implements OnInit {
             this.servifactura
               .crearreciboingreso(datapeticion)
               .subscribe((datos) => {
+                console.log(datos);
                 const dialogrf = this.dialog.open(DialogoAlerta, {
                   data: {
                     boton: 'Ok',
@@ -467,6 +470,8 @@ export class RecibodecajaComponent implements OnInit {
                       recibidoDe: datos.datos[0].recibidoDe,
                       fechaIngreso: datos.datos[0].fechaIngreso,
                       valor: datos.datos[0].valor,
+                      vendedor: datos.vendedor,
+                      usuario: datos.usuario,
                       tipospagos: this.TipoPago,
                       direccionc: this.clienteSeleccionado.direccion,
                       concepto,

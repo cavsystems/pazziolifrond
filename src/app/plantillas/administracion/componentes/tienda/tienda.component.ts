@@ -206,12 +206,12 @@ export class TiendaComponent implements OnInit {
     public dialog: MatDialog,
     private socketservidbs: serviciodb,
     private socketproduct: Socket_producto,
-    private serviauth:AuthService,
+    private serviauth: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.serviauth.mode.value='side'
+    this.serviauth.mode.value = 'side';
     this.seleccionardb();
   }
 
