@@ -16,6 +16,7 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { CarteraComponent } from './componentes/cartera/cartera.component';
 import { RecibodecajaComponent } from './componentes/recibodecaja/recibodecaja.component';
 import { InicialComponent } from './componentes/inicial/inicial.component';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { InicialComponent } from './componentes/inicial/inicial.component';
     MatIconModule,
     IonicModule.forRoot(),
     ZXingScannerModule,
+    NgChartsModule,
   ],
   providers: [],
 })

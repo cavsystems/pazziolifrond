@@ -19,6 +19,8 @@ import { NotFoundComponentComponent } from './not-found-component/not-found-comp
 import { DialogoAlertaob } from './angular-material/alertaob';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatInputModule } from '@angular/material/input';
+import { NgChartsModule } from 'ng2-charts';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import { MatInputModule } from '@angular/material/input';
     FormsModule,
     TextFieldModule,
     MatInputModule,
+    NgChartsModule,
+    MatIconModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

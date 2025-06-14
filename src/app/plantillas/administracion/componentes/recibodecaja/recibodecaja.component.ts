@@ -449,6 +449,7 @@ export class RecibodecajaComponent implements OnInit {
             this.servifactura
               .crearreciboingreso(datapeticion)
               .subscribe((datos) => {
+                console.log(datos)
                 const dialogrf = this.dialog.open(DialogoAlerta, {
                   data: {
                     boton: 'Ok',
@@ -468,10 +469,12 @@ export class RecibodecajaComponent implements OnInit {
                       fechaIngreso: datos.datos[0].fechaIngreso,
                       valor: datos.datos[0].valor,
                       tipospagos: this.TipoPago,
+                      codigoRI: datos.datos[0].codigo,
                       direccionc: this.clienteSeleccionado.direccion,
                       concepto,
+                      nombreComprobanteRI: datos.nombreComprobanteRI,
                     });
-                    //window.location.reload();
+                    window.location.reload();
                   }
                 });
               });
