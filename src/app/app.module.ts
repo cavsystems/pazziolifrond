@@ -19,6 +19,8 @@ import { NotFoundComponentComponent } from './not-found-component/not-found-comp
 import { DialogoAlertaob } from './angular-material/alertaob';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatInputModule } from '@angular/material/input';
+import { NgChartsModule } from 'ng2-charts';
+import { MatIconModule } from '@angular/material/icon';
 import { Recibopago } from './angular-material/alertarecibo';
 import { MatFormField } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -49,6 +51,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     FormsModule,
     TextFieldModule,
     MatInputModule,
+    NgChartsModule,
+    MatIconModule,
 
     MatDatepickerModule,
   ],

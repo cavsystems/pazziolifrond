@@ -356,7 +356,7 @@ export class RecibodecajaComponent implements OnInit {
       }
     });
     console.log(acomulador);
-    this.totalRecibo = totalTemp + acomulador;
+    this.totalRecibo = totalTemp + (acomulador + this.descuento);
     console.log(typeof this.totalRecibo);
     this.valor = 0;
     this.valor = this.totalRecibo - (this.totalTiposPago + this.descuento);
@@ -455,6 +455,7 @@ export class RecibodecajaComponent implements OnInit {
               .crearreciboingreso(datapeticion)
               .subscribe((datos) => {
                 console.log(datos);
+
                 const dialogrf = this.dialog.open(DialogoAlerta, {
                   data: {
                     boton: 'Ok',
@@ -477,9 +478,11 @@ export class RecibodecajaComponent implements OnInit {
                       usuario: datos.usuario,
                       saldoactual: datos.saldoactual,
                       tipospagos: this.TipoPago,
+                      codigoRI: datos.datos[0].codigo,
                       direccionc: this.clienteSeleccionado.direccion,
                       identificacion: this.clienteSeleccionado.identificacion,
                       concepto,
+                      nombreComprobanteRI: datos.nombreComprobanteRI,
                     });
 
                     this.servifactura
@@ -491,7 +494,7 @@ export class RecibodecajaComponent implements OnInit {
                       .subscribe((datos) => {
                         if (datos.estadoPeticion === 'Done') {
                           console.log(datos);
-                          // window.location.reload();
+                          window.location.reload();
                         }
                       });
                   }

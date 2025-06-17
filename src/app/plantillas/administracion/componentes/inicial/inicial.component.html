@@ -1,0 +1,91 @@
+<mat-spinner
+  [diameter]="50"
+  [strokeWidth]="3"
+  class="loader loader-fixed"
+  [class.shown]="loader"
+>
+</mat-spinner>
+<label
+  class="loader loader-text mat-text-primary"
+  style="position: fixed !important"
+  [class.shown]="loader"
+  >Espere...</label
+>
+<div>
+  <mat-card class="total-pedidos-card">
+    <div class="total-label">Cantidad total pedidos</div>
+    <div class="total-valor">{{ totalPedidosMes | number }}</div>
+  </mat-card>
+</div>
+<div class="Contenedor" style="height: 100% !important">
+  <div class="card-row">
+    <mat-card class="inicial-card">
+      <mat-card-header>
+        <mat-card-title> Total pedidos de la semana x día</mat-card-title>  
+      </mat-card-header>
+      <mat-card-content>
+        <canvas baseChart
+            [data]="barChartDataPtotal"
+            [options]="barChartOptionsPtotal"
+            [type]="barChartType">
+        </canvas>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="inicial-card">
+      <mat-card-header>
+        <mat-card-title> Top 5 de productos mas pedidos  </mat-card-title>  
+      </mat-card-header>
+        <mat-card-content>
+          <div 
+            *ngFor="let item of topProductosMasPedidos; let i = index" 
+            class="producto-button"
+            [ngClass]="{ 'top-1': i === 0 }">
+
+            <button mat-raised-button class="producto-btn">
+              <div class="producto-content">
+                <mat-icon *ngIf="i === 0" class="trofeo-icon">emoji_events</mat-icon>
+                
+                <div class="texto-producto">
+                  <span class="producto-nombre">{{ item.descripcionProducto }}</span>
+                  <span class="producto-cantidad">{{ item.cantidadProducto }} unidades</span>
+                </div>
+              </div>
+            </button>
+          </div>
+        </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="card-row">
+    <mat-card class="inicial-card">
+      <mat-card-header>
+        <mat-card-title> Cantidad pedidos semana x día</mat-card-title>  
+      </mat-card-header>
+      <mat-card-content>
+        <canvas baseChart
+          [data]="barChartDataPCantidad"
+          [options]="barChartOptionsPCantidad"
+          [type]="barChartTypeLine">
+        </canvas>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="inicial-card">
+      <mat-card-header>
+        <mat-card-title> Total Pedidos Vs Total Recaudo </mat-card-title>  
+        </mat-card-header>
+        <mat-card-content>
+          <div style="text-align: center; font-weight: bold; margin-bottom: 10px;">
+            Datos correspondientes a: {{ mesActualNombre }}
+          </div>
+          <div style="display: block;">
+          <canvas baseChart
+                  [data]="lineChartData"
+                  [options]="lineChartOptions"
+                  [type]="chartTypeL">
+          </canvas>
+        </div>
+        </mat-card-content>
+      </mat-card>
+  </div>
+</div>

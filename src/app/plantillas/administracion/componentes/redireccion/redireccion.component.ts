@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class RedireccionComponent implements OnInit {
 
   constructor(router:Router) {
-    router.navigateByUrl('admin/tienda')
+    router.navigateByUrl('admin/inicial')
    }
 
   ngOnInit(): void {

@@ -176,4 +176,34 @@ export class Socket_producto {
       { withCredentials: true }
     );
   }
+
+  cargarPedidosSemana(codigoVendedor: Number): Observable<any>{
+    return this.http.get(
+    `${environment.api}/traerPedidosPorSemana?codigoVendedor=${codigoVendedor}`,
+    {
+      withCredentials: true,
+    }
+    );
+  }
+
+  cargarTopProductosSemana(codigoVendedor: Number, top: Number): Observable<any>{
+    return this.http.get(
+      `${environment.api}/topProductosMasPedidosSemana?codigoVendedor=${codigoVendedor}&top=${top}`,
+      { withCredentials: true }
+    );
+  }
+  
+  cargarTotalPedidosMesVendedor(codigoVendedor: Number): Observable<any>{
+    return this.http.get(
+      `${environment.api}/totalPedidosVendedorMes?codigoVendedor=${codigoVendedor}`,
+      { withCredentials: true }
+    );
+  }
+
+  cargarTotalPedidosVsTRecibosIMes(codigoVendedor: Number): Observable<any>{
+    return this.http.get(
+      `${environment.api}/cargarTotalPedidosVsTotalRecibosIngresoMes?codigoVendedor=${codigoVendedor}`,
+      { withCredentials: true }
+    );
+  }
 }

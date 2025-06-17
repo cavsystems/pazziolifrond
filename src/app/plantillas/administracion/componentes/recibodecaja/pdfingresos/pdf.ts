@@ -33,7 +33,7 @@ export const generatePDFingre = async (data: any): Promise<any> => {
         break;
 
       case 'Banco':
-        pago += 'TRANS. BANCARIA' + '  ';
+        pago += 'TRANS. BANCARIA' + '(' + data.opcionBanco.nombre + ')';
 
         break;
 
@@ -360,7 +360,10 @@ export const generatePDFingre = async (data: any): Promise<any> => {
       },
 
       {
-        stack: [{ text: 'Recibo de caja' }],
+        stack: [{ text: 'Recibo de caja' },
+          {text:data.nombreComprobanteRI+data.codigoRI.toString() , fontSize:10}
+
+        ],
 
         alignment: 'right',
         width: 80,
