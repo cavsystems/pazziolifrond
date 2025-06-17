@@ -53,7 +53,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatInputModule,
     NgChartsModule,
     MatIconModule,
-
     MatDatepickerModule,
   ],
   providers: [],
