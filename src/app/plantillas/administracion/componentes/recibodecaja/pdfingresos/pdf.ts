@@ -7,7 +7,7 @@ import { Horaforma } from 'src/app/utils/formatearhora';
 //Esta línea asigna las fuentes cargadas a la instancia de pdfMake, necesario para que funcione correctamente.
 (pdfMake as any).vfs = pdfFonts;
 
-export const generatePDFingre = (data: any): any => {
+export const generatePDFingre = async (data: any): Promise<any> => {
   console.log(data);
   let pago: string = '';
   //Se crea el contenido de la tabla, con:
@@ -123,13 +123,31 @@ export const generatePDFingre = (data: any): any => {
     },
 
     {
-      text: '\u200B',
+      table: {
+        body: [
+          [
+            {
+              stack: [
+                {
+                  text: '\n\n\n\n\n\n' + '________________________',
+                  bold: true,
+                },
+                { text: 'c.c.-NIT. No' },
+              ],
+              margin: [0, 0, 0, 0],
+              verticalAlignment: 'bottom',
+            },
+          ],
+        ],
+      },
+      layout: 'noBorders',
       colSpan: 3,
       border: [true, false, true, true],
       alignment: 'left',
-      verticalAlignment: 'top',
-      lineHeight: 7,
-      height: 100, // altura fija para la celda (en puntos)
+      height: 100,
+      verticalAlignment: 'bottom',
+      lineHeight: 1.2,
+      // altura fija para la celda (en puntos)
       minHeight: 100,
     },
 
@@ -145,14 +163,18 @@ export const generatePDFingre = (data: any): any => {
   tablebody2.push([
     {
       text: 'OBSERVACION:',
-      colSpan: 9,
+      colSpan: 5,
       border: [true, true, true, true],
     },
     {},
     {},
     {},
     {},
-    {},
+    {
+      text: 'SALDO TOTAL ACTUAL:' + data.saldoactual.toLocaleString('de-DE'),
+      colSpan: 4,
+      border: [true, true, true, true],
+    },
     {},
     {},
     {},
@@ -214,33 +236,12 @@ export const generatePDFingre = (data: any): any => {
       stack: [
         { text: 'RECIBO DE', bold: true },
         {
-          text: data.recibidoDe,
-          margin: [50, 0, 0, 0],
-          fontSize: 8,
-        },
-      ],
-    }, // columna 0
-    {},
-    {},
-    {},
-    {}, // columnas 1-4 (vacías para colSpan)
-    {},
-    {}, // columna 5
-    {}, // columna 6 (vacía para colSpan)
-    {},
-
-    // cliente vacío
-  ]);
-
-  tableBody.push([
-    {
-      colSpan: 9,
-      alignment: 'left',
-      bold: true,
-      stack: [
-        { text: 'DIRECCION', bold: true },
-        {
-          text: data.direccionc,
+          text:
+            data.recibidoDe +
+            '  ' +
+            data.direccionc +
+            '  ' +
+            data.identificacion,
           margin: [50, 0, 0, 0],
           fontSize: 8,
         },
@@ -447,4 +448,13 @@ export const generatePDFingre = (data: any): any => {
     const url = URL.createObjectURL(blob);
     nuevaVentana.location.href = url;
   });
+
+  function getPdfBase64(docDefinition: any): Promise<string> {
+    return new Promise((resolve) => {
+      pdfMake.createPdf(docDefinition).getBase64((base64: string) => {
+        resolve(base64);
+      });
+    });
+  }
+  return await getPdfBase64(docDefinition);
 };

@@ -8,6 +8,7 @@ import { DatosPedido } from 'src/app/modelos/datos-peticion copy';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogoAlerta } from 'src/app/angular-material/alerta';
 import { generatePDFingre } from './pdfingresos/pdf';
+import { Recibopago } from 'src/app/angular-material/alertarecibo';
 interface banco {
   codigo: number;
   nombre: string;
@@ -53,7 +54,9 @@ export class RecibodecajaComponent implements OnInit {
     private snackBar: MatSnackBar,
     private servifactura: FacturaserviceService,
     public dialog: MatDialog
-  ) {}
+  ) {
+    this.servifactura.conectar();
+  }
   public Movimiento = [
     'Seleccione',
     'Efectivo',
@@ -461,9 +464,9 @@ export class RecibodecajaComponent implements OnInit {
                   disableClose: false,
                 });
 
-                dialogrf.afterClosed().subscribe((data) => {
+                dialogrf.afterClosed().subscribe(async (data) => {
                   if (data) {
-                    generatePDFingre({
+                    let pdf = await generatePDFingre({
                       razon: this.razon,
                       nit: this.nit,
                       direccion: this.direccion,
@@ -472,11 +475,25 @@ export class RecibodecajaComponent implements OnInit {
                       valor: datos.datos[0].valor,
                       vendedor: datos.vendedor,
                       usuario: datos.usuario,
+                      saldoactual: datos.saldoactual,
                       tipospagos: this.TipoPago,
                       direccionc: this.clienteSeleccionado.direccion,
+                      identificacion: this.clienteSeleccionado.identificacion,
                       concepto,
                     });
-                    //window.location.reload();
+
+                    this.servifactura
+                      .enviaremail({
+                        cliente: this.clienteSeleccionado,
+                        pdf: pdf,
+                        email: '',
+                      })
+                      .subscribe((datos) => {
+                        if (datos.estadoPeticion === 'Done') {
+                          console.log(datos);
+                          // window.location.reload();
+                        }
+                      });
                   }
                 });
               });
@@ -509,6 +526,14 @@ export class RecibodecajaComponent implements OnInit {
       razon: this.razon,
       nit: this.nit,
       direccion: this.direccion,
+    });
+  }
+  verrecibosdepago() {
+    const dialogref = this.dialog.open(Recibopago, {
+      width: '100%',
+      height: '100vw',
+
+      maxHeight: '90vh',
     });
   }
   trackByIndex(index: number, item: any): number {

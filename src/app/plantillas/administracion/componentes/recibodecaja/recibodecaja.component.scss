@@ -10,7 +10,7 @@
   flex-direction: column;
   width: fit-content;
   height: 100%;
-  overflow-x: auto;
+  overflow-x: hidden;
 
 }
 
@@ -36,4 +36,51 @@
     display: flex;
    
     flex-wrap: wrap !important;
+}
+
+@media (max-width:836px) {
+  .inputmetodos{
+    flex:0 0 25%;
+  }
+  
+}
+
+@media (max-width:751px) {
+  .inputmetodos{
+    flex:0 0 100%;
+  }
+
+  .tabla-scroll-tp{
+    flex:0 0 100% !important;
+   div{
+    max-width: 100% !important;
+    width:100%
+   }
+  }
+  
+}
+
+@media (max-width:572px) {
+  .tabla-scroll-tp{
+    flex:0 0 50% !important;
+
+    div{
+      max-width: 400px !important;
+     
+     }
+  
+  }
+}
+
+.generarR{
+  border: none;
+ 
+  border-radius: 10px;
+  padding: 10px;
+  transition: 1s all;
+}
+
+.generarR:active{
+  background-color: rgba(128, 139, 150 ,0.8);
+
 }

@@ -137,9 +137,15 @@
     </div>
     <div
       class="ValorPago"
-      style="margin-top: 20px; display: flex; margin-right: auto"
+      style="
+        margin-top: 20px;
+        display: flex;
+        row-gap: 10px;
+        column-gap: 10px;
+        width: 100%;
+      "
     >
-      <div>
+      <div class="inputmetodos">
         <div style="margin-top: 10px">
           <mat-label style="margin-left: 10px; margin-top: 15px"
             >Deduccion:
@@ -196,7 +202,7 @@
       </div>
       <div
         class="tabla-scroll-tp"
-        style="width: 50%; margin-top: 5px; margin-left: 0; flex-wrap: wrap"
+        style="margin-top: 5px; margin-left: 0; flex: 0 0 50%"
       >
         <div style="overflow: auto; max-width: 500px; max-height: 300px">
           <table
@@ -283,6 +289,19 @@
             {{ descuento.toLocaleString("de-DE") }}
           </mat-card-title>
         </div>
+        <div
+          style="
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            margin-top: 5px;
+            padding: 5px;
+          "
+        >
+          <button class="generarR" (click)="verrecibosdepago()">
+            Recibos de pago
+          </button>
+        </div>
       </div>
     </div>
     <div style="margin-top: 20px; margin-right: auto; display: flex">
@@ -291,6 +310,7 @@
         {{ totalRecibo.toLocaleString("de-DE") }}
       </mat-card-title>
     </div>
+
     <div
       style="display: flex; flex: 1; justify-content: space-between"
       class="botonesactions"
