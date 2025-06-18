@@ -101,4 +101,13 @@ export class FacturaserviceService {
       { withCredentials: true }
     );
   }
+
+  public totalrecibo(codigo: string): Observable<any> {
+    return this.http.get(
+      `${environment.api}/traersaldoactual?codigotercero=${codigo}`,
+      {
+        withCredentials: true,
+      }
+    );
+  }
 }

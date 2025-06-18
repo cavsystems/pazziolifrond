@@ -1,11 +1,19 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DatosAlerta } from './alerta';
+import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
+import { DatosAlerta, DialogoAlerta } from './alerta';
 import { Socket_producto } from 'src/services/socket/socket.producto.service.ts.service';
 import { UntypedFormControl } from '@angular/forms';
 import { formatearFecha } from '../utils/formaterafecha';
 import { FacturaserviceService } from 'src/services/facturaservice/facturaservice.service';
 import { formatearfechasql } from '../utils/formatearfechasql';
+import { generatePDFrecibos } from 'src/app/utils/pdfrecibo';
+import { take } from 'rxjs/operators';
+import { generatePDFrecibosgmail } from '../utils/pdfrecibogmail';
+
 @Component({
   selector: 'Recibo-alerta',
   template: `
@@ -13,7 +21,7 @@ import { formatearfechasql } from '../utils/formatearfechasql';
       class="contenedor-alert"
       style="display: flex;justify-content: center;"
     >
-      <mat-card>
+      <mat-card style="overflow:auto">
         <mat-card-header>
           <div style="display: flex; flex-direction:row;">
             <div>
@@ -97,22 +105,53 @@ import { formatearfechasql } from '../utils/formatearfechasql';
         </mat-card-header>
 
         <mat-card-content style="display:flex;">
-          <div style="width:100%">
+          <div
+            style="width: 100%;
+    min-width: 700px;
+    max-height: 200px;
+    overflow: auto;"
+          >
             <table style="width:100%">
               <thead>
-                <tr>
+                <tr class="trrecibo">
                   <td>Codigo recibo</td>
                   <td>Cliente</td>
                   <td>Vendedor</td>
                   <td>Fecha creacion</td>
+                  <td>Valor recibo</td>
+                  <td>Acciones</td>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let item of recibo">
+                <tr *ngFor="let item of recibo" class="trrecibo">
                   <td>{{ item.codigo }}</td>
                   <td>{{ item.razonSocial }}</td>
                   <td>{{ item.nombre }}</td>
                   <td>{{ formatearfechas(item.fecha) }}</td>
+                  <td>$ {{ item.Valor.toLocaleString('de-DE') }}</td>
+                  <td>
+                    <div style="display: flex;">
+                      <a
+                        mat-icon-button
+                        color="socondary"
+                        (click)="generarpdfrecibo(item)"
+                      >
+                        <img
+                          src="../../../../../assets/images/imgpdf.svg"
+                          style="color: #fe676c; width: 34px; height: 36px"
+                          class="imgicon"
+                        />
+                      </a>
+
+                      <button
+                        mat-icon-button
+                        style="color: #5db5f2"
+                        (click)="enviarcorreo(item)"
+                      >
+                        <mat-icon>forward_to_inbox</mat-icon>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -134,7 +173,7 @@ import { formatearfechasql } from '../utils/formatearfechasql';
         }
       }
 
-      tr {
+      .trrecibo {
         border: 1px solid #000;
         display: flex;
         width: 100%;
@@ -144,8 +183,14 @@ import { formatearfechasql } from '../utils/formatearfechasql';
           width: 100%;
         }
       }
+
+      .mat-dialog-container {
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
     `,
   ],
+  encapsulation: ViewEncapsulation.None,
 })
 export class Recibopago {
   id: string = '';
@@ -155,11 +200,18 @@ export class Recibopago {
   recibo: any[] = [];
   fechafinal!: Date;
   total_venta_general: number = 0;
+  nombreComprobante!: number;
+  razonsocial!: string;
+  nit!: string;
+  direccion!: string;
+
   cliente: any[] = [];
   constructor(
     public dialogRef: MatDialogRef<Recibopago>,
     private socketproduct: Socket_producto,
     private socketserviciofactura: FacturaserviceService,
+    private servifactura: FacturaserviceService,
+    public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: Array<any>
   ) {
     //this.total_venta_general = data.reduce((i, item) => (i += item.total), 0);
@@ -210,8 +262,87 @@ export class Recibopago {
       .subscribe((data) => {
         console.log(data);
         this.recibo = data.respuesta;
+        this.nombreComprobante = data.nombreComprobanteRI;
+        this.razonsocial = data.razonsocial;
+        this.nit = data.nit;
+        this.direccion = data.direccion;
         console.log(this.recibo);
       });
+  }
+
+  generarpdfrecibo(item: any) {
+    this.socketserviciofactura
+      .totalrecibo(item.codigotercero)
+      .subscribe((data) => {
+        generatePDFrecibos({
+          recibo: item,
+          nombreComprobanteRI: this.nombreComprobante,
+          saldoactual: data.respuesta[0].suma,
+          razonsocial: this.razonsocial,
+          nit: this.nit,
+          usuario: data.usuario,
+          direccion: this.direccion,
+        });
+      });
+    /* generatePDFrecibos({
+      recibo: item,
+      nombreComprobanteRI: this.nombreComprobante,
+    });*/
+  }
+
+  enviarcorreo(item: any) {
+    const dialogref = this.dialog.open(DialogoAlerta, {
+      data: {
+        boton: 'Continuar',
+        input: true,
+        boton1: 'Cancelar',
+        mensaje: 'Digite otro correo si lo desea',
+        type: 'email',
+        inputIcon: 'mail',
+        inputText: 'Ingrese correo',
+        tipo: 'info',
+      },
+      disableClose: true,
+    });
+    dialogref.afterClosed().subscribe((data: any) => {
+      if (data) {
+        this.socketserviciofactura
+          .totalrecibo(item.codigotercero)
+          .subscribe((datos) => {
+            const pdf = generatePDFrecibosgmail({
+              recibo: item,
+              nombreComprobanteRI: this.nombreComprobante,
+              saldoactual: datos.respuesta[0].suma,
+              razonsocial: this.razonsocial,
+              nit: this.nit,
+              usuario: data.usuario,
+              direccion: this.direccion,
+            });
+
+            this.servifactura
+              .enviaremail({
+                cliente: item,
+                pdf: pdf,
+                email: data,
+              })
+              .subscribe((datos: any) => {
+                if (datos.estadoPeticion === 'Done') {
+                  const dialogref = this.dialog.open(DialogoAlerta, {
+                    data: {
+                      boton: 'OK',
+                      tipo: 'done',
+                      mensaje: 'Correo enviado',
+                    },
+                    disableClose: true,
+                  });
+                  dialogref.afterClosed().subscribe((datos) => {});
+                  //console.log(datos);
+                  //window.location.reload();
+                }
+              });
+          });
+      }
+    });
   }
   displayFn(cliente: any): string {
     return cliente && cliente.razonSocial ? cliente.razonSocial : '';

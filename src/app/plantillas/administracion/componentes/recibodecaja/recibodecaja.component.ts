@@ -431,7 +431,7 @@ export class RecibodecajaComponent implements OnInit {
           let concepto = 'Cancela/Abono: ';
           let facturasabonadas = this.factura.data.filter((data: any) => {
             if (data.abono > 0 && data.selected === true) {
-              concepto += '-' + data.codigo + ' ' + data.codigoComprobante;
+              concepto += ' ' + data.codigo + ' ' + data.nombre;
               return data;
             }
           });
@@ -494,7 +494,7 @@ export class RecibodecajaComponent implements OnInit {
                       .subscribe((datos) => {
                         if (datos.estadoPeticion === 'Done') {
                           console.log(datos);
-                          window.location.reload();
+                          // window.location.reload();
                         }
                       });
                   }
