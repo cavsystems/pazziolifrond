@@ -67,6 +67,7 @@ export class TiendaComponent implements OnInit {
   identificacion: String = '';
   numeropedido: number = 0;
   id_select: string = '';
+  escanedo: boolean = false;
   formatsEnabled = [
     BarcodeFormat.EAN_13,
     BarcodeFormat.CODE_128,
@@ -78,6 +79,7 @@ export class TiendaComponent implements OnInit {
     BarcodeFormat.UPC_A,
     BarcodeFormat.RSS_14,
   ];
+  beepAudio = new Audio('assets/sounds/beep.mp3');
   sedeSeleccionada: any;
   terceroConsultado: any = null;
   codigoitemseled: number = 0;
@@ -262,15 +264,33 @@ export class TiendaComponent implements OnInit {
       this.respuestacliente();
     }
   }
-  async onCodeResult(codigo: string) {
-    console.log('Código escaneado:', codigo);
+  sonidoescaner(start: number, end: number) {
+    this.beepAudio.currentTime = start;
+    this.beepAudio.play();
 
-    await this.repuestaproductos('DESCRIPCION', codigo, false);
-    // this.descripcion.nativeElement.value = codigo;
-    this.buscarDescripcion.setValue(codigo);
-    console.log(this.productinico[0]);
-    this.elegirCantidad(this.productinico[0]);
-    // Puedes hacer algo con el valor, como buscar en tu base de datos
+    const stopAudio = () => {
+      if (this.beepAudio.currentTime >= end) {
+        this.beepAudio.pause();
+        this.beepAudio.removeEventListener('timeupdate', stopAudio);
+      }
+    };
+
+    this.beepAudio.addEventListener('timeupdate', stopAudio);
+  }
+  async onCodeResult(codigo: string) {
+    if (!this.escanedo) {
+      console.log('Código escaneado:', codigo);
+      this.escanedo = true;
+      await this.repuestaproductos('DESCRIPCION', codigo, false);
+      this.escanedo = false;
+
+      // this.descripcion.nativeElement.value = codigo;
+      this.buscarDescripcion.setValue(codigo);
+      this.sonidoescaner(0, 1.5);
+      console.log(this.productinico[0]);
+      this.elegirCantidad(this.productinico[0]);
+      // Puedes hacer algo con el valor, como buscar en tu base de datos
+    }
   }
 
   async seleccionaritem(_producto: PRODUCTO) {
@@ -847,6 +867,7 @@ export class TiendaComponent implements OnInit {
                 this.procesarproductos(info, true, buscartodo);
                 resolve();
               } else {
+                resolve();
               }
               break;
             case 'TERCERO':

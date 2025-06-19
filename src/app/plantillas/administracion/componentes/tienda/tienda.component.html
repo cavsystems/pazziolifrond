@@ -261,6 +261,18 @@
                 Pedidos por confirmar
               </button>
             </div>
+            <zxing-scanner
+              class="scanner"
+              (scanSuccess)="onCodeResult($event)"
+              [videoConstraints]="{
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+              }"
+              [formats]="formatsEnabled"
+              [tryHarder]="true"
+              style="width: 100%; height: 120px"
+              [ngClass]="escanedo ? 'escaner' : ''"
+            ></zxing-scanner>
           </div>
           <div
             style="

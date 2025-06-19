@@ -493,8 +493,7 @@ export class RecibodecajaComponent implements OnInit {
                       })
                       .subscribe((datos) => {
                         if (datos.estadoPeticion === 'Done') {
-                          console.log(datos);
-                          // window.location.reload();
+                          window.location.reload();
                         }
                       });
                   }

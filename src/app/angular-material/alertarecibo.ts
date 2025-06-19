@@ -308,8 +308,8 @@ export class Recibopago {
       if (data) {
         this.socketserviciofactura
           .totalrecibo(item.codigotercero)
-          .subscribe((datos) => {
-            const pdf = generatePDFrecibosgmail({
+          .subscribe(async (datos) => {
+            const pdf = await generatePDFrecibosgmail({
               recibo: item,
               nombreComprobanteRI: this.nombreComprobante,
               saldoactual: datos.respuesta[0].suma,
@@ -326,6 +326,7 @@ export class Recibopago {
                 email: data,
               })
               .subscribe((datos: any) => {
+                console.log(datos);
                 if (datos.estadoPeticion === 'Done') {
                   const dialogref = this.dialog.open(DialogoAlerta, {
                     data: {
