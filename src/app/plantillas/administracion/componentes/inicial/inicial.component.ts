@@ -102,7 +102,7 @@ export class InicialComponent implements OnInit {
       },
       {
         data: this.ingresosData,
-        label: 'Total Ingresos',
+        label: 'Total Recaudo',
         fill: false,
         tension: 0.3,
         borderColor: '#9dD904',
@@ -324,7 +324,7 @@ seleccionardb() {
             },
             {
               data: ingresosData,
-              label: 'Total Ingresos',
+              label: 'Total Recaudo',
               fill: false,
               tension: 0.3,
               borderColor: '#27ae60',

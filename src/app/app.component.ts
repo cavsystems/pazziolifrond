@@ -27,6 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public terceroSeleccionado: any;
   private visibilityHandler = this.handleVisibilityChange.bind(this);
   data: any;
+  mostrarItemsCartera:boolean=false;
   constructor(
     private router: Router,
     private serviauth: AuthService,
@@ -99,6 +100,17 @@ export class AppComponent implements OnInit, OnDestroy {
       this.CrearReciboIngreso=false
       this.InventarioFisico=false
       console.log("Entre a false");
+    }
+  }
+
+  mostrarSubItem(nItem:Number){
+    switch (nItem) {
+      case 1:
+        this.mostrarItemsCartera=true;
+        break;
+    
+      default:
+        break;
     }
   }
 }
