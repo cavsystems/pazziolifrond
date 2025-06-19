@@ -1,0 +1,171 @@
+<div>
+  <mat-card-title class="tituloP" style="margin-top: 15px"
+    >Inventario físico</mat-card-title
+  >
+</div>
+<div class="row loader-content" style="padding-top: 20px">
+    <div class="buscaProducto " style="height: 100% !important; width: 70%;">
+        <mat-card class="search-card"
+      style="max-width: 100%; max-height: fit-content">
+            <mat-card-header class="search">
+                <mat-card-title class="m-0">Producto</mat-card-title>
+                <!-- BUSQUEDA DE PRODUCTOS -->
+                <div class="row col-12" style="width: calc(100% - 64px)">
+                    <div class="col-6 col-log-6 col-sm-12 col-md-5">
+                        <mat-form-field appearance="fill" search>
+                        <mat-label>Filtro</mat-label>
+                        <input
+                            matInput
+                            placeholder=""
+                            [formControl]="buscarDescripcion"
+                            [matAutocomplete]="auto"
+                            #trigger="matAutocompleteTrigger"
+                            (keyup)="buscarProductos($event, 'descripcion')"
+                            id="descripcion"
+                            #descripcion
+                        />
+                        <mat-autocomplete
+                            #auto="matAutocomplete"
+                            [displayWith]="displayFn"
+                            class="mi-autocomplete-panel"
+                        >
+                            <virtual-scroller
+                            #scroll_prods
+                            [items]="opcionesFiltradas"
+                            style="height: 246px"
+                            >
+                            <mat-option
+                                *ngFor="let option of scroll_prods.viewPortItems"
+                                (keyup.enter)="elegirCantidad(option)"
+                                (click)="elegirCantidad(option)"
+                                [value]="option"
+                                class="desplegable"
+                            >
+                                {{ option.descripcion }}
+                            </mat-option>
+                            </virtual-scroller>
+                        </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-6">
+                        <mat-form-field appearance="fill" search>
+                        <mat-label style="font-size: 1rem">Ubicacion</mat-label>
+                        <input
+                            matInput
+                            #inUbicacion
+                            placeholder=""
+                            name="inputUbicacion"
+                            [(ngModel)]="ubicacion"
+                            id="ubicacion"
+                            type="string"
+                            onfocus="this.select()"
+                        />
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-6">
+                        <mat-form-field appearance="fill" search>
+                        <mat-label style="font-size: 1rem">Cantidad</mat-label>
+                        <input
+                            matInput
+                            #inCantidad
+                            placeholder=""
+                            name="inputCantidad"
+                            [(ngModel)]="cantidad"
+                            id="cantidad"
+                            type="number"
+                            onfocus="this.select()"
+                        />
+                        </mat-form-field>
+                    </div>
+                    <button
+                        mat-fab
+                        color="primary"
+                        [disabled]="productoActual.id == '_vacio'"
+                        (click)="adicionarItem(productoActual,cantidad,ubicacion)"
+                        class="add-product"
+                        >
+                    <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+            </mat-card-header>
+            <!-- PRODUCTO SELECCIONADO -->
+            <mat-card class="b-primary icon-card" style="height: 100px">
+                <mat-card-header style="border: none !important">
+                <mat-card-title class="client-name">{{
+                    productoActual.descripcion
+                }}</mat-card-title>
+                <div class="separator"></div>
+                    <mat-card-subtitle class="client-info" *ngIf="productoActual.id!=='_vacio'">
+                        <div class="row">
+                        <div class="col-6 p-0 elipsis">
+                            {{ productoActual.codigoContable }}
+                        </div>
+                        <div class="col-6 p-0 elipsis">
+                            {{ productoActual.referencia }}
+                        </div>
+                        </div>
+                    </mat-card-subtitle>
+                </mat-card-header>
+            </mat-card>
+        </mat-card>
+    </div>
+    <div class="tabla-scroll" style="width: 100%; margin-top: 10px">
+      <!--multiTemplateDataRows para abilitar las filas personalisables-->
+      <div style="overflow-x: auto">
+        <table
+          mat-table
+          [dataSource]="Productos.data"
+          class="mat-elevation-z8 col-12 tab-factura"
+         
+        >
+          <ng-container matColumnDef="codigo">
+            <th mat-header-cell *matHeaderCellDef>Item</th>
+            <td mat-cell *matCellDef="let element">
+                0
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="codigoContable">
+            <th mat-header-cell *matHeaderCellDef>CodigoContable</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.codigoContable }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="descripcion">
+            <th mat-header-cell *matHeaderCellDef>Descripcion</th>
+            <td mat-cell *matCellDef="let element">{{ element.descripcion }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="cantidad">
+            <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.cantidad }}
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="ubicacion">
+            <th mat-header-cell *matHeaderCellDef>Ubicacion</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.ubicacion }}
+            </td>
+          </ng-container>
+         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+    </div>
+    <div class="totales">
+        <mat-card class="cantidadTotalRegistros">
+            <div class="total-label">Cantidad total registros</div>
+            <div class="total-valor">{{ cantidadTotalRegistros }}</div>
+        </mat-card>
+        <mat-card class="cantidadTotalConteo">
+            <div class="total-label">Cantidad total conteo</div>
+            <div class="total-valor">{{ cantidadTotalUnidadesContadas }}</div>
+        </mat-card>
+    </div>
+</div>
