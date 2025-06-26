@@ -103,6 +103,7 @@ export class FacturaserviceService {
   }
 
   public totalrecibo(codigo: string): Observable<any> {
+    console.log("codigo",codigo)
     return this.http.get(
       `${environment.api}/traersaldoactual?codigotercero=${codigo}`,
       {
@@ -110,4 +111,11 @@ export class FacturaserviceService {
       }
     );
   }
+
+  public insertaritemsinventario(item:any):Observable<any>{
+   return this.http.post(`${environment.api}/insertariteminventario`,item,{withCredentials:true}) }
+
+   public consultaritemsiventario(pagina:number,cliente:string=''):Observable<any>{
+    return this.http.get(`${environment.api}/consultaritemsiventario?pagina=${pagina}&cliente=${cliente}`,{withCredentials:true})
+   }
 }

@@ -271,9 +271,12 @@ export class Recibopago {
   }
 
   generarpdfrecibo(item: any) {
+   console.log(item)
     this.socketserviciofactura
+   
       .totalrecibo(item.codigotercero)
       .subscribe((data) => {
+    
         generatePDFrecibos({
           recibo: item,
           nombreComprobanteRI: this.nombreComprobante,

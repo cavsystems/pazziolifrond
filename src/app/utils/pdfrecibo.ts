@@ -233,7 +233,7 @@ export const generatePDFrecibos = async (data: any): Promise<any> => {
             '  ' +
             data.recibo.direccion +
             '  ' +
-            data.nit,
+            data.recibo.identificacion,
           margin: [50, 0, 0, 0],
           fontSize: 8,
         },

@@ -70,6 +70,26 @@ export const generatePDFfa = (data: any): any => {
         {}, // cliente vacío
       ]);
       // Fila de resumen
+
+      tableBody.push([
+        { text: String(fact.codigo), noWrap: false, fontSize: 8 },
+        { text: String(fact.nombre), noWrap: false, fontSize: 8 },
+        { text: String(fact.fechaEmision), noWrap: false, fontSize: 8 },
+        { text: String(fact.fechaVencimiento), noWrap: false, fontSize: 8 },
+        { text: String(fact.dias), noWrap: false, fontSize: 8 },
+        {
+          text: String(`$${fact.totalFactura.toLocaleString('de-DE')}`),
+          noWrap: false,
+          fontSize: 8,
+        },
+        {
+          text: String(`$${fact.saldo.toLocaleString('de-DE')}`),
+          noWrap: false,
+          fontSize: 8,
+        },
+        { text: String(fact.vendedor), noWrap: false, fontSize: 8 },
+        { text: String(fact.cliente), noWrap: false, fontSize: 8 },
+      ]);
       contador++;
       item = data.respuesta[contador];
     } else {
@@ -98,6 +118,22 @@ export const generatePDFfa = (data: any): any => {
      
     }
   });
+
+  tableBody.push([
+    { text: item.cliente, colSpan: 3, alignment: 'left', bold: true },
+    {},
+    {},
+    {},
+    { text: 'Total', colSpan: 2 },
+    {},
+    {}, // vendedor vacío
+    {
+      text: `$${item.totalSaldoCliente.toLocaleString('de-DE')}`,
+      bold: true,
+    },
+
+    {}, // cliente vacío
+  ]);
   //Se calcula la suma total de todos los productos usando reduce.
 
   const totalGeneral = data.respuesta.reduce(

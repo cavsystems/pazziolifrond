@@ -223,11 +223,11 @@ export const generatePDFrecibosgmail = async (data: any): Promise<any> => {
         { text: 'RECIBO DE', bold: true },
         {
           text:
-            data.recibo.razonSocial +
-            '  ' +
-            data.recibo.direccion +
-            '  ' +
-            data.nit,
+          data.recibo.razonSocial +
+          '  ' +
+          data.recibo.direccion +
+          '  ' +
+          data.recibo.identificacion,
           margin: [50, 0, 0, 0],
           fontSize: 8,
         },

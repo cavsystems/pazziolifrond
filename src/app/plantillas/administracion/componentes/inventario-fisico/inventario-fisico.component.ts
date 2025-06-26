@@ -6,6 +6,9 @@ import { debounceTime, filter, take } from 'rxjs/operators';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { DatosAlerta, DialogoAlerta } from 'src/app/angular-material/alerta';
+import { FacturaserviceService } from 'src/services/facturaservice/facturaservice.service';
+import { MatDialog } from '@angular/material/dialog';
+import { Itemsinventario } from 'src/app/angular-material/alertaritemsinventario';
 
 export interface PRODUCTO {
   numero: number;
@@ -72,6 +75,7 @@ export class InventarioFisicoComponent implements OnInit {
 
   displayedColumns: string[] = [
     'codigo',
+    
     'codigoContable',
     'descripcion',
     'cantidad',
@@ -83,7 +87,9 @@ export class InventarioFisicoComponent implements OnInit {
 
   constructor(
     private socketServices: SocketService,
-    private socketproduct: Socket_producto
+    private socketproduct: Socket_producto,
+    private socketfacturaservi:FacturaserviceService,
+    private dialog:MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -181,18 +187,23 @@ export class InventarioFisicoComponent implements OnInit {
   async adicionarItem(item: any, cantidadItem:number, ubicacionItem: string) {
     this.productoActual.cantidad=cantidadItem;
     this.productoActual.ubicacion=ubicacionItem;
-    
-    this.Productos.data.push(this.productoActual);
-    this.Productos.data = [...this.Productos.data]; 
-
-    console.log(this.Productos.data);
-    this.opcionesFiltradas = [];
-    this.buscarDescripcion.setValue('');
-    this.cantidad=0;
-    this.cantidadTotalRegistros=this.Productos.data.length;
-    this.Productos.data.forEach((data,index) => {
-      this.cantidadTotalUnidadesContadas=this.cantidadTotalUnidadesContadas+data[index].cantidad;
-    })
+    console.log("producto actual",this.productoActual)
+    this.socketfacturaservi.insertaritemsinventario(this.productoActual).subscribe(
+      data=>{
+        if(data.response){
+          this.Productos.data.push(this.productoActual);
+          this.Productos.data = [...this.Productos.data]; 
+        
+          console.log(this.Productos.data);
+          this.opcionesFiltradas = [];
+          this.buscarDescripcion.setValue('');
+          this.cantidad=0;
+          this.cantidadTotalRegistros=this.Productos.data.length;
+          this.cantidadTotalUnidadesContadas=this.Productos.data.reduce((sum:any,data:any) => sum+data.cantidad,0)
+        }
+      }
+    )
+  
   }
 
   procesarproductos(info: any, estado: boolean, buscartodo: boolean) {
@@ -232,7 +243,15 @@ export class InventarioFisicoComponent implements OnInit {
       }
       this.loader = false;
     }
+    consultarinventario(){
+      this.dialog.open(Itemsinventario,{
+        width: '100%',
+        height: '100vw',
+   
+        maxHeight: '90vh',
+      })
 
+    }
     abrirpanel() {
     if (this.opcionesFiltradas.length > 0) {
       this.codigoitemseled = 0;

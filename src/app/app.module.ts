@@ -24,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Recibopago } from './angular-material/alertarecibo';
 import { MatFormField } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { Itemsinventario } from './angular-material/alertaritemsinventario';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     DialogoAlertaob,
     NotFoundComponentComponent,
     Recibopago,
+    Itemsinventario
   ],
   exports: [MatAutocompleteModule, HttpClientModule],
   imports: [
