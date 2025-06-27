@@ -221,6 +221,23 @@
               />
             </mat-form-field>
           </div>
+
+            <div class="col-6 col-sm-12 col-md-6 col-lg-6">
+            <mat-form-field appearance="fill" search>
+              <mat-label style="font-size: 1rem">precio</mat-label>
+              <input
+                matInput
+                #inprecio
+                placeholder=""
+                name="inputPrecio"
+                [(ngModel)]="precio"
+                id="precio"
+                type="number"
+                [disabled]="modificarPrecio === 0"
+                onfocus="this.select()"
+              />
+            </mat-form-field>
+          </div>
         </div>
         <div class="row col-12">
           <div class="col-12" style="display: flex; flex-wrap: wrap">
@@ -400,14 +417,7 @@
 
                 <!-- EDITAR O BORRAR -->
                 <div class="edit-remove">
-                  <button
-                    mat-mini-fab
-                    color="accent"
-                    class="mr-2"
-                    (click)="actulizaritems($event, _producto)"
-                  >
-                    <mat-icon>save</mat-icon>
-                  </button>
+                 
                   <button
                     mat-mini-fab
                     color="warn"

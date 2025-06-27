@@ -18,6 +18,7 @@ import { Detallespedido } from './angular-material/detallespedido';
 import { NotFoundComponentComponent } from './not-found-component/not-found-component.component';
 import { DialogoAlertaob } from './angular-material/alertaob';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { DialogoAlertaitemspedido } from './angular-material/alertaupdateitempedido';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { TextFieldModule } from '@angular/cdk/text-field';
     Detallespedido,
     DialogoAlertaob,
     NotFoundComponentComponent,
+    DialogoAlertaitemspedido
   ],
   exports: [MatAutocompleteModule, HttpClientModule],
   imports: [

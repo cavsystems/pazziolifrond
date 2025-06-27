@@ -79,6 +79,7 @@ export class TiendaComponent implements OnInit {
     BarcodeFormat.RSS_14,
   ];
   sedeSeleccionada: any;
+  modificarPrecio:number=0
   terceroConsultado: any = null;
   codigoitemseled: number = 0;
   @ViewChild('inCodigo') inCodigo!: ElementRef;
@@ -211,6 +212,7 @@ export class TiendaComponent implements OnInit {
 
   ngOnInit(): void {
     this.seleccionardb();
+
   }
 
   seleccionardb() {
@@ -223,11 +225,15 @@ export class TiendaComponent implements OnInit {
           .obteneralmacen()
           .pipe(take(1))
           .subscribe((datos) => {
+            console.log(datos)
             this.almacen = datos.almacen;
             this.configuracion = datos.config;
             this.identificacion = datos.identificacion;
             this.nombrevendedor = datos.nombre;
+             this.modificarPrecio=datos.modificarPrecio
+
           });
+          
       } else {
       }
     });
@@ -272,21 +278,43 @@ export class TiendaComponent implements OnInit {
   }
 
   async seleccionaritem(_producto: PRODUCTO) {
-    this.shoping_card2 = true;
+    //this.shoping_card2 = true;
     this.shoping_card1 = false;
+
+   
     this.codigoitemseled = Number(_producto.codigo);
     document.getElementById('p_actual')?.classList.add('active');
     await this.repuestaproductos('ID', _producto.codigo, false);
     const indexproduct = this.productinico.findIndex(
       (product) => product.codigo === _producto.codigo
     );
-    this.cantidadactual = this.productinico[indexproduct]?.cantidaddisponible;
 
-    this.productoActual = _producto;
+     this.dialog.open(DialogoAlertaitemspedido,{data:{
+      cantidaddisponible:this.productinico[indexproduct]?.cantidaddisponible,
+      descripcion:this.productinico[indexproduct]?.nombre,
+       cantidad:_producto.cantidad,
+        precio:_producto.precio,
+        modificarPrecio:this.modificarPrecio
+
+    },
+    disableClose:true
+  }).afterClosed().subscribe(
+      data=>{
+        if(data){
+        this.actulizaritems(_producto,data)
+        }else{
+           this.reiniciar();
+          this.codigoitemseled = 0;
+        }
+      }
+    )
+  //  this.cantidadactual = this.productinico[indexproduct]?.cantidaddisponible;
+
+    /*this.productoActual = _producto;
     this.precio = this.productoActual.precio;
     this.cantidad = _producto.cantidad;
 
-    this.productoActual.id = '_vacio';
+    this.productoActual.id = '_vacio';*/
   }
 
   async buscarProductos(key: any, campo: string) {
@@ -465,6 +493,7 @@ export class TiendaComponent implements OnInit {
   }
 
   elegirCantidad(_prod: any) {
+
     if (typeof _prod == 'object') {
       if (this.buscarDescripcion.value) {
         this.shoping_card1 = true;
@@ -475,7 +504,7 @@ export class TiendaComponent implements OnInit {
         this.codigo = this.productoActual.codigo;
         this.referencia = this.productoActual.referencia;
         this.cantidadactual =
-          this.productoActual['producto'][this.cantidadproducto];
+          _prod.cantidaddisponible;
         document.getElementById('cantidad')?.focus();
       } else if (this.productos.length > 0) {
         this.productoActual = this.productos[0];
@@ -577,30 +606,39 @@ export class TiendaComponent implements OnInit {
     }
   }
 
+
   async agregarProducto() {
     if (Number(this.cantidad) > 0) {
       this.opcionesFiltradas = [];
       await this.calcularProductoActual();
       this.productoActual.precio = Number(this.precio);
       this.productoActual.cantidad = Number(this.cantidad);
-
+      let cantidadVerificada=0;
       let index = this.productosMostrar.findIndex((item) => {
+    
+
         return item.codigo == this.productoActual.codigo;
       });
       if (index != -1) {
         let _cantidad = this.productosMostrar[index].cantidad + this.cantidad;
         let _precio_total = Number(_cantidad) * Number(this.precio);
-
-        this.productosMostrar[index].cantidad = _cantidad;
+      if(this.productoActual.cantidaddisponible>=_cantidad){
+              this.productosMostrar[index].cantidad = _cantidad;
         this.productosMostrar[index].precio = this.precio;
         this.productosMostrar[index].total = _precio_total;
         localStorage.setItem('pedido', JSON.stringify(this.productosMostrar));
+      }else{
+              this.openSnackBar('Supera la cantidad disponible');
+      }
+
+      
       } else {
         let options = this.productinico.findIndex((option) => {
           return option.codigo === this.productoActual.codigo;
         });
-
+          console.log(this.productinico[options])
         if (this.productinico[options].cantidaddisponible <= 0) {
+
           /* console.log(
             this.opcionesFiltradas[options]['producto'][
               `cantidad${(Number(this.almacen.slice(-1)) - 1).toString()}`
@@ -615,7 +653,7 @@ export class TiendaComponent implements OnInit {
           ) {
             this.openSnackBar('Cantidad no disponible');
           } else {
-            if (this.productinico[options].precio <= 0) {
+            if (this.productinico[options].precio <= 0  && this.precio<=0) {
               this._snackBar.open('producto sin precio', 'ok', {
                 duration: 3000,
                 verticalPosition: 'top', // ⬆️ aparece arriba
@@ -623,7 +661,9 @@ export class TiendaComponent implements OnInit {
               });
             } else {
               delete this.productoActual.producto;
-
+              if(this.precio>0){
+                this.productoActual.precio=this.precio
+              }
               let products = [...this.productosMostrar, this.productoActual];
               this.productosMostrar = products;
               localStorage.setItem('pedido', JSON.stringify(products));
@@ -653,8 +693,8 @@ export class TiendaComponent implements OnInit {
       }
     }
   }
-  async actulizaritems(e: any, product: PRODUCTO) {
-    e.stopPropagation();
+  async actulizaritems(product:PRODUCTO,  datos:any) {
+    
 
     if (this.codigoitemseled > 0) {
       if (this.codigoitemseled === Number(product.codigo)) {
@@ -670,14 +710,15 @@ export class TiendaComponent implements OnInit {
         let options = this.productos.findIndex(
           (pro) => Number(pro.codigo) === this.codigoitemseled
         );
-        if (this.productos[options].cantidaddisponible < this.cantidad) {
+        if (this.productos[options].cantidaddisponible < datos.cantidad) {
           this.openSnackBar('Cantidad no disponible');
           this.reiniciar();
           this.codigoitemseled = 0;
         } else {
-          this.productosMostrar[index].cantidad = this.cantidad;
+          this.productosMostrar[index].cantidad = datos.cantidad;
+          this.productosMostrar[index].precio=datos.precio
           this.productosMostrar[index].total =
-            Number(this.cantidad) * Number(this.precio);
+            Number(datos.cantidad) * Number(datos.precio);
           this.reiniciar();
           this.codigoitemseled = 0;
           this.totalPagar = 0;
@@ -1267,6 +1308,7 @@ import generatePDFtirilla from './pdf/pdftirilla';
 import { generatePDFemail } from './pdf/pdf';
 import { Dialog } from '@angular/cdk/dialog';
 import { DialogoAlertaob } from 'src/app/angular-material/alertaob';
+import { DialogoAlertaitemspedido } from 'src/app/angular-material/alertaupdateitempedido';
 
 @Component({
   selector: 'dialog-factura',
