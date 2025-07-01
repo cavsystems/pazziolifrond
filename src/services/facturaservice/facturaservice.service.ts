@@ -90,7 +90,17 @@ export class FacturaserviceService {
       });
     });
   }
+  public consultaritemubicacion(data:any){
+    return new Observable((obser: any) => {
+      this.socket.emit('pazzioli-pos-3', { metodo: 'CONSULTAR', consulta:'inventario',
+        datoCondicion:data
+      });
+      this.socket.on('respuestaitemsinventario', (datos: any) => {
+        obser.next(datos);
+      });
+    });
 
+  }
   public traerrecibos(
     techainicio: string,
     fechafinal: string,
@@ -117,5 +127,13 @@ export class FacturaserviceService {
 
    public consultaritemsiventario(pagina:number,cliente:string=''):Observable<any>{
     return this.http.get(`${environment.api}/consultaritemsiventario?pagina=${pagina}&cliente=${cliente}`,{withCredentials:true})
+   }
+
+   public consultaritems(pagina:number,cliente:string='',ubicacion:string=''):Observable<any>{
+    return this.http.get(`${environment.api}/consultaritems?pagina=${pagina}&descripcion=${cliente}&ubicacion=${ubicacion}`,{withCredentials:true})
+   }
+
+   public eliminaritemsinventario(body:any):Observable<any>{
+    return this.http.post(`${environment.api}/eliminariteminventario`,body,{withCredentials:true})
    }
 }

@@ -18,6 +18,7 @@ import { Detallespedido } from './angular-material/detallespedido';
 import { NotFoundComponentComponent } from './not-found-component/not-found-component.component';
 import { DialogoAlertaob } from './angular-material/alertaob';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { DialogoAlertaitemspedido } from './angular-material/alertaupdateitempedido';
 import { MatInputModule } from '@angular/material/input';
 import { NgChartsModule } from 'ng2-charts';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,6 +26,8 @@ import { Recibopago } from './angular-material/alertarecibo';
 import { MatFormField } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { Itemsinventario } from './angular-material/alertaritemsinventario';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Itemsinventariounitario } from './angular-material/alertaitemsunitario';
 
 @NgModule({
   declarations: [
@@ -36,11 +39,15 @@ import { Itemsinventario } from './angular-material/alertaritemsinventario';
     Detallespedido,
     DialogoAlertaob,
     NotFoundComponentComponent,
+    DialogoAlertaitemspedido,
     Recibopago,
-    Itemsinventario
+    Itemsinventario,
+    Itemsinventariounitario
+    
   ],
   exports: [MatAutocompleteModule, HttpClientModule],
   imports: [
+    MatCheckboxModule,
     MatTableModule,
     BrowserModule,
     AppRoutingModule,
@@ -56,6 +63,7 @@ import { Itemsinventario } from './angular-material/alertaritemsinventario';
     NgChartsModule,
     MatIconModule,
     MatDatepickerModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent],

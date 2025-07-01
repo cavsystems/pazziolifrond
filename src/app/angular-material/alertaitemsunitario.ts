@@ -19,7 +19,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { UntypedFormControl } from '@angular/forms';
 import { SocketService } from 'src/services/socket/socket.service';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { Itemsinventariounitario } from './alertaitemsunitario';
 export interface PRODUCTO {
     numero: number;
     id: string;
@@ -39,14 +38,14 @@ export interface PRODUCTO {
     ubicacion: string;
   }
 @Component({
-  selector: 'Items-inventario',
+  selector: 'Items-inventariounitario',
   template:`
   <div >
   <mat-card>
   <mat-card-header> 
-    <div   style="display: flex; justify-content: space-between; width:100%" >
+    <div  style="display: flex; justify-content: space-between; width:100%" >
                         <mat-form-field appearance="fill" search  style="flex:0 0 45%;">
-                        <mat-label>Filtro</mat-label>
+                        <mat-label>Ubicacion</mat-label>
                         <input
                             matInput
                             placeholder=""
@@ -73,20 +72,15 @@ export interface PRODUCTO {
                                 [value]="option"
                                 class="desplegable"
                             >
-                                {{ option.descripcion }}
+                                {{ option.ubicacion }}
                             </mat-option>
                             </virtual-scroller>
                         </mat-autocomplete>
                         </mat-form-field>
 
 
-                        
-                       
-                    
                         <mat-checkbox  [(ngModel)]="todo" (click)="traertodo()">todo</mat-checkbox>
-                       
                     </div>
-                     
   </mat-card-header>
   <mat-card-content>
   <div style="max-height:400px; overflow-y: auto;"  (scroll)="onScroll($event)"> 
@@ -102,7 +96,12 @@ export interface PRODUCTO {
       </ng-container>
 
     
-
+  <ng-container matColumnDef="codigo">
+        <th mat-header-cell *matHeaderCellDef>codigo</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.codigo }}
+        </td>
+      </ng-container>
       
 
       <!-- Name Column -->
@@ -120,6 +119,14 @@ export interface PRODUCTO {
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="ubicacion">
+        <th mat-header-cell *matHeaderCellDef>ubicacion</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.ubicacion }}
+        </td>
+      </ng-container>
+
+
      
 
       <ng-container matColumnDef="accionnes">
@@ -129,12 +136,13 @@ export interface PRODUCTO {
          <a
                         mat-icon-button
                         color="socondary"
-                        (click)="veritems(element.descripcion)"
+                        
                       >
                         <img
-                          src="../../../../../assets/images/imegenlupa.svg"
+                          src="../../../../../assets/images/delete_button.svg"
                           style=" width: 30px; height: 33px"
                           class="imgicon"
+                          (click)="anularitem(element.codigo)"
                         />
                       </a>
         
@@ -149,7 +157,8 @@ export interface PRODUCTO {
   </div> ` ,
   styles:[``],
 })
-export class Itemsinventario {
+export class Itemsinventariounitario {
+    todo:boolean=true;
   public pedido: [] = [];
   public numero: number = 0;
   public otrocorreo: string = '';
@@ -157,7 +166,7 @@ export class Itemsinventario {
   public registros_max = 15;
   public pagina: number = 1;
   public descripcio: string = '';
-  todo:boolean=true;
+  ubicacion:string='';
   descrip:string='';
   loading: boolean = false;
   opcionesFiltradas: any[] = [];
@@ -168,52 +177,58 @@ export class Itemsinventario {
   cantidadregistros: number = 0;
   displayedColumns: string[] = [
     'item',
+    'codigo',
      'descripcion',
     'cantidad',
+    'ubicacion',
     'accionnes',
     
   ];
 
   constructor(
-     public dialogRef: MatDialogRef<Itemsinventario>,
+     public dialogRef: MatDialogRef<Itemsinventariounitario>,
      private socketproduct: Socket_producto,
      private socketserviciofactura: FacturaserviceService,
      private servifactura: FacturaserviceService,
      public dialog: MatDialog,
        private socketServices: SocketService,
-     @Inject(MAT_DIALOG_DATA) public data: Array<any>
- 
+     @Inject(MAT_DIALOG_DATA) public data:any
   ) {
-    this.consultaritemsiventario();
+    console.log('data',this.data.itemsinven)
+    this.consultaritemsiventario(this.data.itemsinven);
+    this.servifactura.conectar()
   }
  displayFn(_prod: PRODUCTO): string {
-    return _prod && _prod.descripcion ? _prod.descripcion : '';
+    return _prod && _prod.ubicacion ? _prod.ubicacion : '';
   }
-traertodo(){
-  if(!this.todo){
-    this.pagina=1;
-    this.descrip='';
-    this.buscarDescripcion.setValue('');
-  
-    this.consultaritemsiventario();
-  }else{
-    this.items.data=[];
-    this.cantidadregistros=0;
+
+  traertodo(){
+    if(!this.todo){
+      this.pagina=1;
+      this.descrip='';
+      this.buscarDescripcion.setValue('');
+    
+      this.consultaritemsiventario(this.data.itemsinven);
+    }else{
+      this.items.data=[];
+      this.cantidadregistros=0;
+    }
   }
-}
-   consultaritemsiventario(){
-    this.socketserviciofactura.consultaritemsiventario(this.pagina).pipe(take(1)).subscribe(data=>{
+   consultaritemsiventario(descrip:string){
+    this.socketserviciofactura.consultaritems(this.pagina,descrip).pipe(take(1)).subscribe(data=>{
         this.items.data=data.respuesta
      this.cantidadregistros=data.nregistros.suma
     })
    }
    buscaritem(data:any){
-  this.descrip=this.buscarDescripcion.value.descripcion
-  this.pagina=1;
+  this.ubicacion=this.buscarDescripcion.value.ubicacion;
   this.todo=false;
- this.socketserviciofactura.consultaritemsiventario(this.pagina,this.descrip).pipe(take(1)).subscribe(
+  this.pagina=1;
+ this.socketserviciofactura.consultaritems(this.pagina,this.data.itemsinven,this.ubicacion).pipe(take(1)).subscribe(
     (data:any)=>{
+        console.log("datainventario",data)
         this.items.data=data.respuesta
+        this.cantidadregistros=data.nregistros.suma
         this.items.data = [...this.items.data]; 
         console.log("items",this.items.data)
     }
@@ -244,32 +259,18 @@ traertodo(){
     }
   }
 
-veritems(itemsinven:string){
-  const dialog=this.dialog.open(Itemsinventariounitario, {
-    data:{
-      itemsinven:itemsinven
 
-    }
-  })
-
-  dialog.afterClosed().subscribe((result: any) => {
-   this.pagina=1;
-    this.socketserviciofactura.consultaritemsiventario(this.pagina,this.descrip).pipe(take(1)).subscribe(
-      (data:any)=>{
-          this.items.data=data.respuesta
-          this.items.data = [...this.items.data]; 
-          console.log("items",this.items.data)
-      })
-    
-  });
-}
   async buscarProductos(key: any, campo: string) {
     console.log("entre a buscarProductos")
-    await this.repuestaproductos(
+    this.servifactura.consultaritemubicacion( this.buscarDescripcion.value).subscribe((data:any)=>{
+        console.log("data",data)
+        this.opcionesFiltradas= data.respuesta
+    })
+    /*await this.repuestaproductos(
       'DESCRIPCION',
       this.buscarDescripcion.value,
       true
-    );
+    );*/
   }
 
 
@@ -322,7 +323,23 @@ veritems(itemsinven:string){
         });
     });
   }
-
+  anularitem(element:number){
+    this.socketserviciofactura.eliminaritemsinventario({codigo:element}).pipe(take(1)).subscribe(
+      (data:any)=>{
+     
+       if(data.response){
+        this.pagina=1;
+        this.socketserviciofactura.consultaritems(this.pagina,this.data.itemsinven,this.ubicacion).pipe(take(1)).subscribe(
+            (data:any)=>{
+                console.log("datainventario",data)
+                this.items.data=data.respuesta
+                this.cantidadregistros=data.nregistros.suma
+                this.items.data = [...this.items.data]; 
+                console.log("items",this.items.data)
+            })
+       }
+  })
+}
   procesarproductos(info: any, estado: boolean, buscartodo: boolean) {
         if (estado) {
             this.opcionesFiltradas  = info.mensajePeticion.map((producto: any) => {
@@ -368,6 +385,3 @@ veritems(itemsinven:string){
         }
       }
 }
-
-
-
