@@ -734,7 +734,7 @@ export class TiendaComponent implements OnInit {
         let options = this.productos.findIndex(
           (pro) => Number(pro.codigo) === this.codigoitemseled
         );
-        if (this.productos[options].cantidaddisponible < datos.cantidad) {
+        if (this.productos[options].cantidaddisponible < datos.cantidad && this.ventaNegativo===0) {
           this.openSnackBar('Cantidad no disponible');
           this.reiniciar();
           this.codigoitemseled = 0;
