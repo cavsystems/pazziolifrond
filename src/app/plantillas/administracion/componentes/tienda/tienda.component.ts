@@ -91,7 +91,7 @@ export class TiendaComponent implements OnInit {
   @ViewChild('inCantidad') inCantidad!: ElementRef;
   @ViewChild('inPrecio') inPrecio!: ElementRef;
   @ViewChild('descripcion') descripcion!: ElementRef;
-
+   ventaNegativo:number=0;
   clientes: any[] = [];
   clientesIniciales: any[] = [];
   productinico: PRODUCTO[] = [];
@@ -235,6 +235,7 @@ export class TiendaComponent implements OnInit {
             this.identificacion = datos.identificacion;
             this.nombrevendedor = datos.nombre;
              this.modificarPrecio=datos.modificarPrecio
+            this.ventaNegativo=datos. ventaEnNegativo
 
           });
           
@@ -644,7 +645,7 @@ export class TiendaComponent implements OnInit {
       if (index != -1) {
         let _cantidad = this.productosMostrar[index].cantidad + this.cantidad;
         let _precio_total = Number(_cantidad) * Number(this.precio);
-      if(this.productoActual.cantidaddisponible>=_cantidad){
+      if(this.productoActual.cantidaddisponible>=_cantidad || this.ventaNegativo>0){
               this.productosMostrar[index].cantidad = _cantidad;
         this.productosMostrar[index].precio = this.precio;
         this.productosMostrar[index].total = _precio_total;
@@ -659,7 +660,7 @@ export class TiendaComponent implements OnInit {
           return option.codigo === this.productoActual.codigo;
         });
           console.log(this.productinico[options])
-        if (this.productinico[options].cantidaddisponible <= 0) {
+        if (this.productinico[options].cantidaddisponible <= 0  && this.ventaNegativo===0) {
 
           /* console.log(
             this.opcionesFiltradas[options]['producto'][
@@ -671,8 +672,9 @@ export class TiendaComponent implements OnInit {
         } else {
           if (
             this.productinico[options].cantidaddisponible <
-            this.productoActual.cantidad
+            this.productoActual.cantidad  && this.ventaNegativo===0
           ) {
+            console.log("hhjjjjj",this.ventaNegativo)
             this.openSnackBar('Cantidad no disponible');
           } else {
             if (this.productinico[options].precio <= 0  && this.precio<=0) {
@@ -1267,9 +1269,14 @@ export class TiendaComponent implements OnInit {
         fecha: this.fechahora,
       })
       .subscribe((datos) => {
+        console.log("datosemail",datos)
         if (datos.estadoPeticion === 'Done') {
+        
           this.deleteAll();
+        }else{
+            this.deleteAll();
         }
+
       });
     /*const dialogRef = this.dialog.open(DialogFactura, {
       data: {

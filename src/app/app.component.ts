@@ -40,6 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.mode.value = this.serviauth.mode.value;
     this.serviciodb.tienesedeselccionada().subscribe((data) => {
       this.data = data;
+      console.log("data",data)
         this.opcionesMostrar(data)
       
     });
@@ -89,10 +90,30 @@ export class AppComponent implements OnInit, OnDestroy {
   opcionesMostrar(datos:any){
     console.log("Verificando opciones a mostrar");
     if(datos?.response){
+      let permisoscadena:string[]
+      let permisos=JSON.parse(datos.permisos);
+      permisoscadena=permisos.map((permiso:any)=>{return permiso.permiso})
+  console.log("permisoscadena",permisoscadena)
       this.TomarPedidos=true
       this.ConsultarCartera=true
       this.CrearReciboIngreso=true
       this.InventarioFisico=true
+
+      if(!permisoscadena.includes("TOMAR_PEDIDO")){
+        this.TomarPedidos=false
+      }
+      
+            if(!permisoscadena.includes("INVENTARIO FISICO")){
+        this.InventarioFisico=false
+      }
+      if(!permisoscadena.includes("CREAR INGRESOS")){
+      
+        this.CrearReciboIngreso=false
+      }
+
+       if(!permisoscadena.includes("CXC")){
+        this.ConsultarCartera=false
+      }
       console.log("Entre a true");
     }else{
       this.TomarPedidos=false
@@ -113,4 +134,9 @@ export class AppComponent implements OnInit, OnDestroy {
         break;
     }
   }
+
+  verificarItemMenuAVisualizar(){
+
+  }
+
 }

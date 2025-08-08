@@ -28,7 +28,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { Itemsinventario } from './angular-material/alertaritemsinventario';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Itemsinventariounitario } from './angular-material/alertaitemsunitario';
-
+import { Dialogitemscartera } from './plantillas/administracion/componentes/cartera/cartera.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +42,8 @@ import { Itemsinventariounitario } from './angular-material/alertaitemsunitario'
     DialogoAlertaitemspedido,
     Recibopago,
     Itemsinventario,
-    Itemsinventariounitario
+    Itemsinventariounitario,
+    Dialogitemscartera
     
   ],
   exports: [MatAutocompleteModule, HttpClientModule],

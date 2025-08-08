@@ -64,6 +64,12 @@ export class FacturaserviceService {
     );
   }
 
+  traeritemsfactura(row:any):Observable<any>{
+    return this.http.get(`${environment.api}/traeritemsfactura?codigo=${row.codigo}&codigoComprobante=${row.codigoComprobante}`, {
+      withCredentials: true,
+    });
+  }
+
   facturapdf(): Observable<any> {
     return this.http.get(`${environment.api}/pdffactura`, {
       withCredentials: true,

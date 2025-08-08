@@ -18,7 +18,7 @@
     <mat-list-item role="listitem" class="listitem" *ngIf="TomarPedidos">
       <a matButton routerLink="/admin/tienda" (click)="drawer.close()" class="botones-navegacion" style="display:flex; justify-content:center;"><mat-icon>shopping_cart</mat-icon>Tomar pedidos</a>
     </mat-list-item>
-    <mat-list-item role="listitem"  class="listitem" *ngIf="ConsultarCartera">
+    <mat-list-item role="listitem"  class="listitem" *ngIf="ConsultarCartera || CrearReciboIngreso">
       <a matButton (click)="mostrarSubItem(1)" class="botones-navegacion"  style="display:flex; justify-content:center;" ><mat-icon>wallet</mat-icon>Cartera</a>
     </mat-list-item>
     <div *ngIf="mostrarItemsCartera === true" class="subitem">
@@ -27,7 +27,7 @@
           <a matButton routerLink="/admin/cartera" (click)="drawer.close(); mostrarItemsCartera=false" class="botones-navegacion"  style="display:flex; justify-content:center;" ><mat-icon>wallet</mat-icon>Consultar Cartera</a>
         </mat-list-item>
       </mat-list>
-      <mat-list-item role="listitem" class="listitem" *ngIf="CrearReciboIngreso">
+      <mat-list-item role="listitem" class="listitem" *ngIf="CrearReciboIngreso && data.codigoComprobanteReciboIngreso>0">
         <a matButton routerLink="/admin/recibodecaja" (click)="drawer.close(); mostrarItemsCartera=false" class="botones-navegacion"  style="display:flex; justify-content:center;"><mat-icon>receipt_long</mat-icon>Recibo caja</a>
       </mat-list-item>
     </div>

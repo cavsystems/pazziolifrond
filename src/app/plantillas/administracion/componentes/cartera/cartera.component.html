@@ -127,12 +127,12 @@
 
           <ng-container matColumnDef="codigo">
             <th mat-header-cell *matHeaderCellDef>Número</th>
-            <td mat-cell *matCellDef="let element">{{ element.codigo }}</td>
+            <td mat-cell *matCellDef="let element"  >{{ element.codigo }}</td>
           </ng-container>
 
           <ng-container matColumnDef="codigoComprobante">
             <th mat-header-cell *matHeaderCellDef>Cte</th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" >
               {{ element.nombre }}
             </td>
           </ng-container>
@@ -220,10 +220,12 @@
             mat-row
             *matRowDef="let row; columns: displayedColumns; when: isRegularRow"
             [ngClass]="{ 'fila-resumen': row.isResumen }"
+             (click)="verificaritemsfactura(row)"
           ></tr>
           <tr
             mat-row
             *matRowDef="let row; columns: ['customResumen']; when: isResumenRow"
+           
           ></tr>
         </table>
       </div>

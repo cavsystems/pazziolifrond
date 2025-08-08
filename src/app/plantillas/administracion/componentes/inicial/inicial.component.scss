@@ -70,6 +70,15 @@
   flex-wrap: wrap;
 }
 
+.producto2-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  flex-wrap: wrap;
+max-height: 30px;
+}
+
 .trofeo-icon {
   color: #d4ac0d;
   font-size: 24px;

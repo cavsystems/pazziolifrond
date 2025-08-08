@@ -23,7 +23,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
               matInput
               type="text"
               id="Valor"
-             [disabled]="modificarPrecio===0"
+             [disabled]="modificarPrecio===1"
               [(ngModel)]=this.precio
               
             ></textarea>

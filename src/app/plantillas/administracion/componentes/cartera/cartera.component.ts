@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/services/auth/auth.service';
@@ -6,6 +6,8 @@ import { FacturaserviceService } from 'src/services/facturaservice/facturaservic
 import { Socket_producto } from 'src/services/socket/socket.producto.service.ts.service';
 import { SocketService } from 'src/services/socket/socket.service';
 import { generatePDFfa } from './pdf_cartera/pdf';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-cartera',
@@ -64,7 +66,9 @@ export class CarteraComponent implements OnInit {
     private servifactura: FacturaserviceService,
     private route: ActivatedRoute,
     private serviouth: AuthService,
-    private router: Router
+       public dialog: MatDialog,
+    private router: Router,
+     private platform: Platform,
   ) {
     this.serviouth.obtenernivel().subscribe((data) => {
       console.log(data);
@@ -110,6 +114,22 @@ export class CarteraComponent implements OnInit {
           });
       }
     });
+  }
+
+
+
+  verificaritemsfactura(row:any){
+    console.log("row data",row);
+   this.servifactura.traeritemsfactura(row).subscribe((data) => {
+     const dialogRef = this.dialog.open(Dialogitemscartera, {
+      width: this.platform.is('desktop') ? '60%' : '100%',
+      
+      data:{
+        respuesta:data.respuesta,
+        factura:row
+      }
+     })
+    })
   }
   autocompletarinputclient() {
     if (this.cliente === '') {
@@ -281,4 +301,70 @@ export class CarteraComponent implements OnInit {
       }
     }
   }
+}
+
+@Component({
+  selector: 'dialogitemscartera',
+  templateUrl: 'dialogs/Dialogitems.html',
+  styles: [`.mat-column-Presentacion {
+  width: 10%;
+  max-width: 10%;
+}
+  
+.mat-column-Cantidad {
+  width: 5%;
+  max-width: 5%;
+}
+  
+.mat-column-Precioproducto {
+  width: 10%;
+  max-width: 10%;
+}
+  
+.mat-column-TotalItem  {
+  width: 30%;
+  max-width: 30%;
+}
+  
+table{
+
+min-width: 700px;}
+
+.mat-dialog-container{
+  padding: 0px !important;
+}
+
+.containertable{
+height:fit-content;
+  overflow: auto;
+max-width: 800px;
+border-radius: 10px;
+box-shadow: 5px 0px 10px 5px rgba(0, 0, 0, 0.1);
+max-height:450px;
+
+}
+`],
+})
+ export class Dialogitemscartera{
+  displayedColumns: string[] = [
+    'Item',
+    'Descripcion',
+    'Presentacion',
+    'Cantidad',
+    'Precioproducto',
+    'TotalItem',
+
+  ];
+  constructor(
+      public dialogRef: MatDialogRef<any>,
+      @Inject(MAT_DIALOG_DATA) public data: any,
+      private servisocket: Socket_producto,
+      private platform: Platform,
+      private route: Router
+    ) {
+
+      console.log("data",data);
+    }
+  
+
 }
