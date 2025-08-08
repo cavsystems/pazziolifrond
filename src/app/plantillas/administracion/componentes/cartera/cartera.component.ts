@@ -283,10 +283,13 @@ export class CarteraComponent implements OnInit {
           imagen: null,
           ciudad: '',
         };
-
-        this.total_registros = data.nregistros;
+        if (data.respuesta.length > 0) {
+             this.total_registros = data.nregistros;
         this.totalCartera = data.saldo;
-        this.factura.data = this.generafilaresume(data.respuesta);
+        this.factura.data = this.generafilaresume(data.respuesta)
+        }
+
+       ;
 
         // this.router.navigate(['admin/cartera'], { queryParams: { pagina: 1 } });
       });
