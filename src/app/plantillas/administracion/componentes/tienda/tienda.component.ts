@@ -770,6 +770,8 @@ export class TiendaComponent implements OnInit {
         let filteredItems = this.productosMostrar.filter(
           (item) => id !== item.codigo
         );
+
+        localStorage.setItem('pedido', JSON.stringify(filteredItems));
         this.productosMostrar = [...filteredItems];
         this.totalPagar = 0;
         this.productosMostrar.forEach((producto) => {
