@@ -45,6 +45,10 @@ export interface PRODUCTO {
   tasaiva: string;
   presentacion: string;
   cantidaddisponible: number;
+  costo:number,
+   codigoMedida:number,
+   codigoLinea:number,
+   descuento:number
   [key: string]: any;
 }
 @Component({
@@ -164,6 +168,7 @@ export class TiendaComponent implements OnInit {
     codigo: 0,
     imagen: null,
     ciudad: '',
+    plazo:  0,
   };
   sede: string = '';
 
@@ -182,6 +187,11 @@ export class TiendaComponent implements OnInit {
     tasaiva: '',
     presentacion: '',
     cantidaddisponible: 0,
+      costo: 0,
+   codigoMedida: 0,
+   codigoLinea: 0,
+   descuento: 0,
+  
   };
   cantidadactual: number = 0;
   cantidad: number = 0;
@@ -210,7 +220,8 @@ export class TiendaComponent implements OnInit {
     private socketservidbs: serviciodb,
     private socketproduct: Socket_producto,
     private serviauth: AuthService,
-    private router: Router
+    private router: Router,
+    private facturaservice: FacturaserviceService,
   ) {}
 
   ngOnInit(): void {
@@ -372,6 +383,10 @@ export class TiendaComponent implements OnInit {
       tasaiva: '',
       presentacion: '',
       cantidaddisponible: 0,
+        costo: 0,
+   codigoMedida: 0,
+   codigoLinea:0,
+   descuento:0
     };
     this.codigo = '';
     this.referencia = '';
@@ -591,6 +606,7 @@ export class TiendaComponent implements OnInit {
       codigo: 0,
       imagen: null,
       ciudad: '',
+      plazo: 0 ,
     };
     localStorage.removeItem('pedido');
     this.reiniciar();
@@ -610,6 +626,7 @@ export class TiendaComponent implements OnInit {
               codigo: 0,
               imagen: null,
               ciudad: '',
+              plazo: 0,
             };
           });
       }
@@ -781,7 +798,140 @@ export class TiendaComponent implements OnInit {
       }
     });
   }
+crearfactura(){
 
+   if (this.productosMostrar.length <= 0) {
+      const data: DatosAlerta = {
+        titulo: 'ERROR',
+        mensaje: 'Primero debe ingresar un producto.',
+        boton: 'OK',
+        tipo: 'error',
+        input: false,
+      };
+      this.openDialogAlerta(data);
+      return;
+    } else if (this.clienteSeleccionado.codigo <= 0) {
+      const data: DatosAlerta = {
+        titulo: 'ERROR',
+        mensaje: 'Seleccione un cliente primero.',
+        boton: 'OK',
+        tipo: 'error',
+        input: false,
+      };
+      this.openDialogAlerta(data);
+      return;
+    } else if (this.clienteSeleccionado.email == '') {
+      const data: DatosAlerta = {
+        titulo: 'VERIFICAR',
+        mensaje: 'Ingrese un correo para enviar el recibo de factura al cliente.',
+        boton: 'ENVIAR',
+        boton1: 'CANCELAR',
+        tipo: 'info',
+        input: true,
+        inputIcon: 'alternate_email',
+        inputText: 'Correo',
+        type: 'email',
+      };
+      this.openDialogAlerta(data);
+      return;
+    } else {
+      /*const respon: DatosAlerta = {
+				titulo: 'realizado',
+				mensaje: 'pedido creado ',
+				boton: "OK",
+				tipo: "info",
+				input: false
+			}
+			this.openDialogAlerta(respon);*/
+      const dialogref = this.dialog.open(DialogoAlerta, {
+        data: {
+          boton: 'Confirmar',
+          boton1: 'Cancelar',
+          tipo: 'question',
+          mensaje: 'Confirma realizar este pedido?',
+        },
+        disableClose: true,
+      });
+      dialogref.afterClosed().subscribe((datos) => {
+        if (datos) {
+          this.facturarPedido();
+        }
+      });
+    }
+  
+  
+}
+
+facturarPedido(){
+    this.dialog
+      .open(DialogoAlertaob, {
+        data: {
+          boton: 'Continuar',
+          mensaje: 'Escribe información más detallada sobre el pedido',
+          tipo: 'question',
+          input: true,
+          type: 'text',
+          inputText: 'Ingresa observación',
+        },
+        disableClose: false,
+      })
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((data) => {
+        if (!data) return; // Evita continuar si el usuario cerró el diálogo sin escribir
+
+        this.enviarFacturaObservacion(data);
+      });
+}
+enviarFacturaObservacion(observacion:string){
+    this.loader = true;
+    this.totalPagar = 0;
+
+    let fechaActual = this.obtenerFechaHora();
+    this.fechahora = `${fechaActual.diaActual} ${fechaActual.horaActual}`;
+   console.log("productos",this.productosMostrar[0])
+   console.log(this.clienteSeleccionado)
+    let itemsPedidos = this.productosMostrar.map((producto) => {
+      this.totalPagar += producto.total;
+      return {
+        codigoProducto: producto.codigo,
+        valor: producto.precio,
+        cantidad: producto.cantidad,
+        nombre: producto.nombre,
+        precio: producto.precio,
+        total: producto.total,
+        tasaiva: producto.tasaiva,
+        referencia: producto.referencia,
+        costo: producto.costo,
+        codigoMedida: producto.codigoMedida,
+       codigoLinea:producto.codigoLinea,
+       codigoContable:producto.codigoContable,
+      presentacion:producto.presentacion,
+       descuento:producto.descuento,
+        codigoUsuario: this.clienteSeleccionado.codigo,
+      };
+    });
+   let pedido={
+    tercero:this.clienteSeleccionado,
+    itemsPedidos,
+    totalPagar: this.totalPagar,
+    observacion,
+   }
+
+   this.facturaservice.realizarfactura(pedido).pipe(take(1)).subscribe((data) => {
+      this.loader = false;})
+    /*let pedido = new DatosPedido(
+      this.clienteSeleccionado.codigo,
+      fechaActual.diaActual,
+      fechaActual.horaActual,
+      this.clienteSeleccionado.codigo,
+      this.totalPagar,
+      this.id_select,
+      observacion
+    );*/
+
+
+}
   calcularProductoActual(): Promise<number> {
     return new Promise((resolve, err) => {
       let _precio_total = Number(this.cantidad) * Number(this.precio);
@@ -837,6 +987,7 @@ export class TiendaComponent implements OnInit {
     this.clienteSeleccionado.codigo = cliente.codigo;
     this.clienteSeleccionado.imagen = cliente.imagen || null;
     this.clienteSeleccionado.ciudad = cliente.municipio;
+    this.clienteSeleccionado.plazo = cliente.plazo || 0;
     this.buscarCliente = '';
     this.clientes = [];
     this.socketServices.guardarcliente(cliente).subscribe();
@@ -946,6 +1097,10 @@ export class TiendaComponent implements OnInit {
           tasaiva: producto.tasaIva,
           presentacion: producto.presentacion,
           cantidaddisponible: producto.cantidad,
+            costo:producto.costo,
+   codigoMedida:producto.codigoMedida,
+   codigoLinea:producto. codigoLinea,
+   descuento:producto.descuento
         };
       });
       this.productinico = this.productos;
@@ -1116,6 +1271,7 @@ export class TiendaComponent implements OnInit {
         total: producto.total,
         tasaiva: producto.tasaiva,
         referencia: producto.referencia,
+         descuento:producto.descuento,
         codigoUsuario: this.clienteSeleccionado.codigo,
       };
     });
@@ -1342,6 +1498,7 @@ import { Dialog } from '@angular/cdk/dialog';
 import { DialogoAlertaob } from 'src/app/angular-material/alertaob';
 import { DialogoAlertaitemspedido } from 'src/app/angular-material/alertaupdateitempedido';
 import { AuthService } from 'src/services/auth/auth.service';
+import { FacturaserviceService } from 'src/services/facturaservice/facturaservice.service';
 
 @Component({
   selector: 'dialog-factura',

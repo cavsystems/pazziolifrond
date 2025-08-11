@@ -142,4 +142,11 @@ export class FacturaserviceService {
    public eliminaritemsinventario(body:any):Observable<any>{
     return this.http.post(`${environment.api}/eliminariteminventario`,body,{withCredentials:true})
    }
+
+
+   public realizarfactura(data: any): Observable<any> {
+    return this.http.post(`${environment.api}/realizarfactura`, data, {
+      withCredentials: true,
+    });
+  }
 }
