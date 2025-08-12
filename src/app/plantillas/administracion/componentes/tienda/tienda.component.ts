@@ -48,7 +48,9 @@ export interface PRODUCTO {
   costo:number,
    codigoMedida:number,
    codigoLinea:number,
-   descuento:number
+   descuento:number,
+   costoPromedio:number,
+   codigoGrupo:number
   [key: string]: any;
 }
 @Component({
@@ -191,6 +193,8 @@ export class TiendaComponent implements OnInit {
    codigoMedida: 0,
    codigoLinea: 0,
    descuento: 0,
+   costoPromedio:0,
+   codigoGrupo:0
   
   };
   cantidadactual: number = 0;
@@ -386,7 +390,9 @@ export class TiendaComponent implements OnInit {
         costo: 0,
    codigoMedida: 0,
    codigoLinea:0,
-   descuento:0
+   descuento:0,
+   costoPromedio: 0,
+   codigoGrupo: 0
     };
     this.codigo = '';
     this.referencia = '';
@@ -908,6 +914,8 @@ enviarFacturaObservacion(observacion:string){
        codigoContable:producto.codigoContable,
       presentacion:producto.presentacion,
        descuento:producto.descuento,
+       costoPromedio:producto.costoPromedio,
+   codigoGrupo:producto.codigoGrupo,
         codigoUsuario: this.clienteSeleccionado.codigo,
       };
     });
@@ -919,7 +927,31 @@ enviarFacturaObservacion(observacion:string){
    }
 
    this.facturaservice.realizarfactura(pedido).pipe(take(1)).subscribe((data) => {
-      this.loader = false;})
+
+   
+
+      this.dialog
+      .open(DialogoAlertaob, {
+        data: {
+          boton: 'Continuar',
+          mensaje: data.mensaje,
+          tipo: 'question',
+        
+        },
+        disableClose: false,
+      })
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((data) => {
+        if (!data) return; // Evita continuar si el usuario cerró el diálogo sin escribir
+         
+        this.deleteAll();
+      });
+
+    },
+    (error)=>{
+          this.loader = false;
+    })
     /*let pedido = new DatosPedido(
       this.clienteSeleccionado.codigo,
       fechaActual.diaActual,
@@ -1100,7 +1132,9 @@ enviarFacturaObservacion(observacion:string){
             costo:producto.costo,
    codigoMedida:producto.codigoMedida,
    codigoLinea:producto. codigoLinea,
-   descuento:producto.descuento
+   descuento:producto.descuento,
+   costoPromedio:producto.costoPromedio,
+   codigoGrupo:producto. codigoGrupo
         };
       });
       this.productinico = this.productos;
@@ -1272,6 +1306,8 @@ enviarFacturaObservacion(observacion:string){
         tasaiva: producto.tasaiva,
         referencia: producto.referencia,
          descuento:producto.descuento,
+         costoPromedio:producto.costoPromedio,
+   codigoGrupo:producto. codigoGrupo,
         codigoUsuario: this.clienteSeleccionado.codigo,
       };
     });
