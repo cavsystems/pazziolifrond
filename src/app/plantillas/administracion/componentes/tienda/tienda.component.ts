@@ -942,9 +942,11 @@ enviarFacturaObservacion(observacion:string){
       })
       .afterClosed()
       .pipe(take(1))
-      .subscribe((data) => {
-        if (!data) return; // Evita continuar si el usuario cerró el diálogo sin escribir
-         
+      .subscribe(async (dat) => {
+        if (!dat) return; // Evita continuar si el usuario cerró el diálogo sin escribir
+         console.log(data)
+         let cliente=this.clienteSeleccionado
+         await generatePDFfactura({...data,productos:itemsPedidos,cliente})
         this.deleteAll();
       });
 
@@ -1535,6 +1537,7 @@ import { DialogoAlertaob } from 'src/app/angular-material/alertaob';
 import { DialogoAlertaitemspedido } from 'src/app/angular-material/alertaupdateitempedido';
 import { AuthService } from 'src/services/auth/auth.service';
 import { FacturaserviceService } from 'src/services/facturaservice/facturaservice.service';
+import generatePDFfactura from './pdf/pdffactura';
 
 @Component({
   selector: 'dialog-factura',

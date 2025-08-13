@@ -96,6 +96,15 @@ export class FacturaserviceService {
       });
     });
   }
+
+  public enviaremailfactura(data: any): Observable<any> {
+    return new Observable((obser: any) => {
+      this.socket.emit('pazzioli-pos-3', { metodo: 'EMAILFACTURA', data });
+      this.socket.on('estadocorreoingreso', (datos: any) => {
+        obser.next(datos);
+      });
+    });
+  }
   public consultaritemubicacion(data:any){
     return new Observable((obser: any) => {
       this.socket.emit('pazzioli-pos-3', { metodo: 'CONSULTAR', consulta:'inventario',
