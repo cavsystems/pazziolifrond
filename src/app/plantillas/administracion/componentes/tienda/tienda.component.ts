@@ -207,7 +207,7 @@ export class TiendaComponent implements OnInit {
   suscripcionSocket!: Subscription;
 
   loader: boolean = true;
-
+ facturarPedidos:number=0;
   pdf: any;
   enterPrecio: any = 0;
   subscri: any;
@@ -251,6 +251,7 @@ export class TiendaComponent implements OnInit {
             this.nombrevendedor = datos.nombre;
              this.modificarPrecio=datos.modificarPrecio
             this.ventaNegativo=datos. ventaEnNegativo
+            this.facturarPedidos=datos.facturarPedidos
 
           });
           
