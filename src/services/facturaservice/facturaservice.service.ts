@@ -75,7 +75,11 @@ export class FacturaserviceService {
       withCredentials: true,
     });
   }
-
+obtenertotalpornombrefactura(nombret:string): Observable<any>{
+  return this.http.get(`${environment.api}/obtenertotalpornombrefactura?nombret=${nombret}`,{
+    withCredentials:true
+  });
+}
   traerbancos(): Observable<any> {
     return this.http.get(`${environment.api}/traerbancos`, {
       withCredentials: true,

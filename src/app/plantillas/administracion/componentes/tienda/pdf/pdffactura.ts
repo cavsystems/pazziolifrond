@@ -27,7 +27,7 @@ const generatePDFfactura = async (data: any) => {
       { text: 'Total', style: 'tableHeader' },
     ],
     ...data?.productos.map((product: any) => [
-      product.codigoProducto,
+      product.codigoContable,
       product.nombre,
       product.referencia,
       `${product.presentacion === undefined ? '' : product.presentacion}`,
@@ -83,9 +83,9 @@ const generatePDFfactura = async (data: any) => {
       },
       {
         stack: [
-          { text: `factura No. ${data.factura.codigo}`, style: 'header' },
+          { text: `factura No. ${data.prefijo} ${data.factura.codigo}`, style: 'header' },
           {
-            text: `Fecha de creacion: ${data.factura.vendedor}`,
+            text: `Fecha de creacion: ${data.factura.fechaEmision}`,
             style: 'subheader',
           },
           {
@@ -131,6 +131,26 @@ const generatePDFfactura = async (data: any) => {
         margin: [0, 10, 0, 10],
       },
     ],
+  });
+
+
+  content.push({
+    stack: [
+      { text: `Observaciones`, style: 'header' },
+    
+    ],
+    alignment: 'left',
+      width: '*',
+  });
+  
+
+  content.push({
+    stack: [
+      { text: data.factura.observaciones, style: 'subheader' },
+     
+    ],
+    alignment: 'left',
+      width: '*',
   });
   //Define estilos reutilizables usados en el contenido: encabezados, subencabezados, etc.
   const styles = {

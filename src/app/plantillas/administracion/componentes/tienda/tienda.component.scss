@@ -113,6 +113,15 @@ button[pedido] {
   max-width:20px;
   
 }
+.botonotionsfacturar{
+     background:#DCEC7D !important;
+   text-align: center !important;
+   padding:0 !important;
+   margin-left: 10px;
+   font-size: 6px !important;
+  max-width:20px;
+ color:#FFF !important
+}
 
 .botonotions {
   ::ng-deep .mat-button-wrapper{
@@ -121,6 +130,14 @@ button[pedido] {
 
   }
  
+}
+
+.botonotionsfacturar{
+  ::ng-deep .mat-button-wrapper{
+  font-size: 12px !important;
+  
+
+  }
 }
 
 .prod_card {

@@ -16,6 +16,7 @@ export const generatePDFfa = (data: any): any => {
     return null;
   }
   let item = data.respuesta[0];
+console.log(item)
   let contador = 0;
   const tableBody: any[][] = [
     [
@@ -90,8 +91,9 @@ export const generatePDFfa = (data: any): any => {
         { text: String(fact.vendedor), noWrap: false, fontSize: 8 },
         { text: String(fact.cliente), noWrap: false, fontSize: 8 },
       ]);
-      contador++;
+      
       item = data.respuesta[contador];
+      contador++;
     } else {
       contador++;
       if(index!==0){
@@ -118,7 +120,7 @@ export const generatePDFfa = (data: any): any => {
      
     }
   });
-
+   console.log("cliente factura",item)
   tableBody.push([
     { text: item.cliente, colSpan: 3, alignment: 'left', bold: true },
     {},

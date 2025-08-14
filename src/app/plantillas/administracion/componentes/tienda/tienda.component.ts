@@ -855,7 +855,7 @@ crearfactura(){
           boton: 'Confirmar',
           boton1: 'Cancelar',
           tipo: 'question',
-          mensaje: 'Confirma realizar este pedido?',
+          mensaje: 'Confirma realizar esta factura?',
         },
         disableClose: true,
       });

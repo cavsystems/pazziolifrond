@@ -187,7 +187,21 @@
           <ng-container matColumnDef="estadoVencimiento">
             <th mat-header-cell *matHeaderCellDef>Estado vencimiento</th>
             <td mat-cell *matCellDef="let element">
-              <ng-container *ngIf="element.dias < 0"> Vencida </ng-container>
+              <ng-container *ngIf="element.dias <= 0"> Vencida </ng-container>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let element">
+              <ng-container >   <a mat-icon-button color="socondary" >
+            <img
+              src="../../../../../assets/images/imgpdf.svg"
+              style="color: #fe676c; width: 34px; height: 36px"
+              class="imgicon"
+              (click)="generarpdfitem($event,element)"
+            />
+          </a> </ng-container>
             </td>
           </ng-container>
 

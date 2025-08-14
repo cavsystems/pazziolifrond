@@ -8,6 +8,8 @@ import { SocketService } from 'src/services/socket/socket.service';
 import { generatePDFfa } from './pdf_cartera/pdf';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Platform } from '@ionic/angular';
+import generatePDFfactura from '../tienda/pdf/pdffactura';
+import { promise } from 'protractor';
 
 @Component({
   selector: 'app-cartera',
@@ -41,7 +43,7 @@ export class CarteraComponent implements OnInit {
   public nivel: number = 0;
   clientef = {
     codigo: 0,
-    saldo: 0,
+    saldo: 0 ,
     nombre: '',
   };
   displayedColumns: string[] = [
@@ -54,8 +56,9 @@ export class CarteraComponent implements OnInit {
     'totalFactura',
     'saldo',
     'estadoVencimiento',
+    'Acciones'
   ];
-
+  
   public totalCartera: number = 0;
   public total_registros: number = 0;
   public obtenertodo: boolean = false;
@@ -80,6 +83,59 @@ export class CarteraComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  generarpdfitem(e:any,element:any){
+    e.stopPropagation()
+    this.servifactura.traeritemsfactura(element).subscribe( async (datos) => {
+      let productos=datos?.respuesta.map((item:any)=>{
+        console.log(item)
+        return{
+           cantidad:item.cantidad,
+          codigoContable:item.codigoContable,
+          nombre:item.descripcion,
+          referencia:item.referencia,
+          presentacion:item.presentacion,
+          precio:item.precio,
+
+
+
+        }
+      })
+      let config=datos.config
+      let cliente={
+        nombre:element.cliente,
+        email:datos.respuesta[0].email,
+        identificacion:datos.respuesta[0].identificacion,
+        telefonoFijo:datos.respuesta[0].telefonofijo
+      }
+      let factura={
+        fechaEmision:element.fechaEmision,
+        horaCreacion:datos.respuesta[0].horacreacion,
+        codigo:datos.respuesta[0].codigofactura,
+        observaciones:datos.respuesta[0].observaciones
+       
+
+
+      }
+      let data={
+       
+        config,
+        factura,
+         nombre:element.vendedor,
+        prefijo:datos.prefijo
+
+
+
+
+      }
+
+               await generatePDFfactura({...data,productos,cliente})
+      console.log(datos)
+       console.log(element)
+
+    })
+
   }
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -160,7 +216,7 @@ export class CarteraComponent implements OnInit {
     return this.factura.data[row]?.isResumen === true;
   };
 
-  generafilaresume(data: any[]): any[] {
+   async generafilaresume(data: any[]):Promise<any[]> {
     let subtotal;
     let grupoActual: string | null = null;
     this.facturatodo = [];
@@ -174,9 +230,9 @@ export class CarteraComponent implements OnInit {
     }
 
     let contador = 0;
-    for (let i = 0; i < data.length; i++) {
+   for (let i = 0; i < data.length; i++) {
       let item = data[i];
-
+       console.log(data[i])
       if (grupoActual === null) {
         this.facturatodo.push(item);
 
@@ -184,16 +240,22 @@ export class CarteraComponent implements OnInit {
         subtotal += item.saldo;
       } else {
         if (grupoActual !== item.cliente) {
-          this.facturatodo.push({
-            isResumen: true,
-            nombre: grupoActual,
-            totalCliente: subtotal,
-          });
-          grupoActual = item.cliente;
+       const result: any = await this.servifactura
+          .obtenertotalpornombrefactura(grupoActual)
+          .toPromise(); // 👈 equivalente a firstValueFrom en RxJS 6
 
-          subtotal = 0;
-          subtotal += item.saldo;
-          this.facturatodo.push(item);
+        subtotal = Number(result.respuesta[0]?.sumatotal || 0);
+
+        this.facturatodo.push({
+          isResumen: true,
+          nombre: grupoActual,
+          totalCliente: subtotal,
+        });
+
+        grupoActual = item.cliente;
+        subtotal = item.saldo;
+        this.facturatodo.push(item);
+          
         } else {
           this.facturatodo.push(item);
           subtotal += item.saldo;
@@ -203,6 +265,12 @@ export class CarteraComponent implements OnInit {
     }
 
     if (grupoActual !== null) {
+        const result: any = await this.servifactura
+          .obtenertotalpornombrefactura(grupoActual)
+          .toPromise(); // 👈 equivalente a firstValueFrom en RxJS 6
+   
+        subtotal = Number(result.respuesta[0]?.sumatotal || 0);
+
       this.facturatodo.push({
         isResumen: true,
         nombre: grupoActual,
@@ -257,7 +325,7 @@ export class CarteraComponent implements OnInit {
       });
     }
   }
-  cargarcarteracompleta() {
+   async cargarcarteracompleta() {
     this.cliente = '';
     this.clientes = [];
 
@@ -271,7 +339,7 @@ export class CarteraComponent implements OnInit {
         }, 0);
         clearTimeout(timeout);
       }
-      this.servifactura.traertodaslasfacturas(this.pagina).subscribe((data) => {
+      this.servifactura.traertodaslasfacturas(this.pagina).subscribe( async (data) => {
         this.clienteSeleccionado = {
           nombre: 'Seleccione un cliente',
           identificacion: '',
@@ -286,7 +354,7 @@ export class CarteraComponent implements OnInit {
         if (data.respuesta.length > 0) {
              this.total_registros = data.nregistros;
         this.totalCartera = data.saldo;
-        this.factura.data = this.generafilaresume(data.respuesta)
+        this.factura.data = await  this.generafilaresume(data.respuesta)
         }
 
        ;
