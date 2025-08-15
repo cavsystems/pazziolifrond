@@ -118,7 +118,7 @@ export class InicioSesionComponent implements OnInit {
         (autenticado) => {
           if (autenticado.autenticado) {
             this.socketprodu.conectar();
-            //            window.location.reload();
+                window.location.reload();
             
             // this.router.navigateByUrl('admin/tienda');
           }
