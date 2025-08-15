@@ -49,8 +49,7 @@
                   this.serviauth.traerempresa().subscribe((p) => {
                     (this.data = p.data),
                       (this.loader = !1),
-                      console.log(p.data);
-                  }),
+                                        }),
                   (this.inputdocumento = new a.p4("", [a.kI.required])),
                   (this.inputUsuario = new a.p4("", [a.kI.required])),
                   (this.inputpassword = new a.p4("", [a.kI.required])),
@@ -72,12 +71,10 @@
                             (this.socketprodu.conectar(),
                             window.location.reload());
                       },
-                      (n) => console.log(n)
-                    );
+                      (n) =>                     );
               }
               ngOnInit() {
-                console.log("entro al login");
-              }
+                              }
             }
             return (
               (i.ɵfac = function (n) {

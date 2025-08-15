@@ -230,8 +230,7 @@ export class Recibopago {
         })
         .subscribe((dato) => {
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
-            console.log(JSON.parse(dato).mensajePeticion);
-            this.cliente = JSON.parse(dato).mensajePeticion;
+                        this.cliente = JSON.parse(dato).mensajePeticion;
           }
         });
     }
@@ -252,27 +251,23 @@ export class Recibopago {
     if (this.fechaInicial) {
       fechainicial = formatearFecha(this.fechaInicial);
     }
-    console.log('entro aqui');
-    this.socketserviciofactura
+        this.socketserviciofactura
       .traerrecibos(
         fechainicial,
         fechafinal,
         this.buscarDescripcioncli.value.razonSocial
       )
       .subscribe((data) => {
-        console.log(data);
-        this.recibo = data.respuesta;
+                this.recibo = data.respuesta;
         this.nombreComprobante = data.nombreComprobanteRI;
         this.razonsocial = data.razonsocial;
         this.nit = data.nit;
         this.direccion = data.direccion;
-        console.log(this.recibo);
-      });
+              });
   }
 
   generarpdfrecibo(item: any) {
-   console.log(item)
-    this.socketserviciofactura
+       this.socketserviciofactura
    
       .totalrecibo(item.codigotercero)
       .subscribe((data) => {
@@ -329,8 +324,7 @@ export class Recibopago {
                 email: data,
               })
               .subscribe((datos: any) => {
-                console.log(datos);
-                if (datos.estadoPeticion === 'Done') {
+                                if (datos.estadoPeticion === 'Done') {
                   const dialogref = this.dialog.open(DialogoAlerta, {
                     data: {
                       boton: 'OK',
@@ -340,8 +334,7 @@ export class Recibopago {
                     disableClose: true,
                   });
                   dialogref.afterClosed().subscribe((datos) => {});
-                  //console.log(datos);
-                  //window.location.reload();
+                  //                  //window.location.reload();
                 }
               });
           });

@@ -167,8 +167,7 @@ seleccionardb() {
             this.identificacion = datos.identificacion;
             this.nombrevendedor = datos.nombre;
            
-            console.log(datos)
-            this.cargarDatosTotalPedidosPorSemana(datos.codigoVendedor);
+                        this.cargarDatosTotalPedidosPorSemana(datos.codigoVendedor);
             this.cargarDatosCantidadPedidosPorSemana(datos.codigoVendedor);
             this.cargarTopProductosMasPedidos(datos.codigoVendedor,5);
             this.cargarTotalPedidosMesVendedor(datos.codigoVendedor);
@@ -210,10 +209,8 @@ seleccionardb() {
   }
 
   cargarDatosTotalPedidosPorSemana(codigoVendedor: Number){
-    console.log(codigoVendedor);
-    this.socketproduct.cargarPedidosSemana(codigoVendedor).subscribe((data) => {
-      console.log(data);
-      if(!data.response){
+        this.socketproduct.cargarPedidosSemana(codigoVendedor).subscribe((data) => {
+            if(!data.response){
         //window.location.reload();
       }else{
        
@@ -221,20 +218,16 @@ seleccionardb() {
           
           this.datoPedidosSemanaPtotal.push(datos.total_Pedidos_Dia);
         });
-        console.log("arraypedidos",this.datoPedidosSemanaPtotal)
-        this.barChartDataPtotal.datasets[0].data=this.datoPedidosSemanaPtotal;
+                this.barChartDataPtotal.datasets[0].data=this.datoPedidosSemanaPtotal;
         this.barChartDataPtotal = { ...this.barChartDataPtotal};
         this.cdr.detectChanges();
       }
-      console.log(this.barChartDataPtotal)
-    });
+          });
   }
 
   cargarDatosCantidadPedidosPorSemana(codigoVendedor: Number){
-    console.log(codigoVendedor);
-    this.socketproduct.cargarPedidosSemana(codigoVendedor).subscribe((data) => {
-      console.log(data);
-      if(!data.response){
+        this.socketproduct.cargarPedidosSemana(codigoVendedor).subscribe((data) => {
+            if(!data.response){
         //window.location.reload();
       }else{
        
@@ -242,21 +235,17 @@ seleccionardb() {
           
           this.datoPedidosSemanaPCantidad.push(datos.cantidad_pedidos);
         });
-        console.log("arraypedidos",this.datoPedidosSemanaPCantidad)
-        this.barChartDataPCantidad.datasets[0].data=this.datoPedidosSemanaPCantidad;
+                this.barChartDataPCantidad.datasets[0].data=this.datoPedidosSemanaPCantidad;
         this.barChartDataPCantidad = { ...this.barChartDataPCantidad};
         this.cdr.detectChanges();
       }
-      console.log(this.barChartDataPCantidad)
-    });
+          });
   }
   
   cargarTopProductosMasPedidos(codigoVendedor:Number,top:Number){
     //topProductosMasPedidos
-    console.log(codigoVendedor);
-    this.socketproduct.cargarTopProductosSemana(codigoVendedor,top).subscribe((data) => {
-      console.log(data);
-      if(!data.response){
+        this.socketproduct.cargarTopProductosSemana(codigoVendedor,top).subscribe((data) => {
+            if(!data.response){
 
       }else{
         data.TopProductosSemana.forEach((datos:any,i:number) => {
@@ -269,29 +258,23 @@ seleccionardb() {
           );
         });
       }
-      console.log(this.topProductosMasPedidos);
-    });
+          });
   }
 
   cargarTotalPedidosMesVendedor(codigoVendedor:Number){
-    console.log(codigoVendedor);
-    this.socketproduct.cargarTotalPedidosMesVendedor(codigoVendedor).subscribe((data) => {
-      console.log(data);
-      if(!data.response){
+        this.socketproduct.cargarTotalPedidosMesVendedor(codigoVendedor).subscribe((data) => {
+            if(!data.response){
 
       }else{
         this.totalPedidosMes=data.cantidadTotalPedidosMes[0].total_pedidos_mes;
       }
-      console.log(this.totalPedidosMes);
-    });
+          });
   }
 
   cargarTotalPedidosVsTRecibosIMes(codigoVendedor: Number) {
-    console.log(codigoVendedor);
-
+    
     this.socketproduct.cargarTotalPedidosVsTRecibosIMes(codigoVendedor).subscribe((data) => {
-      console.log(data);
-
+      
       // Limpiar antes de volver a llenar (evita duplicados si se recarga)
       this.TPedidosVsTRecibosI = [];
 
@@ -335,7 +318,6 @@ seleccionardb() {
           ]
         };
       }
-      console.log(this.TPedidosVsTRecibosI);
-    });
+          });
   }
 }

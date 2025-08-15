@@ -749,8 +749,7 @@
               (this.componentMethodCallSource = new g.xQ()),
               (this.componentMethodCalled$ =
                 this.componentMethodCallSource.asObservable()),
-              console.log("\u{1f7e1} SocketService inicializado");
-          }
+                        }
           callComponentMethod() {
             this.componentMethodCallSource.next({ algo: "por aqui paso algo" });
           }
@@ -779,19 +778,16 @@
                       this.socket.id
                     ),
                       i.next(a),
-                      console.log(a);
-                  });
+                                        });
                 }));
           }
           enviarInfo(s) {
-            console.log("entro aqui 1"), this.socket.emit("aws", s);
-          }
+                      }
           obtenerInfo(s) {
             return new h.y((i) => {
               this.escuchando ||
                 this.socket.on(s, (a) => {
-                  i.next(a), console.log(a), (this.escuchando = !0);
-                });
+                  i.next(a),                 });
             });
           }
           consultarTercero(s, i, a, c) {

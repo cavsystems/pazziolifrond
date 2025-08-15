@@ -226,7 +226,9 @@ export class TiendaComponent implements OnInit {
     private serviauth: AuthService,
     private router: Router,
     private facturaservice: FacturaserviceService,
-  ) {}
+  ) {
+    this.facturaservice.conectar()
+  }
 
   ngOnInit(): void {
     this.serviauth.mode.value = 'side';
@@ -244,8 +246,7 @@ export class TiendaComponent implements OnInit {
           .obteneralmacen()
           .pipe(take(1))
           .subscribe((datos) => {
-            console.log(datos)
-            this.almacen = datos.almacen;
+                        this.almacen = datos.almacen;
             this.configuracion = datos.config;
             this.identificacion = datos.identificacion;
             this.nombrevendedor = datos.nombre;
@@ -302,16 +303,14 @@ export class TiendaComponent implements OnInit {
   }
   async onCodeResult(codigo: string) {
     if (!this.escanedo) {
-      console.log('Código escaneado:', codigo);
-      this.escanedo = true;
+            this.escanedo = true;
       await this.repuestaproductos('DESCRIPCION', codigo, false);
       this.escanedo = false;
 
       // this.descripcion.nativeElement.value = codigo;
       this.buscarDescripcion.setValue(codigo);
       this.sonidoescaner(0, 1.5);
-      console.log(this.productinico[0]);
-      this.elegirCantidad(this.productinico[0]);
+            this.elegirCantidad(this.productinico[0]);
       // Puedes hacer algo con el valor, como buscar en tu base de datos
     }
   }
@@ -456,6 +455,9 @@ export class TiendaComponent implements OnInit {
       cliente: this.clienteSeleccionado,
       productos_pedido: this.productosMostrar,
     };
+    console.log("datos pedidod reservar",datospedido)
+  
+    
     if (this.clienteSeleccionado.codigo === 0) {
       this.openDialogAlerta({
         boton: 'Ok',
@@ -683,8 +685,7 @@ export class TiendaComponent implements OnInit {
         let options = this.productinico.findIndex((option) => {
           return option.codigo === this.productoActual.codigo;
         });
-          console.log(this.productinico[options])
-        if (this.productinico[options].cantidaddisponible <= 0  && this.ventaNegativo===0) {
+                  if (this.productinico[options].cantidaddisponible <= 0  && this.ventaNegativo===0) {
 
           /* console.log(
             this.opcionesFiltradas[options]['producto'][
@@ -698,8 +699,7 @@ export class TiendaComponent implements OnInit {
             this.productinico[options].cantidaddisponible <
             this.productoActual.cantidad  && this.ventaNegativo===0
           ) {
-            console.log("hhjjjjj",this.ventaNegativo)
-            this.openSnackBar('Cantidad no disponible');
+                        this.openSnackBar('Cantidad no disponible');
           } else {
             if (this.productinico[options].precio <= 0  && this.precio<=0) {
               this._snackBar.open('producto sin precio', 'ok', {
@@ -896,9 +896,7 @@ enviarFacturaObservacion(observacion:string){
 
     let fechaActual = this.obtenerFechaHora();
     this.fechahora = `${fechaActual.diaActual} ${fechaActual.horaActual}`;
-   console.log("productos",this.productosMostrar[0])
-   console.log(this.clienteSeleccionado)
-    let itemsPedidos = this.productosMostrar.map((producto) => {
+          let itemsPedidos = this.productosMostrar.map((producto) => {
       this.totalPagar += producto.total;
       return {
         codigoProducto: producto.codigo,
@@ -927,15 +925,19 @@ enviarFacturaObservacion(observacion:string){
     observacion,
    }
 
-   this.facturaservice.realizarfactura(pedido).pipe(take(1)).subscribe((data) => {
-
-   
-
-      this.dialog
+   this.facturaservice.realizarfactura(pedido).pipe(take(1)).subscribe(async (data) => {
+       let cliente=this.clienteSeleccionado
+let pdf= await generatePDFfacturagmail({...data,productos:itemsPedidos,cliente})
+    this.facturaservice.enviaremailfactura({pdf:pdf,cliente}).subscribe(
+     
+      (data)=>{
+        console.log(data);
+        if(data.estadoPeticion==="Done"){
+            this.dialog
       .open(DialogoAlertaob, {
         data: {
           boton: 'Continuar',
-          mensaje: data.mensaje,
+          mensaje: data.mensajePeticion,
           tipo: 'question',
         
         },
@@ -945,11 +947,21 @@ enviarFacturaObservacion(observacion:string){
       .pipe(take(1))
       .subscribe(async (dat) => {
         if (!dat) return; // Evita continuar si el usuario cerró el diálogo sin escribir
-         console.log(data)
-         let cliente=this.clienteSeleccionado
-         await generatePDFfactura({...data,productos:itemsPedidos,cliente})
+       // Abrir PDF aquí
+        const fileURL = URL.createObjectURL(this.base64ToBlob(pdf));
+        window.open(fileURL, "_blank");
         this.deleteAll();
       });
+
+        }else if(data.estadoPeticion==="ERROR"){
+          console.log(data.error)
+        }
+      }
+
+    )
+    
+
+    
 
     },
     (error)=>{
@@ -967,6 +979,23 @@ enviarFacturaObservacion(observacion:string){
 
 
 }
+
+
+
+//metodo para converitir un base 64 a blob
+base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
+  const byteCharacters = atob(base64);
+  const byteNumbers = new Array(byteCharacters.length);
+
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+
+  const byteArray = new Uint8Array(byteNumbers);
+  return new Blob([byteArray], { type: contentType });
+}
+
+
   calcularProductoActual(): Promise<number> {
     return new Promise((resolve, err) => {
       let _precio_total = Number(this.cantidad) * Number(this.precio);
@@ -1185,8 +1214,7 @@ enviarFacturaObservacion(observacion:string){
         })
         .subscribe((dato) => {
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
-            console.log(JSON.parse(dato).mensajePeticion);
-            this.clientes = JSON.parse(dato).mensajePeticion;
+                        this.clientes = JSON.parse(dato).mensajePeticion;
           }
         });
     }
@@ -1466,8 +1494,7 @@ enviarFacturaObservacion(observacion:string){
         fecha: this.fechahora,
       })
       .subscribe((datos) => {
-        console.log("datosemail",datos)
-        if (datos.estadoPeticion === 'Done') {
+                if (datos.estadoPeticion === 'Done') {
         
           this.deleteAll();
         }else{
@@ -1539,6 +1566,7 @@ import { DialogoAlertaitemspedido } from 'src/app/angular-material/alertaupdatei
 import { AuthService } from 'src/services/auth/auth.service';
 import { FacturaserviceService } from 'src/services/facturaservice/facturaservice.service';
 import generatePDFfactura from './pdf/pdffactura';
+import generatePDFfacturagmail from './pdf/pdffacturagmail';
 
 @Component({
   selector: 'dialog-factura',

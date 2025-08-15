@@ -104,8 +104,7 @@ export class InventarioFisicoComponent implements OnInit {
       datoCondicion: string | undefined | number,
       buscartodo: boolean = false
     ): Promise<void> {
-      console.log("entre a repuestaproductos")
-      return new Promise((resolve, reject) => {
+            return new Promise((resolve, reject) => {
         this.socketServices.escucha = this.socketproduct.obtenerInfo(
           'aws',
           'pazzioli-pos-3',
@@ -152,8 +151,7 @@ export class InventarioFisicoComponent implements OnInit {
     }
 
   async buscarProductos(key: any, campo: string) {
-    console.log("entre a buscarProductos")
-    await this.repuestaproductos(
+        await this.repuestaproductos(
       'DESCRIPCION',
       this.buscarDescripcion.value,
       true
@@ -187,15 +185,13 @@ export class InventarioFisicoComponent implements OnInit {
   async adicionarItem(item: any, cantidadItem:number, ubicacionItem: string) {
     this.productoActual.cantidad=cantidadItem;
     this.productoActual.ubicacion=ubicacionItem;
-    console.log("producto actual",this.productoActual)
-    this.socketfacturaservi.insertaritemsinventario(this.productoActual).subscribe(
+        this.socketfacturaservi.insertaritemsinventario(this.productoActual).subscribe(
       data=>{
         if(data.response){
           this.Productos.data.push(this.productoActual);
           this.Productos.data = [...this.Productos.data]; 
         
-          console.log(this.Productos.data);
-          this.opcionesFiltradas = [];
+                    this.opcionesFiltradas = [];
           this.buscarDescripcion.setValue('');
           this.cantidad=0;
           this.cantidadTotalRegistros=this.Productos.data.length;

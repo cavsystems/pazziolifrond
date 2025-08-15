@@ -8,13 +8,11 @@ import { Horaforma } from 'src/app/utils/formatearhora';
 (pdfMake as any).vfs = pdfFonts;
 
 export const generatePDFingre = async (data: any): Promise<any> => {
-  console.log(data);
-  let pago: string = '';
+    let pago: string = '';
   //Se crea el contenido de la tabla, con:
   //Una fila de encabezado (títulos).
   //Una fila por cada producto en el array recibido.
-  console.log(data.tipospagos.data);
-  data.tipospagos.data.forEach((data: any) => {
+    data.tipospagos.data.forEach((data: any) => {
     switch (data.Movimiento) {
       case 'Efectivo':
         pago += data.Movimiento + '  ';

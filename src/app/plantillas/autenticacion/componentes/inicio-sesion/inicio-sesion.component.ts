@@ -57,8 +57,7 @@ export class InicioSesionComponent implements OnInit {
   traerempresas() {
     this.serviauth.traerempresa(this.inputdocumento.value).subscribe(
       (datos) => {
-        console.log(datos);
-        if (datos.data.length > 0) {
+                if (datos.data.length > 0) {
           this.data = datos.data;
           this.inputUsuario.enable();
           this.inputpassword.enable();
@@ -119,8 +118,7 @@ export class InicioSesionComponent implements OnInit {
         (autenticado) => {
           if (autenticado.autenticado) {
             this.socketprodu.conectar();
-            //console.log(!this.cookieservices.get("connect.sid"))
-            window.location.reload();
+            //            window.location.reload();
             
             // this.router.navigateByUrl('admin/tienda');
           }

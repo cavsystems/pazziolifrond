@@ -4581,8 +4581,7 @@
               (this.id = ""),
               (this.data = this.data.sort()),
               (this.datatemporal = this.data),
-              console.log(z);
-          }
+                        }
           elegirpedido(c) {
             this.id = c;
           }
@@ -4610,19 +4609,16 @@
               (z) => {
                 z.repuesta &&
                   this.serviproduct.verpedido().subscribe((oA) => {
-                    console.log(oA.pedido), (this.data = oA.pedido);
-                  });
+                                      });
               },
               (z) => {
-                console.log(z);
-              }
+                              }
             );
           }
           buscarcliente() {
             "" == this.terminobusqueda
               ? ((this.data = this.datatemporal),
-                console.log(this.datatemporal))
-              : (this.data = this.datatemporal.filter(
+                              : (this.data = this.datatemporal.filter(
                   (c) =>
                     c.cliente.nombre.includes(
                       this.terminobusqueda.toUpperCase()
@@ -4766,11 +4762,9 @@
       })();
       var w = Dt(4641),
         I = Dt(8493);
-      console.log(I), (w.vfs = I);
-      const p = (function () {
+            const p = (function () {
           var h = (0, x.Z)(function* (G) {
-            console.log(G);
-            const c = [
+                        const c = [
                 [
                   { text: "Codigo", style: "tableHeader" },
                   { text: "Descripci\xf3n", style: "tableHeader" },
@@ -4881,8 +4875,7 @@
           };
         })(),
         C = (h) => {
-          console.log(h);
-          const G = h.split(":"),
+                    const G = h.split(":"),
             c = (ft) => ft.toString().padStart(2, "0");
           let z = +G[0] >= 12 ? "PM" : "AM",
             oA = +G[0] % 12;
@@ -5819,8 +5812,7 @@
                 (this.enterPrecio = 0),
                 (this.almacen = ""),
                 (this.basedatosactual = ""),
-                console.log("almacen constructor", this.socketproduct.almacen);
-            }
+                            }
             ngOnInit() {
               this.seleccionardb();
             }
@@ -5952,8 +5944,7 @@
             }
             buscarProductos(c, z) {
               if (this.productos.length > 0) {
-                console.log("productos rellenos");
-                let oA = "";
+                                let oA = "";
                 console.log(this.buscarDescripcion.value),
                   this.buscarDescripcion.value
                     ? ((oA = this.buscarDescripcion.value
@@ -6031,8 +6022,7 @@
               });
             }
             reservarpedido() {
-              console.log("productos a reservar", this.productosMostrar);
-              const c = {
+                            const c = {
                 cliente: this.clienteSeleccionado,
                 productos_pedido: this.productosMostrar,
               };
@@ -6107,8 +6097,7 @@
                             oA.repuesta && this.deleteAll();
                         },
                         (oA) => {
-                          console.log(oA);
-                        }
+                                                  }
                       );
                 });
             }
@@ -6372,8 +6361,7 @@
                     oA.sedeSeleccionada.usuario.usuario
                   );
                 } catch (VA) {
-                  console.log(VA);
-                } finally {
+                                  } finally {
                   setTimeout(() => {
                     "DESCRIPCION" != z && oA.elegirCantidad(null);
                   }, 1e3);
@@ -6656,8 +6644,7 @@
                     c.socketproduct.obtenernumeropedido().subscribe(
                       (function () {
                         var se = (0, x.Z)(function* (Le) {
-                          console.log(Le), kt(Le.codigo.codigo);
-                        });
+                                                  });
                         return function (Le) {
                           return se.apply(this, arguments);
                         };
@@ -7407,8 +7394,7 @@
                       (c) => {
                         c.response
                           ? this.dialogRef.close({ continuar: !0 })
-                          : console.log("hubo un error inesperado");
-                      },
+                          :                       },
                       (c) => {
                         console.log(c.error),
                           this.snackBar.open(c.error.error, "Cerrar", {
@@ -7549,8 +7535,7 @@
                   (Yt, St) => Yt + St.cantidad,
                   0
                 )),
-                console.log(this.total);
-            }
+                            }
             onNoClick(c) {
               this.dialogRef.close();
             }
@@ -7824,11 +7809,9 @@
             h
           );
         })();
-      console.log(I), (w.vfs = I);
-      const Co = (function () {
+            const Co = (function () {
         var h = (0, x.Z)(function* (G) {
-          console.log(G);
-          const c = [
+                    const c = [
               [
                 { text: "Codigo", style: "tableHeader" },
                 { text: "Descripci\xf3n", style: "tableHeader" },
@@ -8092,8 +8075,7 @@
                 })
                 .afterClosed()
                 .subscribe((z) => {
-                  console.log("cerrado");
-                });
+                                  });
             }
             pdf(c) {
               this.productser
@@ -8180,8 +8162,7 @@
                                 })
                                 .afterClosed()
                                 .subscribe((Le) => {
-                                  console.log("correo enviado");
-                                });
+                                                                  });
                             });
                         }
                       });
@@ -8465,8 +8446,7 @@
               c.servipro
                 .obteneritemspedido(c.route.snapshot.params.codigo)
                 .subscribe((z) => {
-                  console.log(z), (c.data = z), (c.total = z[0].total);
-                });
+                                  });
             })();
           }
         }
@@ -12720,8 +12700,7 @@
                   return Object.prototype.hasOwnProperty.call(AA, q);
                 }
                 (M.log = function () {
-                  console.log("%s - %s", dA(), M.format.apply(M, arguments));
-                }),
+                                  }),
                   (M.inherits = e(89784)),
                   (M._extend = function (AA, q) {
                     if (!q || !S(q)) return AA;

@@ -125,8 +125,7 @@ export class RecibodecajaComponent implements OnInit {
         })
         .subscribe((dato) => {
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
-            console.log(JSON.parse(dato).mensajePeticion);
-            this.clientes = JSON.parse(dato).mensajePeticion;
+                        this.clientes = JSON.parse(dato).mensajePeticion;
           }
         });
     }
@@ -147,8 +146,7 @@ export class RecibodecajaComponent implements OnInit {
     this.servifactura
       .traerfacturas(this.pagina, this.clienteSeleccionado.codigo)
       .subscribe((data) => {
-        console.log(data);
-        if (data.respuesta.length > 0) {
+                if (data.respuesta.length > 0) {
           this.pagina = 1;
           this.total_registros = data.nregistros;
           this.factura.data = data.respuesta;
@@ -157,8 +155,7 @@ export class RecibodecajaComponent implements OnInit {
   }
 
   seleccionaritem(item: string) {
-    /*console.log(item);
-    console.log(this.TipoPago.data);*/
+    /*    console.log(this.TipoPago.data);*/
 
     if (item === 'Seleccione') {
       this.snackBar.open('No ha seleccionado un tipo de pago', 'Cerrar', {
@@ -207,9 +204,7 @@ export class RecibodecajaComponent implements OnInit {
     const index = this.TipoPago.data.findIndex(
       (data) => data.Movimiento === item
     );
-    console.log(index);
-    console.log(this.TipoPago);
-    if (index >= 0) {
+            if (index >= 0) {
       this.TipoPago.data[index].valor = this.valor;
     } else {
       const nuevoDato = {
@@ -227,12 +222,10 @@ export class RecibodecajaComponent implements OnInit {
     this.valor = this.totalRecibo - (this.totalTiposPago + this.descuento);
     this.movimientoSeleccionado = 'Seleccione';
 
-    console.log(this.movimientoSeleccionado);
-  }
+      }
 
   seleccionaritemDeduccion(item: string) {
-    /*console.log(item);
-    console.log(this.TipoPago.data);*/
+    /*    console.log(this.TipoPago.data);*/
 
     if (item === 'Seleccione') {
       this.snackBar.open('No ha seleccionado un tipo de pago', 'Cerrar', {
@@ -328,16 +321,14 @@ export class RecibodecajaComponent implements OnInit {
         datos.codigoComprobante === valor.codigoComprobante
     );
     this.factura.data[index].abono == valor.abono;
-    console.log(valor.abono);
-    this.totalizarPanelReciboIngreso();
+        this.totalizarPanelReciboIngreso();
     this.valor = 0;
     this.valor = this.totalRecibo - (this.totalTiposPago + this.descuento);
     this.movimientoSeleccionado = 'Seleccione';
   }
 
   onCheckChange(element: any) {
-    console.log(element);
-    if (!element.selected) {
+        if (!element.selected) {
       element.abono = 0;
     }
     this.totalizarPanelReciboIngreso();
@@ -349,16 +340,13 @@ export class RecibodecajaComponent implements OnInit {
       (sum: any, val: any) => sum + Number(val.abono),
       0
     );
-    console.log(this.TipoPago);
-    this.TipoPago.data.forEach((data) => {
+        this.TipoPago.data.forEach((data) => {
       if (data.valor < 0) {
         acomulador += data.valor;
       }
     });
-    console.log(acomulador);
-    this.totalRecibo = totalTemp + (acomulador + this.descuento);
-    console.log(typeof this.totalRecibo);
-    this.valor = 0;
+        this.totalRecibo = totalTemp + (acomulador + this.descuento);
+        this.valor = 0;
     this.valor = this.totalRecibo - (this.totalTiposPago + this.descuento);
     this.movimientoSeleccionado = 'Seleccione';
   }
@@ -375,17 +363,13 @@ export class RecibodecajaComponent implements OnInit {
   }
 
   eliminarTipoPago(item: any) {
-    console.log('Eliminando item Tipo Pago');
-    console.log(item);
-    const index = this.TipoPago.data.findIndex(
+            const index = this.TipoPago.data.findIndex(
       (data) => data.Movimiento === item.Movimiento
     );
-    console.log(index);
-    this.TipoPago.data.splice(index, 1);
+        this.TipoPago.data.splice(index, 1);
     this.TipoPago.data = this.TipoPago.data;
     this.TipoPago._updateChangeSubscription();
-    console.log(this.TipoPago);
-    this.totalizarTiposPago();
+        this.totalizarTiposPago();
     this.valor = 0;
     if (item.valor < 0) {
       this.descuento -= item.valor * -1;
@@ -410,8 +394,7 @@ export class RecibodecajaComponent implements OnInit {
 
     item.opcionBanco = banco;
 
-    console.log(item);
-  }
+      }
 
   crearReciboIngreso() {
     if (this.totalRecibo === this.totalTiposPago + this.descuento) {
@@ -440,8 +423,7 @@ export class RecibodecajaComponent implements OnInit {
             JSON.stringify(this.clienteSeleccionado)
           ); // si falla, este es el problema
           console.log('tipo pago', JSON.stringify(this.TipoPago.data)); // si falla, este
-          console.log('facturas abonadas', JSON.stringify(facturasabonadas));
-          const datapeticion = {
+                    const datapeticion = {
             totalrecibo: this.totalRecibo,
             cliente: this.clienteSeleccionado,
             tipopago: this.TipoPago.data,
@@ -454,8 +436,7 @@ export class RecibodecajaComponent implements OnInit {
             this.servifactura
               .crearreciboingreso(datapeticion)
               .subscribe((datos) => {
-                console.log(datos);
-
+                
                 const dialogrf = this.dialog.open(DialogoAlerta, {
                   data: {
                     boton: 'Ok',

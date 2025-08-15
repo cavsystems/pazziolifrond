@@ -194,8 +194,7 @@ export class Itemsinventariounitario {
        private socketServices: SocketService,
      @Inject(MAT_DIALOG_DATA) public data:any
   ) {
-    console.log('data',this.data.itemsinven)
-    this.consultaritemsiventario(this.data.itemsinven);
+        this.consultaritemsiventario(this.data.itemsinven);
     this.servifactura.conectar()
   }
  displayFn(_prod: PRODUCTO): string {
@@ -226,19 +225,16 @@ export class Itemsinventariounitario {
   this.pagina=1;
  this.socketserviciofactura.consultaritems(this.pagina,this.data.itemsinven,this.ubicacion).pipe(take(1)).subscribe(
     (data:any)=>{
-        console.log("datainventario",data)
-        this.items.data=data.respuesta
+                this.items.data=data.respuesta
         this.cantidadregistros=data.nregistros.suma
         this.items.data = [...this.items.data]; 
-        console.log("items",this.items.data)
-    }
+            }
  )
    }
 
    onScroll(event: any) {
     const element = event.target;
-    console.log(this.cantidadregistros)
-    if ( element.scrollHeight - element.scrollTop === element.clientHeight && this.cantidadregistros > this.items.data.length) {
+        if ( element.scrollHeight - element.scrollTop === element.clientHeight && this.cantidadregistros > this.items.data.length) {
     
      
       this.pagina++;
@@ -261,10 +257,8 @@ export class Itemsinventariounitario {
 
 
   async buscarProductos(key: any, campo: string) {
-    console.log("entre a buscarProductos")
-    this.servifactura.consultaritemubicacion( this.buscarDescripcion.value).subscribe((data:any)=>{
-        console.log("data",data)
-        this.opcionesFiltradas= data.respuesta
+        this.servifactura.consultaritemubicacion( this.buscarDescripcion.value).subscribe((data:any)=>{
+                this.opcionesFiltradas= data.respuesta
     })
     /*await this.repuestaproductos(
       'DESCRIPCION',
@@ -279,8 +273,7 @@ export class Itemsinventariounitario {
     datoCondicion: string | undefined | number,
     buscartodo: boolean = false
   ): Promise<void> {
-    console.log("entre a repuestaproductos")
-    return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
       this.socketServices.escucha = this.socketproduct.obtenerInfo(
         'aws',
         'pazzioli-pos-3',
@@ -331,12 +324,10 @@ export class Itemsinventariounitario {
         this.pagina=1;
         this.socketserviciofactura.consultaritems(this.pagina,this.data.itemsinven,this.ubicacion).pipe(take(1)).subscribe(
             (data:any)=>{
-                console.log("datainventario",data)
-                this.items.data=data.respuesta
+                                this.items.data=data.respuesta
                 this.cantidadregistros=data.nregistros.suma
                 this.items.data = [...this.items.data]; 
-                console.log("items",this.items.data)
-            })
+                            })
        }
   })
 }

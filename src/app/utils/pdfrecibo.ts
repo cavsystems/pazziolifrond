@@ -8,8 +8,7 @@ import { Horaforma } from 'src/app/utils/formatearhora';
 (pdfMake as any).vfs = pdfFonts;
 
 export const generatePDFrecibos = async (data: any): Promise<any> => {
-  console.log(data);
-  let pago: string = '';
+    let pago: string = '';
   //Se crea el contenido de la tabla, con:
   //Una fila de encabezado (títulos).
   //Una fila por cada producto en el array recibido.

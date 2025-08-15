@@ -40,8 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.mode.value = this.serviauth.mode.value;
     this.serviciodb.tienesedeselccionada().subscribe((data) => {
       this.data = data;
-      console.log("data",data)
-        this.opcionesMostrar(data)
+              this.opcionesMostrar(data)
       
     });
  
@@ -53,12 +52,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
   handleVisibilityChange() {
     this.serviauth.verificarvendedor().subscribe((data) => {
-         this.opcionesMostrar(data)
+       
       if (!data?.response) {
         this.data = null;
         this.router.navigate(['auth/login']);
       } else {
         this.serviciodb.tienesedeselccionada().subscribe((data) => {
+            this.opcionesMostrar(data)
           this.data = data;
         });
       }
@@ -88,13 +88,11 @@ export class AppComponent implements OnInit, OnDestroy {
     )
   }
   opcionesMostrar(datos:any){
-    console.log("Verificando opciones a mostrar");
-    if(datos?.response){
+        if(datos?.response){
       let permisoscadena:string[]
-      let permisos=JSON.parse(datos.permisos);
+            let permisos=JSON.parse(datos.permisos);
       permisoscadena=permisos.map((permiso:any)=>{return permiso.permiso})
-  console.log("permisoscadena",permisoscadena)
-      this.TomarPedidos=true
+        this.TomarPedidos=true
       this.ConsultarCartera=true
       this.CrearReciboIngreso=true
       this.InventarioFisico=true
@@ -114,14 +112,12 @@ export class AppComponent implements OnInit, OnDestroy {
        if(!permisoscadena.includes("CXC")){
         this.ConsultarCartera=false
       }
-      console.log("Entre a true");
-    }else{
+          }else{
       this.TomarPedidos=false
       this.ConsultarCartera=false
       this.CrearReciboIngreso=false
       this.InventarioFisico=false
-      console.log("Entre a false");
-    }
+          }
   }
 
   mostrarSubItem(nItem:Number){

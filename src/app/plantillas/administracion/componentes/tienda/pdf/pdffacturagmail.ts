@@ -5,12 +5,8 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 //Esta línea asigna las fuentes cargadas a la instancia de pdfMake, necesario para que funcione correctamente.
 (pdfMake as any).vfs = pdfFonts;
 
-const generatePDFfactura = async (data: any) => {
-      const nuevaVentana = window.open('', '_blank');
-  if (!nuevaVentana) {
-    alert('El navegador bloqueó la ventana emergente. Permite pop-ups.');
-    return null;
-  }
+const generatePDFfacturagmail = async (data: any) => {
+    
   //Se crea el contenido de la tabla, con:
   //Una fila de encabezado (títulos).
   //Una fila por cada producto en el array recibido.
@@ -179,11 +175,7 @@ const generatePDFfactura = async (data: any) => {
   };
   //Genera el PDF y lo abre en una nueva pestaña del navegador.
 
-  // ✅ 3. Genera el PDF y escribe el contenido en la ventana ya abierta
-  pdfMake.createPdf(docDefinition).getBlob((blob: Blob) => {
-    const url = URL.createObjectURL(blob);
-    nuevaVentana.location.href = url;
-  });
+ 
   function getPdfBase64(docDefinition: any): Promise<string> {
     return new Promise((resolve) => {
       pdfMake.createPdf(docDefinition).getBase64((base64: string) => {
@@ -194,4 +186,4 @@ const generatePDFfactura = async (data: any) => {
   return await getPdfBase64(docDefinition);
 };
 
-export default generatePDFfactura ;
+export default generatePDFfacturagmail ;

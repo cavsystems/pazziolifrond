@@ -6,8 +6,7 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 (pdfMake as any).vfs = pdfFonts;
 
 export const generatePDFfa = (data: any): any => {
-  console.log(data);
-  //Se crea el contenido de la tabla, con:
+    //Se crea el contenido de la tabla, con:
   //Una fila de encabezado (títulos).
   //Una fila por cada producto en el array recibido.
   const nuevaVentana = window.open('', '_blank');
@@ -16,7 +15,6 @@ export const generatePDFfa = (data: any): any => {
     return null;
   }
   let item = data.respuesta[0];
-console.log(item)
   let contador = 0;
   const tableBody: any[][] = [
     [
@@ -120,8 +118,7 @@ console.log(item)
      
     }
   });
-   console.log("cliente factura",item)
-  tableBody.push([
+     tableBody.push([
     { text: item.cliente, colSpan: 3, alignment: 'left', bold: true },
     {},
     {},

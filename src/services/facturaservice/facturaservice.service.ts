@@ -132,8 +132,7 @@ obtenertotalpornombrefactura(nombret:string): Observable<any>{
   }
 
   public totalrecibo(codigo: string): Observable<any> {
-    console.log("codigo",codigo)
-    return this.http.get(
+        return this.http.get(
       `${environment.api}/traersaldoactual?codigotercero=${codigo}`,
       {
         withCredentials: true,

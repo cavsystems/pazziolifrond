@@ -74,8 +74,7 @@ export class CarteraComponent implements OnInit {
      private platform: Platform,
   ) {
     this.serviouth.obtenernivel().subscribe((data) => {
-      console.log(data);
-      this.nivel = data.nivel;
+            this.nivel = data.nivel;
     });
   }
   determinarnivel() {
@@ -89,8 +88,7 @@ export class CarteraComponent implements OnInit {
     e.stopPropagation()
     this.servifactura.traeritemsfactura(element).subscribe( async (datos) => {
       let productos=datos?.respuesta.map((item:any)=>{
-        console.log(item)
-        return{
+                return{
            cantidad:item.cantidad,
           codigoContable:item.codigoContable,
           nombre:item.descripcion,
@@ -131,9 +129,7 @@ export class CarteraComponent implements OnInit {
       }
 
                await generatePDFfactura({...data,productos,cliente})
-      console.log(datos)
-       console.log(element)
-
+             
     })
 
   }
@@ -175,8 +171,7 @@ export class CarteraComponent implements OnInit {
 
 
   verificaritemsfactura(row:any){
-    console.log("row data",row);
-   this.servifactura.traeritemsfactura(row).subscribe((data) => {
+       this.servifactura.traeritemsfactura(row).subscribe((data) => {
      const dialogRef = this.dialog.open(Dialogitemscartera, {
       width: this.platform.is('desktop') ? '60%' : '100%',
       
@@ -201,8 +196,7 @@ export class CarteraComponent implements OnInit {
         })
         .subscribe((dato) => {
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
-            console.log(JSON.parse(dato).mensajePeticion);
-            this.clientes = JSON.parse(dato).mensajePeticion;
+                        this.clientes = JSON.parse(dato).mensajePeticion;
           }
         });
     }
@@ -232,8 +226,7 @@ export class CarteraComponent implements OnInit {
     let contador = 0;
    for (let i = 0; i < data.length; i++) {
       let item = data[i];
-       console.log(data[i])
-      if (grupoActual === null) {
+             if (grupoActual === null) {
         this.facturatodo.push(item);
 
         grupoActual = item.cliente;
@@ -434,8 +427,7 @@ max-height:450px;
       private route: Router
     ) {
 
-      console.log("data",data);
-    }
+          }
   
 
 }

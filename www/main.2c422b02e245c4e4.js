@@ -328,8 +328,7 @@
           ngOnInit() {
             console.log("datos inicio configuracion"),
               this.serviciodb.tienesedeselccionada().subscribe((N) => {
-                (this.data = N), console.log("datos navegacion", N);
-              });
+                (this.data = N),               });
           }
           salir() {
             this.serviauth.salir().subscribe((N) => {
@@ -485,8 +484,7 @@
                           ? (this.socketproduct.conectar(),
                             this.router.navigateByUrl("admin/tienda"),
                             !1)
-                          : (console.log("no hay toquen"), !0)
-                      )
+                          : (                      )
                     );
                 }
               }
@@ -26028,8 +26026,7 @@
       let BC = (() => {
         class e {
           log(n) {
-            console.log(n);
-          }
+                      }
           warn(n) {
             console.warn(n);
           }

@@ -215,15 +215,13 @@ traertodo(){
     (data:any)=>{
         this.items.data=data.respuesta
         this.items.data = [...this.items.data]; 
-        console.log("items",this.items.data)
-    }
+            }
  )
    }
 
    onScroll(event: any) {
     const element = event.target;
-    console.log(this.cantidadregistros)
-    if ( element.scrollHeight - element.scrollTop === element.clientHeight && this.cantidadregistros > this.items.data.length) {
+        if ( element.scrollHeight - element.scrollTop === element.clientHeight && this.cantidadregistros > this.items.data.length) {
     
      
       this.pagina++;
@@ -258,14 +256,12 @@ veritems(itemsinven:string){
       (data:any)=>{
           this.items.data=data.respuesta
           this.items.data = [...this.items.data]; 
-          console.log("items",this.items.data)
-      })
+                })
     
   });
 }
   async buscarProductos(key: any, campo: string) {
-    console.log("entre a buscarProductos")
-    await this.repuestaproductos(
+        await this.repuestaproductos(
       'DESCRIPCION',
       this.buscarDescripcion.value,
       true
@@ -278,8 +274,7 @@ veritems(itemsinven:string){
     datoCondicion: string | undefined | number,
     buscartodo: boolean = false
   ): Promise<void> {
-    console.log("entre a repuestaproductos")
-    return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
       this.socketServices.escucha = this.socketproduct.obtenerInfo(
         'aws',
         'pazzioli-pos-3',
