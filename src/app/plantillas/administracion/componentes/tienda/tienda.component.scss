@@ -96,7 +96,7 @@ div.separator {
 
 button[pedido] {
   max-width: 200px;
-  float: right;
+  
   right: 8px;
   font-size: 1.2rem !important;
 }
@@ -108,19 +108,23 @@ button[pedido] {
    background:#1f618d !important;
    text-align: center !important;
    padding:0 !important;
-   margin-left: 10px;
+  
    font-size: 6px !important;
-  max-width:20px;
+  border-radius: 10px !important;
+    max-width: 150px !important;
   
 }
 .botonotionsfacturar{
      background:#DCEC7D !important;
    text-align: center !important;
    padding:0 !important;
-   margin-left: 10px;
+   
    font-size: 6px !important;
   max-width:20px;
- color:#FFF !important
+ color:#FFF !important;
+ border-radius: 10px !important;
+    max-width: 150px !important;  
+ 
 }
 
 .botonotions {
@@ -311,6 +315,9 @@ button[pedido] {
   .botonotions{
     margin-top:10px;
   }
+  .botonotionsfacturar{
+    margin-top:10px;
+  }
 
   .botontionsdel{
     margin-top:10px;
@@ -435,5 +442,18 @@ max-width:100px;
   }
 
 }
+.botontionsdel{
+   border-radius: 10px !important;
+    max-width: 150px !important;  
+  font-size: 6px !important;
+   text-align: center !important;
+}
+.botontionsdel{
+    ::ng-deep .mat-button-wrapper{
+  font-size: 12px !important;
+  
 
+  }
+ 
+}
 
