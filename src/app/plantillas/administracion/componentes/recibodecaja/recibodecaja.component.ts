@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Socket_producto } from 'src/services/socket/socket.producto.service.ts.service';
 import { FacturaserviceService } from 'src/services/facturaservice/facturaservice.service';
@@ -53,7 +53,8 @@ export class RecibodecajaComponent implements OnInit {
     private socketServices: SocketService,
     private snackBar: MatSnackBar,
     private servifactura: FacturaserviceService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {
     this.servifactura.conectar();
   }
@@ -65,16 +66,15 @@ export class RecibodecajaComponent implements OnInit {
     'Cheque',
     'Banco',
   ];
-  public movimientoSeleccionado: string = 'Seleccione';
+  public movimientoSeleccionado: string | null = 'Seleccione';
   public Deduccion = [
-    'Seleccione',
     'Descuento',
     'Rete Iva',
     'Rete Ica',
     'Rete Fuente',
   ];
   public opcionesBanco: banco[] = [];
-  public deduccionSeleccionada: string = 'Seleccione';
+  public deduccionSeleccionada:  null |string = 'Seleccione';
   displayedColumnsTipoPago: String[] = ['Movimiento', 'valor', 'acciones'];
   public valor: number = 0;
   public valorDeduccion: number = 0;
@@ -180,7 +180,11 @@ export class RecibodecajaComponent implements OnInit {
         panelClass: ['snackbar-error'],
       });
       this.valor = 0;
-      this.movimientoSeleccionado = 'Seleccione';
+       this.movimientoSeleccionado = null;
+    setTimeout(() => {
+        
+  this.movimientoSeleccionado = 'Seleccione';
+});
       return;
     }
 
@@ -197,7 +201,11 @@ export class RecibodecajaComponent implements OnInit {
         }
       );
       this.valor = 0;
-      this.movimientoSeleccionado = 'Seleccione';
+       this.movimientoSeleccionado= null;
+    setTimeout(() => {
+        
+  this.movimientoSeleccionado = 'Seleccione';
+});
       return;
     }
 
@@ -220,7 +228,13 @@ export class RecibodecajaComponent implements OnInit {
 
     this.valor = 0;
     this.valor = this.totalRecibo - (this.totalTiposPago + this.descuento);
-    this.movimientoSeleccionado = 'Seleccione';
+
+   this.movimientoSeleccionado = null;
+    setTimeout(() => {
+        
+  this.movimientoSeleccionado = 'Seleccione';
+});
+    
 
       }
 
@@ -242,7 +256,11 @@ export class RecibodecajaComponent implements OnInit {
         panelClass: ['snackbar-error'],
       });
       this.valorDeduccion = 0;
-      this.deduccionSeleccionada = 'Seleccione';
+       this.deduccionSeleccionada = null;
+    setTimeout(() => {
+        
+  this.deduccionSeleccionada = 'Seleccione';
+});
       return;
     }
 
@@ -269,7 +287,11 @@ export class RecibodecajaComponent implements OnInit {
       );
       this.valorDeduccion = 0;
       this.valor = 0;
-      this.movimientoSeleccionado = 'Seleccione';
+     this.deduccionSeleccionada = null;
+    setTimeout(() => {
+        
+  this.deduccionSeleccionada = 'Seleccione';
+});
       this.valor = this.totalRecibo - (this.totalTiposPago + this.descuento);
       return;
     }
@@ -282,14 +304,17 @@ export class RecibodecajaComponent implements OnInit {
     datosActuales.push(nuevoDato);
     this.TipoPago.data = [...datosActuales];
 
-    this.valorDeduccion = 0;
-    this.deduccionSeleccionada = 'Seleccione';
+    
 
     this.totalizarDeducciones();
 
     this.valor = 0;
     this.valor = this.totalRecibo - (this.totalTiposPago + this.descuento);
-    this.movimientoSeleccionado = 'Seleccione';
+   this.deduccionSeleccionada = null;
+    setTimeout(() => {
+        
+  this.deduccionSeleccionada = 'Seleccione';
+});
   }
 
   public totalizarDeducciones() {

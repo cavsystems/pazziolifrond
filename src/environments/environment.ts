@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   vendedor: 'token_vendedor',
-  api: 'http://localhost:3000/api',
-  apisocket: 'http://localhost:3000',
+  api: 'http://192.168.20.8:3000/api',
+  apisocket: 'http://192.168.20.8:3000',
 };
 
 /*

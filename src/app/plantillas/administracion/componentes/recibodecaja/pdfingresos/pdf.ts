@@ -53,8 +53,8 @@ export const generatePDFingre = async (data: any): Promise<any> => {
       { text: '', style: 'tableHeader' },
       { text: 'CUENTA', style: 'tableHeader', colSpan: 2 },
       { text: '', style: 'tableHeader' },
-      { text: 'CREDITO', style: 'tableHeader', colSpan: 1 },
       { text: 'DEBITO', style: 'tableHeader', colSpan: 1 },
+      { text: 'CREDITO', style: 'tableHeader', colSpan: 1 },
 
       { text: 'FIRMASELLO', style: 'tableHeader', colSpan: 3 },
 

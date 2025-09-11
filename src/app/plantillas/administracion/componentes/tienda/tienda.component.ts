@@ -937,7 +937,7 @@ let pdf= await generatePDFfacturagmail({...data,productos:itemsPedidos,cliente})
       .open(DialogoAlertaob, {
         data: {
           boton: 'Continuar',
-          mensaje: data.mensajePeticion,
+          mensaje: "Factura creada",
           tipo: 'question',
         
         },
@@ -951,6 +951,8 @@ let pdf= await generatePDFfacturagmail({...data,productos:itemsPedidos,cliente})
         const fileURL = URL.createObjectURL(this.base64ToBlob(pdf));
         window.open(fileURL, "_blank");
         this.deleteAll();
+       window.location.reload();
+        
       });
 
         }else if(data.estadoPeticion==="ERROR"){

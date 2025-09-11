@@ -1,3 +1,4 @@
+
 .exit-button {
   position: absolute;
   right: 10px;
@@ -107,7 +108,48 @@ border-radius: 8px;
   font-weight: bold;
   justify-content: center;
 }
+.mat-drawer-content{
+  overflow:  hidden !important;
 
+}
 .subitem{
   padding-left: 32px;
+ 
 }
+
+@media (max-height:581px) {
+  .content{
+  max-height: 515px !important;
+  }
+  
+  
+}
+
+
+@media (max-height:900px) and (min-height:844px) {
+  .content{
+  max-height:780px !important;
+  }
+  
+  
+}
+
+
+@media (max-height:1000px) and (min-height:915px) {
+  .content{
+  max-height:850px !important;
+  }
+  
+  
+}
+
+
+@media (max-height:750px) and (min-height:600px) {
+  .content{
+  max-height:640px !important;
+  }
+  
+  
+}
+
+

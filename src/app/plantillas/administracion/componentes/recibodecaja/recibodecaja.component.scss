@@ -38,6 +38,10 @@
     flex-wrap: wrap !important;
 }
 
+
+.inputmetodos{
+    flex:0 0 25%;
+  }
 @media (max-width:836px) {
   .inputmetodos{
     flex:0 0 25%;
@@ -83,4 +87,18 @@
 .generarR:active{
   background-color: rgba(128, 139, 150 ,0.8);
 
+}
+
+.mat-card-title{
+  font: 400 17px / 20px Roboto, "Helvetica Neue", sans-serif !important;
+    letter-spacing: normal !important;
+  margin-bottom:0 ;
+}
+
+.totalTipoPago{
+    font: 400 17px / 20px Roboto, "Helvetica Neue", sans-serif !important;
+    letter-spacing: normal !important;
+  margin-bottom:0 ;
+  color: rgba(0, 0, 0, 0.87);
+  margin-left: 10px;
 }
