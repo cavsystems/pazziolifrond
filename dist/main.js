@@ -9450,8 +9450,8 @@ __webpack_require__.r(__webpack_exports__);
 const environment = {
     production: false,
     vendedor: 'token_vendedor',
-    api: 'http://192.168.20.8:3000/api',
-    apisocket: 'http://192.168.20.8:3000',
+    api: 'https://pazzioliweb.cavsystems.com.co/api',
+    apisocket: 'https://pazzioliweb.cavsystems.com.co',
 };
 /*
  * For easier debugging in development mode, you can import the following file
