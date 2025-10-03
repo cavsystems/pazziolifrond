@@ -18,6 +18,7 @@ import { RecibodecajaComponent } from './componentes/recibodecaja/recibodecaja.c
 import { InicialComponent } from './componentes/inicial/inicial.component';
 import { NgChartsModule } from 'ng2-charts';
 import { InventarioFisicoComponent } from './componentes/inventario-fisico/inventario-fisico.component';
+import { InventarioComponent } from './componentes/inventario/inventario.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { InventarioFisicoComponent } from './componentes/inventario-fisico/inven
     RecibodecajaComponent,
     InicialComponent,
     InventarioFisicoComponent,
+    InventarioComponent,
   ],
   imports: [
     CommonModule,

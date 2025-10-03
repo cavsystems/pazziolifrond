@@ -102,7 +102,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
       
             if(!permisoscadena.includes("INVENTARIO FISICO")){
-        this.InventarioFisico=false
+       // this.InventarioFisico=false
       }
       if(!permisoscadena.includes("CREAR INGRESOS")){
       

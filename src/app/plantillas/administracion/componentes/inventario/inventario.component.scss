@@ -1,0 +1,75 @@
+table {
+  width: 100%;
+}
+.buscaliente {
+  display: flex;
+  flex-direction: column;
+  width:100%;
+  height: 100vw;
+
+
+}
+
+.buscaliente:nth-child(1){
+  flex: 0 0 100%;
+  align-items: center;
+  
+}
+
+.tabla-scroll{
+  width: 100%;
+ table{
+  overflow-x: visible;
+ }
+  
+
+ 
+  //overflow-x: auto;
+}
+
+.tab-factura{
+  min-width: 600px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.totalCartera{
+  padding-top: 10px;
+  display: flex;
+  font-weight: bold;
+}
+
+.tituloP{
+  padding-top: 15px;
+  display: flex;
+  font-weight: bold;
+  justify-content: center;
+}
+//estilos boton pdf
+.botonpdf{
+  border: none;
+  border-radius: 10px;
+  background: #fff;
+  transition:  background-color 0.5s ease;;
+}
+
+.botonpdf:active{
+  background-color: rgba(133, 146, 158 ,0.5);
+}
+
+.clientelist{
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.mat-header-row {
+  position: sticky;
+  top: 0;
+  background: #fff; /* Fondo blanco para que no se mezcle con el scroll */
+  z-index: 1;
+}
+
+.classformbodega {
+
+ 
+}
