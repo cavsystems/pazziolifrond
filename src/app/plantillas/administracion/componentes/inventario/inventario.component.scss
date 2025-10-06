@@ -70,6 +70,91 @@ table {
 }
 
 .classformbodega {
-
+    display: flex;
+    justify-content: center;
+ ::ng-deep .mat-form-field-wrapper{
+ padding: 0;
+ width: 350px;
+}
  
 }
+
+
+
+
+.cantidades-scroll {
+  display: flex;
+  overflow-x: auto;
+  max-width: 250px; /* Ajusta según diseño */
+}
+
+
+.tabla-contenedor {
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+/* 🔹 El contenedor debe manejar el scroll, no la tabla */
+.tabla-contenedor {
+  max-height: 300px;
+  overflow: auto;
+  position: relative; /* MUY IMPORTANTE para sticky */
+}
+
+/* 🔹 Fijar encabezado al hacer scroll vertical */
+.mat-header-row {
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  background: white;
+}
+
+/* 🔹 Cada celda sticky (por columna) */
+.mat-header-cell[sticky],
+.mat-header-cell[stickyEnd],
+.mat-cell[stickyEnd] {
+  background: white;
+  white-space: nowrap !important;
+}
+
+
+/* 🔹 Última columna fija a la derecha */
+.mat-header-cell[stickyEnd],
+.mat-cell[stickyEnd] {
+  position: sticky;
+  right: 0;
+  z-index: 12;
+}
+
+/* 🔹 Bordes opcionales para diferenciar */
+.mat-header-cell[stickyEnd] {
+  border-left: 1px solid #ddd;
+}
+.mat-cell[stickyEnd] {
+  border-left: 1px solid #ddd;
+}
+
+/* 🔹 Evita que el header se vea cubierto */
+.mat-header-cell {
+  z-index: 11;
+}
+
+
+/* 🔹 Evita que el texto de las celdas se parta en varias líneas */
+.tabla-contenedor .mat-header-cell,
+.tabla-contenedor .mat-cell {
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Opcional: agrega "..." si se corta */
+  padding: 8px 12px; /* un poco de espacio para que se vea bien */
+}
+
+/* 🔹 Asegura que las columnas mantengan su ancho natural */
+.tabla-contenedor table {
+  table-layout: auto !important;
+  width: max-content !important; /* permite scroll horizontal si es necesario */
+  min-width: 100%;
+}
+
+

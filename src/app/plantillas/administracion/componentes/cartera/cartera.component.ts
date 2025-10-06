@@ -56,7 +56,9 @@ export class CarteraComponent implements OnInit {
     'totalFactura',
     'saldo',
     'estadoVencimiento',
-    'Acciones'
+    'Acciones',
+   
+    
   ];
   
   public totalCartera: number = 0;
