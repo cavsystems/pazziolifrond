@@ -100,6 +100,11 @@ table {
   max-height: 300px;
   overflow: auto;
   position: relative; /* MUY IMPORTANTE para sticky */
+  width: 100%;
+  
+    box-shadow: 0 6px 10px 0px rgba(39, 38, 49, 0.1) !important;
+    border-radius: 10px;
+
 }
 
 /* 🔹 Fijar encabezado al hacer scroll vertical */
@@ -125,11 +130,14 @@ table {
   position: sticky;
   right: 0;
   z-index: 12;
+  border-left: none !important;
 }
+
+
 
 /* 🔹 Bordes opcionales para diferenciar */
 .mat-header-cell[stickyEnd] {
-  border-left: 1px solid #ddd;
+  //border-left: 1px solid #ddd;
 }
 .mat-cell[stickyEnd] {
   border-left: 1px solid #ddd;
@@ -158,3 +166,22 @@ table {
 }
 
 
+.botonexpor{
+    ::ng-deep span{
+        font-size: 14px;
+    }
+}
+
+
+.containerexport{
+   
+    margin-top: 30px;
+    margin-bottom: 60px;
+}
+.mat-table-sticky:last-of-type {
+  right: 0 !important;
+}
+
+.mat-table-sticky {
+  box-shadow: none !important; /* opcional, elimina líneas duplicadas */
+}

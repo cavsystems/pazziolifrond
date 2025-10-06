@@ -13,10 +13,10 @@
     >
       <mat-card-header class="search">
         <div style="display: flex; justify-content: space-between">
-          <mat-card-title class="m-0">Producto</mat-card-title>
-          <div>
+          <mat-card-title class="m-0 " style="margin-left: 15px !important;">Producto</mat-card-title>
+          <div style="margin-right: 15px !important;">
             <label for="cartera" style="font-size: 1rem; font-weight: bold"
-              >Completa</label
+              >Completa </label
             >
             <input
               type="checkbox"
@@ -29,8 +29,8 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <mat-form-field appearance="fill" search>
-              <mat-label>Buscar cliente</mat-label>
+            <mat-form-field appearance="fill" search >
+              <mat-label>Buscar Producto</mat-label>
               <input
                 matInput
                 placeholder=""
@@ -61,7 +61,7 @@
 </mat-form-field>
    </mat-card-footer>
     </mat-card>
-<div class="tabla-scroll" style="width: 100%; margin-top: 10px;    padding: 0 12px 0 12px;">
+<div class="tabla-scroll" style="width: 100%; margin-top: 10px;   ">
   <div class="tabla-contenedor" (scroll)="onScroll($event)">
    
     <table
@@ -74,93 +74,52 @@
 
       <!-- Columnas -->
       <ng-container matColumnDef="referencia">
-        <th mat-header-cell *matHeaderCellDef sticky>Referencia</th>
+        <th mat-header-cell *matHeaderCellDef sticky>REFERENCIA</th>
         <td mat-cell *matCellDef="let element">{{ element.referencia }}</td>
       </ng-container>
 
       <ng-container matColumnDef="descripcion">
-        <th mat-header-cell *matHeaderCellDef sticky>Descripción</th>
+        <th mat-header-cell *matHeaderCellDef sticky>DESCRIPCIÓN</th>
         <td mat-cell *matCellDef="let element">{{ element.descripcion }}</td>
       </ng-container>
 
       
       <ng-container matColumnDef="costo">
-        <th mat-header-cell *matHeaderCellDef sticky>Costo</th>
+        <th mat-header-cell *matHeaderCellDef sticky>COSTO</th>
         <td mat-cell *matCellDef="let element">${{ element.costo.toLocaleString("de-DE") }}</td>
       </ng-container>
 
       <ng-container matColumnDef="precio1">
-        <th mat-header-cell *matHeaderCellDef sticky>Precio1</th>
+        <th mat-header-cell *matHeaderCellDef sticky>PRECIO1</th>
         <td mat-cell *matCellDef="let element">${{ element.precio1.toLocaleString("de-DE") }}</td>
       </ng-container>
 
         <ng-container matColumnDef="precio2">
-        <th mat-header-cell *matHeaderCellDef sticky>Precio1</th>
+        <th mat-header-cell *matHeaderCellDef sticky>PRECIO2</th>
         <td mat-cell *matCellDef="let element">${{ element.precio2.toLocaleString("de-DE") }}</td>
       </ng-container>
 
         <ng-container matColumnDef="precio3">
-        <th mat-header-cell *matHeaderCellDef sticky>Precio1</th>
+        <th mat-header-cell *matHeaderCellDef sticky>PRECIO3</th>
         <td mat-cell *matCellDef="let element">${{ element.precio3.toLocaleString("de-DE") }}</td>
       </ng-container>
 
       <!-- Columnas de cantidades -->
-      <ng-container matColumnDef="cantidad1">
-        <th mat-header-cell *matHeaderCellDef>Cant. 1</th>
+   
+
+      <ng-container matColumnDef="cantidad">
+        <th mat-header-cell *matHeaderCellDef>CANTIDAD</th>
         <td mat-cell *matCellDef="let element">{{ element.cantidad }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="cantidad2">
-        <th mat-header-cell *matHeaderCellDef>Cant. 2</th>
-        <td mat-cell *matCellDef="let element">{{ element.cantidad2 }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="cantidad3">
-        <th mat-header-cell *matHeaderCellDef>Cant. 3</th>
-        <td mat-cell *matCellDef="let element">{{ element.cantidad3 }}</td>
-      </ng-container>
-      <ng-container matColumnDef="cantidad4">
-        <th mat-header-cell *matHeaderCellDef>Cant. 4</th>
-        <td mat-cell *matCellDef="let element">{{ element.cantidad4 }}</td>
-      </ng-container>
-      <ng-container matColumnDef="cantidad5">
-        <th mat-header-cell *matHeaderCellDef>Cant. 5</th>
-        <td mat-cell *matCellDef="let element">{{ element.cantidad5 }}</td>
-      </ng-container>
-
-        <ng-container matColumnDef="cantidad6">
-        <th mat-header-cell *matHeaderCellDef>Cant. 6</th>
-        <td mat-cell *matCellDef="let element">{{ element.cantidad6 }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="cantidad7">
-        <th mat-header-cell *matHeaderCellDef>Cant. 7</th>
-        <td mat-cell *matCellDef="let element">{{ element.cantidad7 }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="cantidad8">
-        <th mat-header-cell *matHeaderCellDef>Cant. 8</th>
-        <td mat-cell *matCellDef="let element">{{ element.cantidad8 }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="cantidad9">
-        <th mat-header-cell *matHeaderCellDef>Cant. 9</th>
-        <td mat-cell *matCellDef="let element">{{ element.cantidad9}}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="cantidad10">
-        <th mat-header-cell *matHeaderCellDef>Cant. 10</th>
-        <td mat-cell *matCellDef="let element">{{ element.cantidad10}}</td>
-      </ng-container>
-
-
-
+     
 
 
 
       <!-- Última columna fija -->
-      <ng-container matColumnDef="totalproducto">
-        <th mat-header-cell *matHeaderCellDef sticky stickyEnd>Total Producto</th>
+      
+        <ng-container matColumnDef="totalproducto" stickyEnd>
+        <th mat-header-cell *matHeaderCellDef  stickyEnd>TOTAL PRODUCTO</th>
         <td mat-cell *matCellDef="let element" stickyEnd>
           <ng-container>
             ${{ element.cantidadtotal.toLocaleString("de-DE") }}
@@ -168,7 +127,6 @@
          
         </td>
       </ng-container>
-
       <!-- Filas -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns" class="tablatr"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns" class="tablatr"></tr>
@@ -230,6 +188,8 @@
 
 
       <!-- Última columna fija -->
+   
+
       <ng-container matColumnDef="totalproducto">
         <th mat-header-cell *matHeaderCellDef sticky stickyEnd>Total Producto</th>
         <td mat-cell *matCellDef="let element" stickyEnd>
@@ -245,6 +205,35 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns2" class="tablatr"></tr>
 
     </table>
+
+
+
+   
   </div>
+
+  <div class="d-flex justify-content-end" style="margin-top: 30px; padding: 0 10px 0 10px;">
+   
+    <span style="font-weight: 700;
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif !important;">Total: ${{totalglobal.toLocaleString("de-DE") }}
+    </span>
+</div>
+  
+   <div class="d-flex justify-content-center containerexport">
+        <button
+        mat-flat-button
+        color="primary"
+        full-button
+        pedido
+        class="botonotions botonexpor"
+       
+        style="box-shadow: 0px 4px 3px rgba(0, 0, 0, 0.2) !important;
+    width: 100px;
+    height: fit-content;
+    "
+      >
+       Exportar
+      </button>
+    </div>
 </div>
 

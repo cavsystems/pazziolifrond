@@ -9,26 +9,25 @@ import { Socket_producto } from 'src/services/socket/socket.producto.service.ts.
 })
 export class InventarioComponent implements OnInit {
   bodegas:any[]=[]
+  totalpositivo:number=0;
+  totalglobal:number=0;
+totalnegativo:number=0;
   bodegaSeleccionada:string=''
    displayedColumns: string[] = [
  
     'referencia',
     'descripcion',
+     'cantidad',
+   
+   
     'costo',
     'precio1',
      'precio2',
       'precio3',
-   'cantidad1',
-     'cantidad2',
-      'cantidad3',
-       'cantidad4',
-        'cantidad5',
-         'cantidad6',
-          'cantidad7',
-           'cantidad8',
-            'cantidad9',
-             'cantidad10',
-    'totalproducto'
+
+    'totalproducto',
+    
+   
   ];
 
 
@@ -58,6 +57,11 @@ export class InventarioComponent implements OnInit {
     imagen: null,
     ciudad: '',
   };
+
+  encontrarnombretabla(id:number){
+    const titulos=this.bodegas.find(item=> item.codigo===id)
+    return titulos ? titulos.alias : ''; 
+  }
   pagina=1
   cliente=""
 obtenertodo=false
@@ -80,6 +84,28 @@ obtenertodo=false
    }
   ngOnInit(): void {
     //nada
+    this.obtenertodo=true
+     this.socketproduct
+        .obtenerInfo('aws', 'pazzioli-pos-3', {
+          metodo: 'CONSULTAR',
+          condicion: 'INVENTARIO',
+          consulta: 'PRODUCTOS',
+          canalserver: 'aws',
+          datoCondicion: 1,
+          pagina:1,
+          bodega:''
+
+        })
+       
+        .subscribe((dato) => {
+          if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
+                        console.log("numerregistro", JSON.parse(dato).registro)
+                        this.nregistros= JSON.parse(dato).registro
+                        this.productos = JSON.parse(dato).mensajePeticion;
+                     this.totalglobal=JSON.parse(dato).inventariototal
+
+          }              
+        });
   }
 
 
@@ -113,6 +139,7 @@ obtenertodo=false
 
         
          this.productos = [...JSON.parse(dato).mensajePeticion];
+               this.totalglobal=JSON.parse(dato).mensajePeticion.reduce((acum:any, item:any) => acum + item.cantidadtotal, 0)
          this.cdr.detectChanges();
           }
         });
@@ -120,6 +147,57 @@ obtenertodo=false
 
   }
 cargabodega(valor: string){
+  if(this.obtenertodo){
+    this.pagina=1
+    this.productos=[]
+    this.socketproduct
+        .obtenerInfo('aws', 'pazzioli-pos-3', {
+          metodo: 'CONSULTAR',
+          condicion: 'INVENTARIO',
+          consulta: 'PRODUCTOS',
+          canalserver: 'aws',
+          datoCondicion: this.pagina ,
+          pagina:this.pagina,
+          bodega:valor
+
+        })
+        .subscribe((dato) => {
+          if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
+                        console.log("numerregistro", JSON.parse(dato).registro)
+                        this.nregistros= JSON.parse(dato).registro
+                        this.productos = JSON.parse(dato).mensajePeticion;
+                              this.totalglobal=JSON.parse(dato).mensajePeticion.reduce((acum:any, item:any) => acum + item.cantidadtotal, 0)
+          }
+        });
+  }else{
+      this.pagina=1
+    this.productos=[]
+    if(this.cliente!==""){
+     this.socketproduct
+        .obtenerInfo('aws', 'pazzioli-pos-3', {
+          metodo: 'CONSULTAR',
+          condicion: 'DESCRIPCIONINVENTARIO',
+          consulta: 'PRODUCTOS',
+          canalserver: 'aws',
+          datoCondicion:this.cliente ,
+          bodega:valor
+        })
+          
+
+        .subscribe((dato) => {
+          if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
+
+        
+         this.productos = [...JSON.parse(dato).mensajePeticion];
+         this.cdr.detectChanges();
+         this.totalglobal=0
+
+               this.totalglobal=JSON.parse(dato).mensajePeticion.reduce((acum:any, item:any) => acum + item.cantidadtotal, 0)
+               console.log("totalglobal", this.totalglobal)
+          }
+        });
+        }
+  }
   
  
 }
@@ -127,10 +205,94 @@ cargabodega(valor: string){
 navegarpagina1(){
 
 }
+calcularpositivo(id:number){
+  let contadorpositovo=0
+  console.log("id codigo",id)
+  const dato=this.productos.find(item=>{
 
+    return item.codigo === id})
+  console.log("codigoid",dato)
+  if(dato.cantidad>=0){
+    contadorpositovo+=dato.cantidad
+  }
+  
+  if(dato.cantidad2>=0){
+    contadorpositovo+=dato.cantidad2
+  }
+  if(dato.cantidad3>=0){
+    contadorpositovo+=dato.cantidad3
+  }
+  if(dato.cantidad4>=0){
+    contadorpositovo+=dato.cantidad4
+  }
+    if(dato.cantidad5>=0){
+    contadorpositovo+=dato.cantidad5
+  }
+    if(dato.cantidad6>=0){
+    contadorpositovo+=dato.cantidad6
+  }
+
+    if(dato.cantidad7>=0){
+    contadorpositovo+=dato.cantidad7
+  }
+  
+    if(dato.cantidad8>=0){
+    contadorpositovo+=dato.cantidad8
+  }
+   if(dato.cantidad9>=0){
+    contadorpositovo+=dato.cantidad9
+  }
+
+  if(dato.cantidad10>=0){
+    contadorpositovo+=dato.cantidad10
+  }
+  return contadorpositovo
+}
+
+
+calcularnegativo(id:number){
+  let contadorpositovo=0
+  const dato=this.productos.find(item=> item.codigo === id)
+  if(dato.cantidad<=0){
+    contadorpositovo+=dato.cantidad
+  }
+  
+  if(dato.cantidad2<=0){
+    contadorpositovo+=dato.cantidad2
+  }
+  if(dato.cantidad3<=0){
+    contadorpositovo+=dato.cantidad3
+  }
+  if(dato.cantidad4<=0){
+    contadorpositovo+=dato.cantidad4
+  }
+    if(dato.cantidad5<=0){
+    contadorpositovo+=dato.cantidad5
+  }
+    if(dato.cantidad6<=0){
+    contadorpositovo+=dato.cantidad6
+  }
+
+    if(dato.cantidad7<=0){
+    contadorpositovo+=dato.cantidad7
+  }
+  
+    if(dato.cantidad8<=0){
+    contadorpositovo+=dato.cantidad8
+  }
+   if(dato.cantidad9<=0){
+    contadorpositovo+=dato.cantidad9
+  }
+
+  if(dato.cantidad10<=0){
+    contadorpositovo+=dato.cantidad10
+  }
+  return contadorpositovo
+}
 cargarcarteracompleta(){
   console.log(">>> Ejecutando cargarcarteracompleta()");
   this.cliente=""
+  this.pagina=1
   if(this.obtenertodo){
    this.socketproduct
         .obtenerInfo('aws', 'pazzioli-pos-3', {
@@ -148,6 +310,7 @@ cargarcarteracompleta(){
                         console.log("numerregistro", JSON.parse(dato).registro)
                         this.nregistros= JSON.parse(dato).registro
                         this.productos = JSON.parse(dato).mensajePeticion;
+                              this.totalglobal=JSON.parse(dato).mensajePeticion.reduce((acum:any, item:any) => acum + item.cantidadtotal, 0)
           }
         });
   }else{
@@ -195,7 +358,8 @@ onScroll(event: any){
       pro.push(item); // 👉 agrega al array existente
     }
               })
-         
+                    this.totalglobal=JSON.parse(dato).inventariototal
+         console.log("productos despues",pro)  
   this.productos=[...pro]
   console.log(this.productos)
   return}
