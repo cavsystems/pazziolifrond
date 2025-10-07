@@ -19,6 +19,7 @@ import { InicialComponent } from './componentes/inicial/inicial.component';
 import { NgChartsModule } from 'ng2-charts';
 import { InventarioFisicoComponent } from './componentes/inventario-fisico/inventario-fisico.component';
 import { InventarioComponent } from './componentes/inventario/inventario.component';
+import { AuxclienteComponent } from './componentes/auxcliente/auxcliente.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { InventarioComponent } from './componentes/inventario/inventario.compone
     InicialComponent,
     InventarioFisicoComponent,
     InventarioComponent,
+    AuxclienteComponent,
   ],
   imports: [
     CommonModule,

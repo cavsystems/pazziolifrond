@@ -152,12 +152,16 @@ table {
 /* 🔹 Evita que el texto de las celdas se parta en varias líneas */
 .tabla-contenedor .mat-header-cell,
 .tabla-contenedor .mat-cell {
-  white-space: nowrap !important;
+  //white-space: nowrap !important;
   overflow: hidden;
   text-overflow: ellipsis; /* Opcional: agrega "..." si se corta */
   padding: 8px 12px; /* un poco de espacio para que se vea bien */
+ 
 }
 
+::ng-deep .tablatr td:nth-child(2) {
+  min-width: 300px;
+}
 /* 🔹 Asegura que las columnas mantengan su ancho natural */
 .tabla-contenedor table {
   table-layout: auto !important;

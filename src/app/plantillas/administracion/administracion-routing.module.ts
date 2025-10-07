@@ -8,6 +8,7 @@ import { RecibodecajaComponent } from './componentes/recibodecaja/recibodecaja.c
 import { InicialComponent } from './componentes/inicial/inicial.component';
 import { InventarioFisicoComponent } from './componentes/inventario-fisico/inventario-fisico.component';
 import { InventarioComponent } from './componentes/inventario/inventario.component';
+import { AuxclienteComponent } from './componentes/auxcliente/auxcliente.component';
 
 //runGuardsAndResolvers esto me permitira que cada ves que navegue de nuevo aqui se vulva a ejecuta el oningt
 export const AdminRoutes: Routes = [
@@ -57,6 +58,11 @@ export const AdminRoutes: Routes = [
   {
     path:'inventario',
     component:InventarioComponent
+  },
+   {
+    path:'auxcliente',
+    component:AuxclienteComponent
   }
+
 
 ];

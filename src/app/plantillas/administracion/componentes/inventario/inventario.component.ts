@@ -121,6 +121,7 @@ obtenertodo=false
     if (!valor || valor.trim() === '') {
 
       this.productos = [];
+      this.totalglobal=0
       return;
     } else {
       this.socketproduct
@@ -139,7 +140,7 @@ obtenertodo=false
 
         
          this.productos = [...JSON.parse(dato).mensajePeticion];
-               this.totalglobal=JSON.parse(dato).mensajePeticion.reduce((acum:any, item:any) => acum + item.cantidadtotal, 0)
+            this.totalglobal=JSON.parse(dato).inventariototal
          this.cdr.detectChanges();
           }
         });
@@ -166,7 +167,7 @@ cargabodega(valor: string){
                         console.log("numerregistro", JSON.parse(dato).registro)
                         this.nregistros= JSON.parse(dato).registro
                         this.productos = JSON.parse(dato).mensajePeticion;
-                              this.totalglobal=JSON.parse(dato).mensajePeticion.reduce((acum:any, item:any) => acum + item.cantidadtotal, 0)
+                           this.totalglobal=JSON.parse(dato).inventariototal
           }
         });
   }else{
@@ -191,8 +192,7 @@ cargabodega(valor: string){
          this.productos = [...JSON.parse(dato).mensajePeticion];
          this.cdr.detectChanges();
          this.totalglobal=0
-
-               this.totalglobal=JSON.parse(dato).mensajePeticion.reduce((acum:any, item:any) => acum + item.cantidadtotal, 0)
+    this.totalglobal=JSON.parse(dato).inventariototal
                console.log("totalglobal", this.totalglobal)
           }
         });
@@ -310,7 +310,7 @@ cargarcarteracompleta(){
                         console.log("numerregistro", JSON.parse(dato).registro)
                         this.nregistros= JSON.parse(dato).registro
                         this.productos = JSON.parse(dato).mensajePeticion;
-                              this.totalglobal=JSON.parse(dato).mensajePeticion.reduce((acum:any, item:any) => acum + item.cantidadtotal, 0)
+                                 this.totalglobal=JSON.parse(dato).inventariototal
           }
         });
   }else{
