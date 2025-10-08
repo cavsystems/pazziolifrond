@@ -76,6 +76,7 @@
   flex: 1 1 auto; /* Esto hace que crezca y ocupe lo que sobra */
   overflow: auto; /* Aquí se aplicará el scroll */
   min-height: 0; /* Importante para que funcione bien con flexbox */
+  padding-bottom: 100px;
 }
 //estilos botones navegacion
 .botones-navegacion{

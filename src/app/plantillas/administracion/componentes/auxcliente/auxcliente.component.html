@@ -1,5 +1,5 @@
-<div>
-  <mat-card-title class="tituloP">Consultar cartera</mat-card-title>
+<div class="d-flex justify-content-center" style="padding: 30px 12px 10px 12px;">
+  <mat-card-title class="tituloP">Movimiento de cliente</mat-card-title>
 </div>
 
 
@@ -7,28 +7,23 @@
   class="row loader-content"
   style="padding-top: 20px; height: 100% !important"
 >
-<mat-card  style="max-width: 70%; max-height: fit-content">
+
+<div class="buscaliente"  style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; padding: 0 8px 0 5px;" >
+
+<mat-card  style="max-width:70%; max-height: fit-content ; width: 100%;" >
      <mat-card-header class="search">
         <div style="display: flex; justify-content: space-between">
-          <mat-card-title class="m-0 " style="margin-left: 15px !important;">Producto</mat-card-title>
-          <div style="margin-right: 15px !important;">
-            <label for="cartera" style="font-size: 1rem; font-weight: bold"
-              >Completa </label
-            >
-            <input
-              type="checkbox"
-              id="cartera"
-             
-            />
-          </div>
+          <mat-card-title class="m-0 " style="margin-left: 15px !important;">Cliente</mat-card-title>
+         
         </div>
         <div class="row">
           <div class="col-12">
             <mat-form-field appearance="fill" search >
-              <mat-label>Buscar Producto</mat-label>
+              <mat-label>Buscar cliente</mat-label>
               <input
                 matInput
-             
+                 (ngModelChange)="autocompletarinputclient($event)"
+                [(ngModel)]="cliente"
               />
               <mat-icon matSuffix>search</mat-icon>
 
@@ -36,7 +31,167 @@
             </mat-form-field>
           </div>
         </div>
+        <div class="d-flex justify-content-between flex-wrap" style="padding:0 12px 0 12px">
+        <mat-form-field
+                class="example-full-width mat-form-cxc"
+                style="padding: 0 !important; flex: 0 0 30%;"
+              >
+                <mat-label>fecha inicial</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="pickerinicial"
+                  [(ngModel)]=" fechaInicial"
+                />
+                <mat-datepicker-toggle matIconSuffix [for]="pickerinicial">
+                  <mat-icon matDatepickerToggleIcon
+                    >keyboard_arrow_down</mat-icon
+                  >
+                </mat-datepicker-toggle>
+                <mat-datepicker #pickerinicial></mat-datepicker>
+              </mat-form-field>
+
+
+               <mat-form-field
+                class="example-full-width mat-form-cxc"
+                style="padding: 0 !important; flex: 0 0 30%;"
+              >
+                <mat-label>fecha final</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="pickerfinal"
+                  [(ngModel)]="fechafinal"
+                />
+                <mat-datepicker-toggle matIconSuffix [for]="pickerfinal">
+                  <mat-icon matDatepickerToggleIcon
+                    >keyboard_arrow_down</mat-icon
+                  >
+                </mat-datepicker-toggle>
+                <mat-datepicker #pickerfinal></mat-datepicker>
+              </mat-form-field>
+
+
+              </div>
       </mat-card-header>
-     
+      <mat-card-content class="overflow-content" style="height: auto">
+        <!-- LISTA CLIENTES -->
+        <mat-selection-list #shoes [multiple]="false" class="clientelist">
+          <mat-list-option
+            *ngFor="let _cliente of clientes"
+            [value]="_cliente"
+            (click)="seleccionarCliente(_cliente)"
+            style="width: calc(100% - 32px); margin: auto; border-radius: 8px"
+          >
+            <div>
+              <div mat-line class="bold">{{ _cliente.razonSocial }}</div>
+              <div mat-line><b>Id: </b> {{ _cliente.identificacion }}</div>
+            </div>
+          </mat-list-option>
+        </mat-selection-list>
+
+
+
+      </mat-card-content>
+
+
+       <mat-card class="b-primary icon-card" style="height: 100px">
+        <mat-card-header style="border: none !important">
+          <div mat-card-avatar>
+            <img
+              *ngIf="clienteSeleccionado.imagen; else sinimagen"
+              [src]="'http://localhost:3000/' + clienteSeleccionado.imagen"
+              style="
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                object-fit: cover;
+              "
+            />
+            <ng-template #sinimagen>
+              <mat-icon class="head-icon" style="margin: 11px 0">
+                face
+              </mat-icon>
+            </ng-template>
+          </div>
+          <mat-card-title class="client-name">{{
+            clienteSeleccionado.nombre
+          }}</mat-card-title>
+          <div class="separator"></div>
+          <mat-card-subtitle class="client-info">
+            <div class="row">
+              <div class="col-6 p-0 elipsis">
+                <mat-icon>perm_identity</mat-icon>
+                {{ clienteSeleccionado.identificacion }}
+              </div>
+              <div class="col-6 p-0 elipsis">
+                <mat-icon>phone_android</mat-icon>
+                {{ clienteSeleccionado.celulares }}
+              </div>
+              <div class="col-6 p-0 elipsis">
+                <mat-icon>phone</mat-icon>
+                {{ clienteSeleccionado.telefonoFijo }}
+              </div>
+              <div class="col-6 p-0 elipsis">
+                <mat-icon>alternate_email</mat-icon>
+                {{ clienteSeleccionado.email }}
+              </div>
+              <div class="col-12 p-0 elipsis">
+                <mat-icon>location_city</mat-icon>
+                {{ clienteSeleccionado.direccion }}
+              </div>
+            </div>
+          </mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
 </mat-card>
+
+
+<div class="tabla-scroll" style="width: 100%; margin-top: 10px;   ">
+  <div class="tabla-contenedor" >
+   
+    <table
+      mat-table
+      [dataSource]="data"
+      class="mat-elevation-z8 col-12 tab-factura"
+      multiTemplateDataRows
+      
+    >
+
+      <!-- Columnas -->
+      <ng-container matColumnDef="Documento">
+        <th mat-header-cell *matHeaderCellDef sticky>Documento</th>
+        <td mat-cell *matCellDef="let element">{{ element.referencia }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="Fechadocumento">
+        <th mat-header-cell *matHeaderCellDef sticky>Fechadocumento</th>
+        <td mat-cell *matCellDef="let element">{{ element.descripcion }}</td>
+      </ng-container>
+
+      
+      <ng-container matColumnDef="debito">
+        <th mat-header-cell *matHeaderCellDef sticky>Debito</th>
+        <td mat-cell *matCellDef="let element">${{ element.costo.toLocaleString("de-DE") }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="credito">
+        <th mat-header-cell *matHeaderCellDef sticky>Credito</th>
+        <td mat-cell *matCellDef="let element">${{ element.precio1.toLocaleString("de-DE") }}</td>
+      </ng-container>
+
+        <ng-container matColumnDef="saldoactual">
+        <th mat-header-cell *matHeaderCellDef sticky>Saldo</th>
+        <td mat-cell *matCellDef="let element">${{ element.precio2.toLocaleString("de-DE") }}</td>
+      </ng-container>
+
+       
+      <!-- Filas -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="tablatr"></tr>
+    
+
+    </table>
+
+</div>
+
+
+
 </div>
