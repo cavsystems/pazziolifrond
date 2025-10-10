@@ -1,0 +1,49 @@
+::ng-deep .mat-form-cxc{
+    .mat-form-field-wrapper>div>div{
+     display: flex;
+    
+     
+    }
+
+.mat-form-field-wrapper{
+    padding: 0 !important;
+}
+   
+}
+::ng-deep .mat-form-cxc .mat-form-field-underline {
+  border-bottom: 2px solid #2196f3; /* o el color que tú quieras */
+}
+
+@media (max-width:624px) {
+
+  ::ng-deep  .mat-form-cxc{
+        flex: 0 0 100% !important;
+    }
+}
+.tituloseccion{
+    font: bold 14px 'montserral','sans-serif'
+}
+.tituloP
+ {
+    padding-top: 15px;
+    display: flex
+;
+    font-weight: bold;
+    justify-content: center;
+}
+
+
+.tabla-contenedor{
+    max-height: 300px;
+    overflow: auto;
+    position: relative;
+    width: 100%;
+    box-shadow: 0 6px 10px 0px rgba(39, 38, 49, 0.1) !important;
+    border-radius: 10px;
+
+}
+
+.clientelist{
+    max-height: 180px;
+    overflow: auto;
+}

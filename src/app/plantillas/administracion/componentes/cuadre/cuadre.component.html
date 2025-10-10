@@ -1,0 +1,121 @@
+<div class="d-flex justify-content-center" style="padding: 30px 12px 10px 12px;">
+  <mat-card-title class="tituloP">Cuadre</mat-card-title>
+</div>
+
+<div
+  class="row loader-content"
+  style="padding-top: 20px; height: 100% !important"
+>
+
+<div class="buscaliente"  style="width: 100%; display: flex; flex-direction: column; align-items: center; padding: 0 8px 0 5px;" >
+<mat-card  style="max-width:70%; max-height: fit-content ; width: 100%;" >
+     <mat-card-header class="search">
+        <div style="display: flex; justify-content: space-between">
+          <mat-card-title class="m-0 " style="margin-left: 15px !important;">Cliente</mat-card-title>
+         
+        </div>
+        <div class="row">
+          <div class="col-6">
+             <mat-form-field appearance="fill" class="classformbodega">
+  <mat-label>Elige un almacen</mat-label>
+  <select matNativeControl  [(ngModel)]="this.almacen"  (ngModelChange)="cargaalmacen($event)">
+    <option value="" selected>Todo</option>
+    <option value="volvo" *ngFor="let item of almacenes" [value]="item.alias">{{item.alias}}</option>
+    
+  </select>
+</mat-form-field>
+          </div>
+
+            <div class="col-6">
+             <mat-form-field appearance="fill" class="classformbodega">
+  <mat-label>Elige un usuario</mat-label>
+  <select matNativeControl  [(ngModel)]="this.almacen"  (ngModelChange)="cargaalmacen($event)">
+    <option value="" selected>Todo</option>
+    <option value="volvo" *ngFor="let item of almacenes" [value]="item.alias">{{item.alias}}</option>
+    
+  </select>
+</mat-form-field>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between flex-wrap" style="padding:0 12px 0 12px">
+        <mat-form-field
+                class="example-full-width mat-form-cxc"
+                style="padding: 0 !important; flex: 0 0 30%;"
+              >
+                <mat-label>fecha inicial</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="pickerinicial"
+                  [(ngModel)]=" fechaInicial"
+                />
+                <mat-datepicker-toggle matIconSuffix [for]="pickerinicial">
+                  <mat-icon matDatepickerToggleIcon
+                    >keyboard_arrow_down</mat-icon
+                  >
+                </mat-datepicker-toggle>
+                <mat-datepicker #pickerinicial></mat-datepicker>
+              </mat-form-field>
+
+
+               <mat-form-field
+                class="example-full-width mat-form-cxc"
+                style="padding: 0 !important; flex: 0 0 30%;"
+              >
+                <mat-label>fecha final</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="pickerfinal"
+                  [(ngModel)]="fechafinal"
+                />
+                <mat-datepicker-toggle matIconSuffix [for]="pickerfinal">
+                  <mat-icon matDatepickerToggleIcon
+                    >keyboard_arrow_down</mat-icon
+                  >
+                </mat-datepicker-toggle>
+                <mat-datepicker #pickerfinal></mat-datepicker>
+              </mat-form-field>
+
+
+              </div>
+      </mat-card-header>
+      <mat-card-content class="overflow-content" style="height: auto">
+        <!-- LISTA CLIENTES -->
+        <mat-selection-list #shoes [multiple]="false" class="clientelist">
+          <mat-list-option
+            *ngFor="let _cliente of clientes"
+            [value]="_cliente"
+            (click)="seleccionarCliente(_cliente)"
+            style="width: calc(100% - 32px); margin: auto; border-radius: 8px"
+          >
+            <div>
+              <div mat-line class="bold">{{ _cliente.razonSocial }}</div>
+              <div mat-line><b>Id: </b> {{ _cliente.identificacion }}</div>
+            </div>
+          </mat-list-option>
+        </mat-selection-list>
+
+
+
+      </mat-card-content>
+
+
+      
+</mat-card>
+<div class="row" style="width: 100%;">
+    <div class="col-12">
+        <mat-card>
+       <div class="d-flex justify-content-start">
+        <span class="tituloseccion">Novmiento</span>
+        <div class="row">
+            <div class="col-12">
+                   <div class="col-">
+                
+            </div>
+            </div>
+        </div>
+       </div>
+        </mat-card>
+    </div>
+</div>
+
+</div>

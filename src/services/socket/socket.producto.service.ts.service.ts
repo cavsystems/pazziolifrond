@@ -117,6 +117,25 @@ export class Socket_producto {
     });
   }
 
+  consultarfacturasxusuario(codigousuari:string,fechainicio:string,fechafin:string): Observable<any>{
+ return this.http.get(`${environment.api}/consultarfacturasxusuario?codigousuario=${codigousuari}&fechainicio=${fechainicio}&fechafin=${fechafin} `, {
+      withCredentials: true,
+    })
+  }
+
+  consultaruaxiliarcliente(codigotercero:string,fechainicio:string,fechafin:string):Observable<any>{
+    console.log("consultarauxcliente")
+   return this.http.get(`${environment.api}/consultarauxiliarcliente?codigotercero=${codigotercero}&fechainicio=${fechainicio}&fechafin=${fechafin}`,{
+       withCredentials: true,
+    })
+  }
+consultarrecibosxusuario(codigofa:number,codigocom:number):Observable<any>{
+  console.log("codigos",codigofa,codigocom)
+  return this.http.get(`${environment.api}/consultarreciboaux?codigofa=${codigofa}&codigocom=${codigocom} `, {
+      withCredentials: true,
+    })
+
+}
   actulizarpedido(id: string, data: any): Observable<any> {
     return this.http.put(`${environment.api}/actulizarreservado/${id}`, data, {
       withCredentials: true,

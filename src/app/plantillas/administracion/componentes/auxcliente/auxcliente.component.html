@@ -8,7 +8,7 @@
   style="padding-top: 20px; height: 100% !important"
 >
 
-<div class="buscaliente"  style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; padding: 0 8px 0 5px;" >
+<div class="buscaliente"  style="width: 100%;  display: flex; flex-direction: column; align-items: center; padding: 0 8px 100px 5px;" >
 
 <mat-card  style="max-width:70%; max-height: fit-content ; width: 100%;" >
      <mat-card-header class="search">
@@ -150,7 +150,7 @@
    
     <table
       mat-table
-      [dataSource]="data"
+      [dataSource]="dataSource"
       class="mat-elevation-z8 col-12 tab-factura"
       multiTemplateDataRows
       
@@ -159,37 +159,46 @@
       <!-- Columnas -->
       <ng-container matColumnDef="Documento">
         <th mat-header-cell *matHeaderCellDef sticky>Documento</th>
-        <td mat-cell *matCellDef="let element">{{ element.referencia }}</td>
+        <td mat-cell *matCellDef="let element">{{ element.documento }}</td>
       </ng-container>
 
       <ng-container matColumnDef="Fechadocumento">
-        <th mat-header-cell *matHeaderCellDef sticky>Fechadocumento</th>
-        <td mat-cell *matCellDef="let element">{{ element.descripcion }}</td>
+        <th mat-header-cell *matHeaderCellDef sticky>Fecha documento</th>
+        <td mat-cell *matCellDef="let element">{{ element.Fechadocumento }}</td>
       </ng-container>
 
       
       <ng-container matColumnDef="debito">
         <th mat-header-cell *matHeaderCellDef sticky>Debito</th>
-        <td mat-cell *matCellDef="let element">${{ element.costo.toLocaleString("de-DE") }}</td>
+        <td mat-cell *matCellDef="let element">${{ element.debito.toLocaleString("de-DE") }}</td>
       </ng-container>
 
       <ng-container matColumnDef="credito">
         <th mat-header-cell *matHeaderCellDef sticky>Credito</th>
-        <td mat-cell *matCellDef="let element">${{ element.precio1.toLocaleString("de-DE") }}</td>
+        <td mat-cell *matCellDef="let element">${{ element.credito.toLocaleString("de-DE") }}</td>
       </ng-container>
 
         <ng-container matColumnDef="saldoactual">
         <th mat-header-cell *matHeaderCellDef sticky>Saldo</th>
-        <td mat-cell *matCellDef="let element">${{ element.precio2.toLocaleString("de-DE") }}</td>
+        <td mat-cell *matCellDef="let element">${{ element.saldoactual.toLocaleString("de-DE") }}</td>
       </ng-container>
 
        
-      <!-- Filas -->
+      <!-- Filas -->  
       <tr mat-header-row *matHeaderRowDef="displayedColumns" class="tablatr"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     
 
     </table>
 
+</div>
+
+ <div class="d-flex justify-content-end" style="margin-top: 30px; padding: 0 10px 0 10px;">
+   
+    <span style="font-weight: 700;
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif !important;">Total: ${{this.saldo.toLocaleString("de-DE") }}
+    </span>
 </div>
 
 

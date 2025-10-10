@@ -20,6 +20,8 @@ import { NgChartsModule } from 'ng2-charts';
 import { InventarioFisicoComponent } from './componentes/inventario-fisico/inventario-fisico.component';
 import { InventarioComponent } from './componentes/inventario/inventario.component';
 import { AuxclienteComponent } from './componentes/auxcliente/auxcliente.component';
+import { AdministracionComponent } from './administracion.component';
+import { CuadreComponent } from './componentes/cuadre/cuadre.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import { AuxclienteComponent } from './componentes/auxcliente/auxcliente.compone
     InventarioFisicoComponent,
     InventarioComponent,
     AuxclienteComponent,
+    AdministracionComponent,
+    CuadreComponent,
   ],
   imports: [
     CommonModule,

@@ -21,6 +21,7 @@ import { Console, log } from 'console';
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Pedidos';
+  mostrarItemsinventario:boolean=false;
   mode = { value: 'side' as 'over' | 'push' | 'side' };
   showToolbar: boolean = true; TomarPedidos: boolean = false; ConsultarCartera: boolean = false; CrearReciboIngreso: boolean = false; InventarioFisico: boolean = false;
   public sedes: any;
@@ -121,18 +122,16 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   mostrarSubItem(nItem:Number){
-    switch (nItem) {
-      case 1:
-        this.mostrarItemsCartera=true;
-        break;
+      this.mostrarItemsCartera=  !this.mostrarItemsCartera;
     
-      default:
-        break;
-    }
   }
 
   verificarItemMenuAVisualizar(){
 
+  }
+
+  mostrarsubmenuiteminventario(){
+    this.mostrarItemsinventario=!this.mostrarItemsinventario
   }
 
 }
