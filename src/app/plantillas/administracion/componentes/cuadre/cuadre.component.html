@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-center" style="padding: 30px 12px 10px 12px;">
-  <mat-card-title class="tituloP">Cuadre</mat-card-title>
+  <mat-card-title class="tituloP">Cuadre diario</mat-card-title>
 </div>
 
 <div
@@ -7,20 +7,17 @@
   style="padding-top: 20px; height: 100% !important"
 >
 
-<div class="buscaliente"  style="width: 100%; display: flex; flex-direction: column; align-items: center; padding: 0 8px 0 5px;" >
+<div class="buscaliente"  style="width: 100%; display: flex; flex-direction: column; align-items: center; padding: 0 8px 100px 5px;" >
 <mat-card  style="max-width:70%; max-height: fit-content ; width: 100%;" >
      <mat-card-header class="search">
-        <div style="display: flex; justify-content: space-between">
-          <mat-card-title class="m-0 " style="margin-left: 15px !important;">Cliente</mat-card-title>
-         
-        </div>
+      
         <div class="row">
           <div class="col-6">
              <mat-form-field appearance="fill" class="classformbodega">
   <mat-label>Elige un almacen</mat-label>
   <select matNativeControl  [(ngModel)]="this.almacen"  (ngModelChange)="cargaalmacen($event)">
-    <option value="" selected>Todo</option>
-    <option value="volvo" *ngFor="let item of almacenes" [value]="item.alias">{{item.alias}}</option>
+    <option value='0' selected >Todo</option>
+    <option value="volvo" *ngFor="let item of almacenes" [value]="item.codigo.toString()">{{item.alias}}</option>
     
   </select>
 </mat-form-field>
@@ -29,9 +26,9 @@
             <div class="col-6">
              <mat-form-field appearance="fill" class="classformbodega">
   <mat-label>Elige un usuario</mat-label>
-  <select matNativeControl  [(ngModel)]="this.almacen"  (ngModelChange)="cargaalmacen($event)">
-    <option value="" selected>Todo</option>
-    <option value="volvo" *ngFor="let item of almacenes" [value]="item.alias">{{item.alias}}</option>
+  <select matNativeControl  [(ngModel)]="this.usuario"  (ngModelChange)="cargaalmacen($event)">
+    <option value='0' selected>Todo</option>
+    <option *ngFor="let item of usuarios" [value]="item.codigo.toString()">{{item.nombre}}</option>
     
   </select>
 </mat-form-field>
@@ -42,7 +39,7 @@
                 class="example-full-width mat-form-cxc"
                 style="padding: 0 !important; flex: 0 0 30%;"
               >
-                <mat-label>fecha inicial</mat-label>
+                <mat-label>Fecha inicial</mat-label>
                 <input
                   matInput
                   [matDatepicker]="pickerinicial"
@@ -61,7 +58,7 @@
                 class="example-full-width mat-form-cxc"
                 style="padding: 0 !important; flex: 0 0 30%;"
               >
-                <mat-label>fecha final</mat-label>
+                <mat-label>Fecha final</mat-label>
                 <input
                   matInput
                   [matDatepicker]="pickerfinal"
@@ -78,44 +75,395 @@
 
               </div>
       </mat-card-header>
-      <mat-card-content class="overflow-content" style="height: auto">
-        <!-- LISTA CLIENTES -->
-        <mat-selection-list #shoes [multiple]="false" class="clientelist">
-          <mat-list-option
-            *ngFor="let _cliente of clientes"
-            [value]="_cliente"
-            (click)="seleccionarCliente(_cliente)"
-            style="width: calc(100% - 32px); margin: auto; border-radius: 8px"
-          >
-            <div>
-              <div mat-line class="bold">{{ _cliente.razonSocial }}</div>
-              <div mat-line><b>Id: </b> {{ _cliente.identificacion }}</div>
-            </div>
-          </mat-list-option>
-        </mat-selection-list>
-
-
-
-      </mat-card-content>
-
-
-      
+     
+       
+      <mat-card-footer style="display: flex
+;
+    justify-content: center;
+    padding: 10px 0 10px 0;">
+        <button class="botonconsulcua" (click)="consultarcuadre()">Consultar</button>
+      </mat-card-footer>
 </mat-card>
-<div class="row" style="width: 100%;">
+<div class="row" style="width: 100%; max-width: 1150px;">
     <div class="col-12">
         <mat-card>
-       <div class="d-flex justify-content-start">
-        <span class="tituloseccion">Novmiento</span>
+          <mat-card-header>
+            <div style="    display: flex
+;
+    justify-content: end;
+    width: 100%;"><span class="clasecuadrecajatotal">Total caja: ${{this.totalcaja.toLocaleString("de-DE")}}</span></div>
+          </mat-card-header>
+       <div class="d-flex justify-content-start flex-column">
+        <span class="tituloseccion" style="padding: 0 17px;">Ventas</span>
         <div class="row">
-            <div class="col-12">
-                   <div class="col-">
+           <div class="col-12 col-md-6" style="padding: 0;">
+            <div class="row">
+            <div class="col-6 ">
+                   <label class="labelcuadre">Total venta bruta</label>
+                    <mat-form-field appearance="fill" search  class="inputdisabled" >
+                 <mat-label><span  class="totalescuadrespan" >{{totalventas.toLocaleString("de-DE")}}</span></mat-label>
+              <input
+                matInput
+                placeholder=""
+               disabled
+             
+              />
+             
+
+              
+            </mat-form-field>
+            </div>
+
+             <div class="col-6">
+               <label  class="labelcuadre">Total descuento</label>
+                    <mat-form-field appearance="fill" search  class="inputdisabled" >
+              <mat-label><span  class="totalescuadrespan">{{descuentoventa.toLocaleString("de-DE")}}</span></mat-label>
+              <input
+                matInput
+                placeholder=""
+            disabled
+              />
+             
+
+              
+            </mat-form-field>
+            </div>
+            </div>
+            </div>
+
+            <div class="col-12 col-md-6" style="padding: 0;">
+            <div class="row">
+            <div class="col-6">
+              <label  class="labelcuadre">Total gravada</label>
+                    <mat-form-field appearance="fill" search   class="inputdisabled" >
+              <mat-label><span  class="totalescuadrespan">{{gravadasventas.toLocaleString("de-DE")}}</span></mat-label>
+              <input
+                matInput
+                placeholder=""
+                disabled
                 
+              />
+             
+
+              
+            </mat-form-field>
             </div>
+
+             <div class="col-6">
+                <label  class="labelcuadre">Total exentas</label>
+                    <mat-form-field appearance="fill" search   class="inputdisabled">
+            
+         
+              <input
+                matInput
+                placeholder=""
+               
+             disabled
+              />
+             <mat-label><span  class="totalescuadrespan">{{ this.exentasventas.toLocaleString("de-DE")}}</span></mat-label>
+
+              
+            </mat-form-field>
             </div>
+           
+        </div>
+        </div>
+   
+       
+        </div>
+
+         
+
+         <div class="row">
+          
+
+         
+          <div class="col-6 col-md-4">
+               <label  class="labelcuadre">Total iva</label>
+                    <mat-form-field appearance="fill" search   class="inputdisabled" >
+              <mat-label><span  class="totalescuadrespan">{{ivaventas.toLocaleString("de-DE")}}</span></mat-label>
+              <input
+                matInput
+                placeholder=""
+               disabled
+             
+              />
+             
+
+              
+            </mat-form-field>
+            </div>
+
+         
+            
+             <div class="col-6 col-md-4" >
+                  <label  class="labelcuadre">Total ventas</label>
+                    <mat-form-field appearance="fill" search   class="inputdisabled">
+              <mat-label><span class="totalescuadrespan">{{totalventas.toLocaleString("de-DE")}}</span></mat-label>
+              <input
+                matInput
+                placeholder=""
+               disabled
+                 
+             
+              />
+             
+
+              
+            </mat-form-field>
+            </div>
+           
+
+          
+        </div>
+        <div class="row"  >
+          <div class="col-12" style="width: 100%; overflow: auto;" *ngIf="totalventas>0">
+               <label  class="labelcuadre">Formas de pago</label>
+            <table class="tablametodos" >
+              <thead>
+                <tr>
+                <th *ngIf="efectivoventas>0">
+                  Efectivo
+                </th>
+                    <th *ngIf="creditoventas>0">
+                  T.credito
+                </th>
+                    <th *ngIf="debitoventas>0">
+                 T.debito
+                </th>
+                    <th *ngIf="bancosventas>0">
+                 Bancos
+                </th>
+
+                 <th *ngIf="cxcventas>0">
+                 Cartera
+                </th>
+                    <th *ngIf="chequeventas>0">
+                 Cheques
+                </th>
+                 <th>
+                Total
+                </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td  *ngIf="efectivoventas>0">{{efectivoventas.toLocaleString("de-DE")}}</td>
+                  <td *ngIf="creditoventas>0">{{creditoventas.toLocaleString("de-DE")}}</td>
+                  <td  *ngIf="debitoventas>0">{{debitoventas.toLocaleString("de-DE")}}</td>
+                  <td *ngIf="bancosventas>0">{{bancosventas.toLocaleString("de-DE")}}</td>
+                  <td *ngIf="cxcventas>0">{{cxcventas.toLocaleString("de-DE")}}</td>
+                    <td *ngIf="chequeventas>0">{{chequeventas.toLocaleString("de-DE")}}</td>
+                     <td>{{totalventas.toLocaleString("de-DE")}}</td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+
         </div>
        </div>
+         <div class="d-flex justify-content-start flex-column">
+        <span class="tituloseccion" style="padding: 0 17px;">Recibos de ingreso</span> </div>
+             <div class="row">
+                <div class="col-6  ">
+                  <div>
+                <label  class="labelcuadre">Total recibos</label>
+                    <mat-form-field appearance="fill" search class="inputdisabled"  >
+              <mat-label><span class="totalescuadrespan">{{totalrecibos.toLocaleString("de-DE")}}</span></mat-label>
+              <input
+                matInput
+                placeholder=""
+               disabled
+              />
+             
+
+              
+            </mat-form-field>
+            </div>
+            </div>
+
+           
+            <div class="col-6 ">
+              <div>
+                <label class="labelcuadre">Total descuentos</label>
+                    <mat-form-field appearance="fill" search class="inputdisabled" >
+              <mat-label><span class="totalescuadrespan">{{descuentorecibos.toLocaleString("de-DE")}}</span></mat-label>
+              <input
+                matInput
+                placeholder=""
+                disabled
+              />
+             
+
+              
+            </mat-form-field>
+            </div>
+            </div>
+
+             
+            
+             <div class="row" style="width: 100%;" >
+       
+              </div>
+        </div>
+
+
+
+
+          <div class="d-flex justify-content-start flex-column">
+        <span class="tituloseccion" style="padding: 0 17px;">Egresos</span> </div>
+             <div class="row">
+                 <div class="col-6 ">
+                <label class="labelcuadre">Total egresos</label>
+                    <mat-form-field appearance="fill" search class="inputdisabled" >
+              <mat-label><span class="totalescuadrespan">0</span></mat-label>
+              <input
+                matInput
+                placeholder=""
+                disabled
+             
+              />
+             
+
+              
+            </mat-form-field>
+
+
+            
+            </div>
+            <div class="col-6 ">
+              <label class="labelcuadre">Total descuentos</label>
+                    <mat-form-field appearance="fill" search class="inputdisabled" >
+              <mat-label><span class="totalescuadrespan">0</span></mat-label>
+              <input
+                matInput
+                placeholder=""
+                 disabled
+              />
+             
+
+              
+            </mat-form-field>
+            </div>
+
+          
+           
+
+        </div>
+     <div class="d-flex justify-content-start flex-column">
+        <span class="tituloseccion" style="padding: 0 17px;">Devoluciones</span> </div>
+      
+       <div class="row">
+           <div class="col-12 col-md-6" style="padding: 0;">
+            <div class="row">
+            <div class="col-6 ">
+                   <label class="labelcuadre">Total devoluciones</label>
+                    <mat-form-field appearance="fill" search  class="inputdisabled" >
+                 <mat-label><span  class="totalescuadrespan" >{{devolucionescuadre.totalDevolucion | number:'1.0-0':'de-DE'}}</span></mat-label>
+              <input
+                matInput
+                placeholder=""
+               disabled
+             
+              />
+             
+
+              
+            </mat-form-field>
+            </div>
+
+             <div class="col-6">
+               <label  class="labelcuadre">Total devolucion contado</label>
+                    <mat-form-field appearance="fill" search  class="inputdisabled" >
+              <mat-label><span  class="totalescuadrespan">{{devolucionescuadre.totalDevolucionContado| number:'1.0-0':'de-DE'}}</span></mat-label>
+              <input
+                matInput
+                placeholder=""
+            disabled
+              />
+             
+
+              
+            </mat-form-field>
+            </div>
+            </div>
+            </div>
+
+            <div class="col-12 col-md-6" style="padding: 0;">
+            <div class="row">
+            <div class="col-6">
+              <label  class="labelcuadre">Total devolucion cartera</label>
+                    <mat-form-field appearance="fill" search   class="inputdisabled" >
+              <mat-label><span  class="totalescuadrespan">{{devolucionescuadre.totalDevolucionCartera | number:'1.0-0':'de-DE'}}</span></mat-label>
+              <input
+                matInput
+                placeholder=""
+                disabled
+                
+              />
+             
+
+              
+            </mat-form-field>
+            </div>
+
+           
+        </div>
+        </div>
+   
+       
+        </div>
+
+         
+
+
+           <div class="row"  >
+          <div class="col-12" style="width: 100%; overflow: auto;" *ngIf="totalventas>0">
+               <label  class="tituloseccion" style="padding: 12px 0px;">Formas de pago resumen</label>
+            <table class="tablametodos" >
+              <thead>
+                <tr>
+                <th >
+                  Efectivo
+                </th>
+                    <th >
+                  Tarjetas
+                </th>
+                 
+                    <th >
+                 Otros
+                </th>
+
+                 <th>
+                 Cartera
+                </th>
+                    
+                 <th>
+                Total
+                </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td  >{{efectivoglobal.toLocaleString("de-DE")}}</td>
+                  <td >{{targetas.toLocaleString("de-DE")}}</td>
+                
+                  <td >{{otros.toLocaleString("de-DE")}}</td>
+                  <td >{{cxcventas.toLocaleString("de-DE")}}</td>
+                    <td >{{totalglobalmetodos.toLocaleString("de-DE")}}</td>
+                
+                </tr>
+              </tbody>
+            </table>
+            </div>
+
+        </div>
+        
         </mat-card>
     </div>
+
+
+    
 </div>
 
 </div>

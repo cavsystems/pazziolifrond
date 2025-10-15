@@ -10,6 +10,21 @@
 }
    
 }
+.lineatotales::before{
+content: "";
+border: 1px solid  gray;
+display: block;
+
+}
+.botontable{
+  border: none;
+  border: 0.5px solid #000;
+    padding: 0;
+    border-radius: 20px;
+    text-align: center;
+    display: flex
+;
+}
 ::ng-deep .mat-form-cxc .mat-form-field-underline {
   border-bottom: 2px solid #2196f3; /* o el color que tú quieras */
 }
@@ -46,4 +61,74 @@
 .clientelist{
     max-height: 180px;
     overflow: auto;
+}
+
+.tablametodos{
+    width: 100%;
+}
+
+.tablametodos>thead>tr>th{
+   text-align: start;
+}
+
+.tablametodos {
+  border-collapse: collapse;
+}
+.tablametodos>thead>tr>th{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12); ;
+     border-top: 1px solid rgba(0, 0, 0, 0.12); 
+     font: 12px "monserrat","sans-serif";
+     color:#0000008A;
+     padding-right: 30px;
+     
+}
+
+.tablametodos>tbody>tr>td{
+    border: 1px solid rgba(0, 0, 0, 0.12); 
+     
+}
+.tablametodos>thead>tr>th:first-child{
+    border-left:1px solid rgba(0, 0, 0, 0.12); 
+}
+.tablametodos>thead>tr>th:last-child{
+ border-right:1px solid rgba(0, 0, 0, 0.12);
+}
+
+.botonconsulcua{
+    border: none;
+    width: 120px;
+    height: 40px;
+    border-radius: 10px;
+        font: 15px "monserrat", "sans-serif";
+        background: #5DE2E7 ;
+    color:#fff
+}
+
+.botonconsulcua:active{
+        background:#5DB3E9;
+
+}
+
+::ng-deep .inputdisabled > div> div  {
+  background-color:#E7E5E4
+!important; /* color de fondo */
+  color: #000 !important;               /* color del texto */
+  opacity: 1 !important;                /* evita que se vea apagado */
+  cursor: not-allowed;                  /* opcional */
+  border-radius: 4px;                   /* opcional */
+}
+
+.totalescuadrespan{
+font-size: 14px;
+color: black;
+}
+.labelcuadre{
+    margin-left: 5px;
+    font-size: 15px;
+}
+
+.clasecuadrecajatotal{
+    font: 24px 'monserrat',"sans-serif";
+    color: #000000DE;
+    font-weight: bold;
 }

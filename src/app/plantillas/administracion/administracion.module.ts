@@ -22,7 +22,10 @@ import { InventarioComponent } from './componentes/inventario/inventario.compone
 import { AuxclienteComponent } from './componentes/auxcliente/auxcliente.component';
 import { AdministracionComponent } from './administracion.component';
 import { CuadreComponent } from './componentes/cuadre/cuadre.component';
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
 
+registerLocaleData(localeDe);
 @NgModule({
   declarations: [
     TiendaComponent,

@@ -142,6 +142,12 @@ consultarrecibosxusuario(codigofa:number,codigocom:number):Observable<any>{
     });
   }
 
+  consultarusuario(codigousuario:number): Observable<any>{
+    return this.http.get(`${environment.api}/consultarusuario?codigousuario=${codigousuario}`, {
+      withCredentials: true,
+    })
+  }
+
   aliminarpedidoreservado(id: string): Observable<any> {
     return this.http.delete(
       `${environment.api}/eliminarpedidoreservado/${id}
@@ -173,7 +179,35 @@ consultarrecibosxusuario(codigofa:number,codigocom:number):Observable<any>{
       }
     );
   }
+  consultarTotalesRecibosIngresoXUsuarioXRangoFechas(codigo:number,fechainicial:string,fechafinal:string){
+     return this.http.get(`${environment.api}/consultarTotalesRecibosIngresoXUsuarioXRangoFechas?codigoUsuario=${codigo}&fechainicio=${fechainicial}&fechafin=${fechafinal}`,
+      {
+        withCredentials: true,
+      })
+  }
+  consultarTotalesVentasXUsuarioXRangoFechas(codigo:number,fechainicial:string,fechafinal:string):Observable<any>{
 
+    return this.http.get(`${environment.api}/consultarTotalesVentasXUsuarioXRangoFechas?codigoUsuario=${codigo}&fechainicio=${fechainicial}&fechafin=${fechafinal}`,
+      {
+        withCredentials: true,
+      })
+  }
+
+
+  consultarTotalesRecibosEgresoXUsuarioXRangoFechas(codigo:number,fechainicial:string,fechafinal:string){
+    return this.http.get(`${environment.api}/consultarTotalesRecibosEgresoXUsuarioXRangoFechas?codigoUsuario=${codigo}&fechainicio=${fechainicial}&fechafin=${fechafinal}`,
+      {
+        withCredentials: true,
+      })
+  }
+
+
+  consultarTotalesDevolucionesXUsuarioXRangoFechas(codigo:number,fechainicial:string,fechafinal:string){
+     return this.http.get(`${environment.api}/consultarTotalesDevolucionesXUsuarioXRangoFechas?codigoUsuario=${codigo}&fechainicio=${fechainicial}&fechafin=${fechafinal}`,
+      {
+        withCredentials: true,
+      })
+  }
   public enviaremail(data: any): Observable<any> {
     return new Observable((obser: any) => {
       this.socket.emit('pazzioli-pos-3', { metodo: 'EMAIL', data });
