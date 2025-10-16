@@ -179,31 +179,36 @@ consultarrecibosxusuario(codigofa:number,codigocom:number):Observable<any>{
       }
     );
   }
-  consultarTotalesRecibosIngresoXUsuarioXRangoFechas(codigo:number,fechainicial:string,fechafinal:string){
-     return this.http.get(`${environment.api}/consultarTotalesRecibosIngresoXUsuarioXRangoFechas?codigoUsuario=${codigo}&fechainicio=${fechainicial}&fechafin=${fechafinal}`,
+  consultarTotalesRecibosIngresoXUsuarioXRangoFechas(codigo:number,codigobodega:number,fechainicial:string,fechafinal:string){
+     return this.http.get(`${environment.api}/consultarTotalesRecibosIngresoXUsuarioXRangoFechas?codigoUsuario=${codigo}&fechainicio=${fechainicial}&fechafin=${fechafinal}&codigobodega=${codigobodega}`,
       {
         withCredentials: true,
       })
   }
-  consultarTotalesVentasXUsuarioXRangoFechas(codigo:number,fechainicial:string,fechafinal:string):Observable<any>{
+  consultarTotalesVentasXUsuarioXRangoFechas(codigo:number,codigobodega:number,fechainicial:string,fechafinal:string):Observable<any>{
 
-    return this.http.get(`${environment.api}/consultarTotalesVentasXUsuarioXRangoFechas?codigoUsuario=${codigo}&fechainicio=${fechainicial}&fechafin=${fechafinal}`,
-      {
-        withCredentials: true,
-      })
-  }
-
-
-  consultarTotalesRecibosEgresoXUsuarioXRangoFechas(codigo:number,fechainicial:string,fechafinal:string){
-    return this.http.get(`${environment.api}/consultarTotalesRecibosEgresoXUsuarioXRangoFechas?codigoUsuario=${codigo}&fechainicio=${fechainicial}&fechafin=${fechafinal}`,
+    return this.http.get(`${environment.api}/consultarTotalesVentasXUsuarioXRangoFechas?codigoUsuario=${codigo}&fechainicio=${fechainicial}&fechafin=${fechafinal}&codigobodega=${codigobodega}`,
       {
         withCredentials: true,
       })
   }
 
 
-  consultarTotalesDevolucionesXUsuarioXRangoFechas(codigo:number,fechainicial:string,fechafinal:string){
-     return this.http.get(`${environment.api}/consultarTotalesDevolucionesXUsuarioXRangoFechas?codigoUsuario=${codigo}&fechainicio=${fechainicial}&fechafin=${fechafinal}`,
+  consultarTotalesRecibosEgresoXUsuarioXRangoFechas(codigo:number,codigobodega:number,fechainicial:string,fechafinal:string){
+    return this.http.get(`${environment.api}/consultarTotalesRecibosEgresoXUsuarioXRangoFechas?codigoUsuario=${codigo}&fechainicio=${fechainicial}&fechafin=${fechafinal}&codigobodega=${codigobodega}`,
+      {
+        withCredentials: true,
+      })
+  }
+
+consultarusuarioalmacen(codigo:number){
+  return this.http.get(`${environment.api}/consultarusuarioalmacen?codigobodega=${codigo}`,
+      {
+        withCredentials: true,
+      })
+}
+  consultarTotalesDevolucionesXUsuarioXRangoFechas(codigo:number,codigobodega:number,fechainicial:string,fechafinal:string){
+     return this.http.get(`${environment.api}/consultarTotalesDevolucionesXUsuarioXRangoFechas?codigoUsuario=${codigo}&fechainicio=${fechainicial}&fechafin=${fechafinal}&codigobodega=${codigobodega}`,
       {
         withCredentials: true,
       })

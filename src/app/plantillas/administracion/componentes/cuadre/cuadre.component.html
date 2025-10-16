@@ -15,9 +15,9 @@
           <div class="col-6">
              <mat-form-field appearance="fill" class="classformbodega">
   <mat-label>Elige un almacen</mat-label>
-  <select matNativeControl  [(ngModel)]="this.almacen"  (ngModelChange)="cargaalmacen($event)">
+  <select matNativeControl  [(ngModel)]="this.almacen" (ngModelChange)="cargaalmacen($event)" >
     <option value='0' selected >Todo</option>
-    <option value="volvo" *ngFor="let item of almacenes" [value]="item.codigo.toString()">{{item.alias}}</option>
+    <option  *ngFor="let item of almacenes" [value]="item.codigo.toString()">{{item.alias}}</option>
     
   </select>
 </mat-form-field>
@@ -26,7 +26,7 @@
             <div class="col-6">
              <mat-form-field appearance="fill" class="classformbodega">
   <mat-label>Elige un usuario</mat-label>
-  <select matNativeControl  [(ngModel)]="this.usuario"  (ngModelChange)="cargaalmacen($event)">
+  <select matNativeControl  [(ngModel)]="usuario"  >
     <option value='0' selected>Todo</option>
     <option *ngFor="let item of usuarios" [value]="item.codigo.toString()">{{item.nombre}}</option>
     
@@ -316,7 +316,7 @@
                  <div class="col-6 ">
                 <label class="labelcuadre">Total egresos</label>
                     <mat-form-field appearance="fill" search class="inputdisabled" >
-              <mat-label><span class="totalescuadrespan">0</span></mat-label>
+              <mat-label><span class="totalescuadrespan">{{totalegreso.toLocaleString("de-DE")}}</span></mat-label>
               <input
                 matInput
                 placeholder=""
@@ -334,7 +334,7 @@
             <div class="col-6 ">
               <label class="labelcuadre">Total descuentos</label>
                     <mat-form-field appearance="fill" search class="inputdisabled" >
-              <mat-label><span class="totalescuadrespan">0</span></mat-label>
+              <mat-label><span class="totalescuadrespan">{{descuentoegresos.toLocaleString("de-DE")}}</span></mat-label>
               <input
                 matInput
                 placeholder=""

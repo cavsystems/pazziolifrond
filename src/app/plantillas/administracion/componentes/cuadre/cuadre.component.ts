@@ -181,6 +181,7 @@ totalDevolucionContado
 : 
 "0"
    }
+   nivel:number=0
   ventabruta:number=0
 descuentoventa:number=0
 retencionesventa:number=0
@@ -203,6 +204,7 @@ efectivoglobal:number=0
 targetas:number=0
 cxcventas:number=0;
 totalcaja:number=0;
+
 otros:number=0;
    almacen:string='0'
    usuario:string='0'
@@ -287,7 +289,7 @@ otros:number=0;
           this.cdr.detectChanges();
         });
            if(data.nivel===4){
-                
+                this.nivel=data.nivel
                
             this.socketproduct.consultarusuario(data.codigousuario).subscribe(
               (data)=>{
@@ -321,6 +323,39 @@ otros:number=0;
         
    }
  cargaalmacen(valor:string){
+  if(this.nivel===4){
+     this.socketproduct.consultarusuarioalmacen(Number(valor)).subscribe(
+    (data:any)=>{
+      const codigousuact=this.usuario
+    const usuarioarray=data.usuarios
+      this.usuario='0'
+      this.usuarios=[...usuarioarray]
+   /*   console.log("datos almacen",data)
+      const usuarioarray=data.usuarios
+   const codigosExistentes = this.usuarios.map((u: any) => u.codigo);
+const usuariofiltrado = usuarioarray.filter((u: any) => !codigosExistentes.includes(u.codigo));
+        console.log("usuario filtrado",usuariofiltrado)
+    const usuario=this.usuarios
+    const usuarioactual=this.usuarios.findIndex((item:any)=>{
+      return item.codigo ===   Number(codigousuact)
+    })
+    if(usuarioactual!==-1){
+
+  const usuariofinal=[...usuariofiltrado,usuario[usuarioactual]]
+  this.usuarios=[...usuariofinal]
+    console.log("usuario final", this.usuarios)
+    }else{
+       const usuariofinal=[...usuariofiltrado]
+    }*/
+  
+    
+   
+     
+
+    }
+  )
+  }
+ 
  
 
  }
@@ -351,7 +386,7 @@ this.otros=0;
 }
  consultarcuadre(){
   this.formatearvariables()
-   this.socketproduct.consultarTotalesVentasXUsuarioXRangoFechas(Number(this.usuario),`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
+   this.socketproduct.consultarTotalesVentasXUsuarioXRangoFechas(Number(this.usuario),Number(this.almacen),`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
     (data:any)=>{
       console.log("total de ventas",data.datosaux[0])
       this.exentasventas=Number(data.datosaux[0].ftExenta)
@@ -364,19 +399,19 @@ this.otros=0;
 
        
     this.ventascuadre=data.datosaux[0]
-         this.socketproduct.consultarTotalesRecibosIngresoXUsuarioXRangoFechas(Number(this.usuario),`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
+         this.socketproduct.consultarTotalesRecibosIngresoXUsuarioXRangoFechas(Number(this.usuario),Number(this.almacen),`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
          (dat:any)=>{
             console.log("datos recibos",dat)
           this.totalrecibos=Number(dat.datosaux[0].totalRecibos)
           this.descuentorecibos=Number(dat.datosaux[0].TDescuentos)
 this.reciboscuadre=dat.datosaux[0]
-          this.socketproduct.consultarTotalesRecibosEgresoXUsuarioXRangoFechas(Number(this.usuario),`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
+          this.socketproduct.consultarTotalesRecibosEgresoXUsuarioXRangoFechas(Number(this.usuario),Number(this.almacen),`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
             (datos:any)=>{
               console.log("datos recibos egresos",datos)
             this.totalegreso= Number(datos.datosaux[0].tEgresos)
              this.descuentoegresos=Number(datos.datosaux[0].tDescuentos)
               this.egresoscuadre=datos.datosaux[0]
-             this.socketproduct.consultarTotalesDevolucionesXUsuarioXRangoFechas(Number(this.usuario),`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
+             this.socketproduct.consultarTotalesDevolucionesXUsuarioXRangoFechas(Number(this.usuario),Number(this.almacen),`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
               (dato:any)=>{
                 console.log("datos recibos devoluciones",dato)
                 this.totaldevoluciones=Number(datos.datosaux[0].totalDevolucion)
