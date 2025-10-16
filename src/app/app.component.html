@@ -48,8 +48,34 @@
           <a matButton routerLink="/admin/inventariofisico" (click)="drawer.close(); mostrarItemsCartera=false ;  mostrarItemsinventario=false" class="botones-navegacion"  style="display:flex; justify-content:center;white-space:nowrap; padding-left: 0;" ><mat-icon>inventory</mat-icon>Inventario fisico</a>
         </mat-list-item>
       </mat-list>
+
+      
    
     </div>
+
+      <mat-list-item role="listitem"  class="listitem" > 
+      <a matButton   class="botones-navegacion"  (click)="mostrarsubmenuitemcaja()" style="display:flex; justify-content:center;"><mat-icon>point_of_sale</mat-icon>Caja</a>
+    </mat-list-item>
+     <div *ngIf="  this.itemscaja=== true" class="subitem">
+      <mat-list role="list" dense>
+        <mat-list-item role="listitem"  class="listitem" *ngIf="ConsultarCartera">
+          <a matButton routerLink="/admin/cuadre" (click)="drawer.close(); mostrarItemsCartera=false ;  mostrarItemsinventario=false" class="botones-navegacion"  style="display: flex
+;
+    justify-content: center;
+    white-space: nowrap;
+    padding-left: 0;
+    align-items: center;
+    gap:5" ><img src="../assets/images/imagencu.svg"/>Consultar cuadre</a>
+        </mat-list-item>
+
+    
+      </mat-list>
+
+      
+   
+    </div>
+
+    
 
 
   </mat-list>

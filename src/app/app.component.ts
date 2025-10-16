@@ -26,6 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
   showToolbar: boolean = true; TomarPedidos: boolean = false; ConsultarCartera: boolean = false; CrearReciboIngreso: boolean = false; InventarioFisico: boolean = false;
   public sedes: any;
   public terceroSeleccionado: any;
+  itemscaja:boolean=false
   private visibilityHandler = this.handleVisibilityChange.bind(this);
   data: any;
   mostrarItemsCartera:boolean=false;
@@ -50,7 +51,9 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     document.removeEventListener('visibilitychange', this.visibilityHandler);
   }
-
+mostrarsubmenuitemcaja(){
+  this.itemscaja=!this.itemscaja
+}
   handleVisibilityChange() {
     this.serviauth.verificarvendedor().subscribe((data) => {
        
@@ -103,7 +106,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
       
             if(!permisoscadena.includes("INVENTARIO FISICO")){
-       // this.InventarioFisico=false
+       this.InventarioFisico=false
       }
       if(!permisoscadena.includes("CREAR INGRESOS")){
       
