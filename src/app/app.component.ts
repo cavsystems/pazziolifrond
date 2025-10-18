@@ -24,6 +24,7 @@ export class AppComponent implements OnInit, OnDestroy {
   mostrarItemsinventario:boolean=false;
   mode = { value: 'side' as 'over' | 'push' | 'side' };
   showToolbar: boolean = true; TomarPedidos: boolean = false; ConsultarCartera: boolean = false; CrearReciboIngreso: boolean = false; InventarioFisico: boolean = false;
+  ConsultarCuadre: boolean = false;
   public sedes: any;
   public terceroSeleccionado: any;
   itemscaja:boolean=false
@@ -100,6 +101,7 @@ mostrarsubmenuitemcaja(){
       this.ConsultarCartera=true
       this.CrearReciboIngreso=true
       this.InventarioFisico=true
+      this.ConsultarCuadre=true;
 
       if(!permisoscadena.includes("TOMAR_PEDIDO")){
         this.TomarPedidos=false
@@ -115,6 +117,10 @@ mostrarsubmenuitemcaja(){
 
        if(!permisoscadena.includes("CXC")){
         this.ConsultarCartera=false
+      }
+
+      if(!permisoscadena.includes("CONSULTAR CUADRE")){
+        this.ConsultarCuadre=false;
       }
           }else{
       this.TomarPedidos=false

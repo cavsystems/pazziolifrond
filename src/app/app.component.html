@@ -58,8 +58,8 @@
     </mat-list-item>
      <div *ngIf="  this.itemscaja=== true" class="subitem">
       <mat-list role="list" dense>
-        <mat-list-item role="listitem"  class="listitem" *ngIf="ConsultarCartera">
-          <a matButton routerLink="/admin/cuadre" (click)="drawer.close(); mostrarItemsCartera=false ;  mostrarItemsinventario=false" class="botones-navegacion"  style="display: flex
+        <mat-list-item role="listitem"  class="listitem" *ngIf="ConsultarCuadre">
+          <a matButton routerLink="/admin/cuadre" (click)="drawer.close(); this.itemscaja=false" class="botones-navegacion"  style="display: flex
 ;
     justify-content: center;
     white-space: nowrap;

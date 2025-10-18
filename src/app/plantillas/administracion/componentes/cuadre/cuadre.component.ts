@@ -396,7 +396,11 @@ this.otros=0;
    this.descuentoventa=Number(data.datosaux[0].ftDescuentos)
      
          this.totalventas=Number(data.datosaux[0].totalVentas)
-
+      this.efectivoventas=Number(data.datosaux[0].ftEfectivo)
+      this.creditoventas=Number(data.datosaux[0].ftCredito)
+      this.debitoventas=Number(data.datosaux[0].ftDebito)
+      this.bancosventas=Number(data.datosaux[0].ftBono)
+      this.chequeventas=Number(data.datosaux[0].ftCheque)
        
     this.ventascuadre=data.datosaux[0]
          this.socketproduct.consultarTotalesRecibosIngresoXUsuarioXRangoFechas(Number(this.usuario),Number(this.almacen),`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
