@@ -26,6 +26,9 @@ export class AppComponent implements OnInit, OnDestroy {
   showToolbar: boolean = true; TomarPedidos: boolean = false; ConsultarCartera: boolean = false; CrearReciboIngreso: boolean = false; InventarioFisico: boolean = false;
   public sedes: any;
   public terceroSeleccionado: any;
+  consultarinventariofisico:boolean=true;
+  consultarproductos:boolean=true;
+  cuadrecaja:boolean=true;
   itemscaja:boolean=false
   private visibilityHandler = this.handleVisibilityChange.bind(this);
   data: any;
@@ -100,7 +103,15 @@ mostrarsubmenuitemcaja(){
       this.ConsultarCartera=true
       this.CrearReciboIngreso=true
       this.InventarioFisico=true
-
+      if(!permisoscadena.includes('MONITOR CAJA')){
+        this.cuadrecaja=false
+      }
+      if(!permisoscadena.includes('CONSULTAR PRODUCTOS')){
+        this.consultarproductos=false;
+      }
+      if(!permisoscadena.includes("CONSULTAR INVENTARIO FISICO")){
+      this.consultarinventariofisico=false;
+      }
       if(!permisoscadena.includes("TOMAR_PEDIDO")){
         this.TomarPedidos=false
       }

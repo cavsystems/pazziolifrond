@@ -35,16 +35,16 @@
         <a matButton routerLink="/admin/recibodecaja" (click)="drawer.close(); mostrarItemsCartera=false ;  mostrarItemsinventario=false" class="botones-navegacion"  style="display:flex; justify-content:center;"><mat-icon>receipt_long</mat-icon>Recibo caja</a>
       </mat-list-item>
     </div>
-    <mat-list-item role="listitem"  class="listitem" > 
+    <mat-list-item role="listitem"  class="listitem"   *ngIf="InventarioFisico" > 
       <a matButton   class="botones-navegacion"  (click)="mostrarsubmenuiteminventario()" style="display:flex; justify-content:center;"><mat-icon>inventory</mat-icon>Inventarios</a>
     </mat-list-item>
      <div *ngIf="mostrarItemsinventario=== true" class="subitem">
       <mat-list role="list" dense>
-        <mat-list-item role="listitem"  class="listitem" *ngIf="ConsultarCartera">
-          <a matButton routerLink="/admin/inventario" (click)="drawer.close(); mostrarItemsCartera=false ;  mostrarItemsinventario=false" class="botones-navegacion"  style="display:flex; justify-content:center;white-space:nowrap; padding-left: 0;" ><mat-icon>shelves</mat-icon>Consultar inventario</a>
+        <mat-list-item role="listitem"  class="listitem"  *ngIf="consultarproductos">
+          <a matButton routerLink="/admin/inventario" (click)="drawer.close(); mostrarItemsCartera=false ;  mostrarItemsinventario=false" class="botones-navegacion"  style="display:flex; justify-content:center;white-space:nowrap; padding-left: 0;"><mat-icon>shelves</mat-icon>Consultar inventario</a>
         </mat-list-item>
 
-         <mat-list-item role="listitem"  class="listitem" *ngIf="InventarioFisico">
+         <mat-list-item role="listitem"  class="listitem"  *ngIf="consultarinventariofisico">
           <a matButton routerLink="/admin/inventariofisico" (click)="drawer.close(); mostrarItemsCartera=false ;  mostrarItemsinventario=false" class="botones-navegacion"  style="display:flex; justify-content:center;white-space:nowrap; padding-left: 0;" ><mat-icon>inventory</mat-icon>Inventario fisico</a>
         </mat-list-item>
       </mat-list>
@@ -53,7 +53,7 @@
    
     </div>
 
-      <mat-list-item role="listitem"  class="listitem" > 
+      <mat-list-item role="listitem"  class="listitem" *ngIf="cuadrecaja" > 
       <a matButton   class="botones-navegacion"  (click)="mostrarsubmenuitemcaja()" style="display:flex; justify-content:center;"><mat-icon>point_of_sale</mat-icon>Caja</a>
     </mat-list-item>
      <div *ngIf="  this.itemscaja=== true" class="subitem">
