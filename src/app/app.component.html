@@ -27,7 +27,7 @@
           <a matButton routerLink="/admin/cartera" (click)="drawer.close(); mostrarItemsCartera=false;  mostrarItemsinventario=false" class="botones-navegacion"  style="display:flex; justify-content:center;" ><mat-icon>wallet</mat-icon>Consultar Cartera</a>
         </mat-list-item>
 
-         <mat-list-item role="listitem"  class="listitem" *ngIf="InventarioFisico">
+         <mat-list-item role="listitem"  class="listitem" *ngIf="auxiliarcxc" >
           <a matButton routerLink="/admin/auxcliente" (click)="drawer.close(); mostrarItemsCartera=false ;  mostrarItemsinventario=false" class="botones-navegacion"  style="display:flex; justify-content:center;white-space:nowrap; padding-left: 0;" ><mat-icon>person</mat-icon>Auxiliar cliente</a>
         </mat-list-item>
       </mat-list>

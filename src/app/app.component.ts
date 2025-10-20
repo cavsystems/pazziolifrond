@@ -28,6 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public sedes: any;
   public terceroSeleccionado: any;
   consultarinventariofisico:boolean=true;
+  auxiliarcxc:boolean=true;
   consultarproductos:boolean=true;
   cuadrecaja:boolean=true;
   itemscaja:boolean=false
@@ -52,6 +53,7 @@ export class AppComponent implements OnInit, OnDestroy {
  
     document.addEventListener('visibilitychange', this.visibilityHandler);
   }
+
   ngOnDestroy(): void {
     document.removeEventListener('visibilitychange', this.visibilityHandler);
   }
@@ -104,6 +106,9 @@ mostrarsubmenuitemcaja(){
       this.ConsultarCartera=true
       this.CrearReciboIngreso=true
       this.InventarioFisico=true
+      if(!permisoscadena.includes('AUXILIAR CXC')){
+        this.auxiliarcxc=false
+      }
       if(!permisoscadena.includes('MONITOR CAJA')){
         this.cuadrecaja=false
       }
