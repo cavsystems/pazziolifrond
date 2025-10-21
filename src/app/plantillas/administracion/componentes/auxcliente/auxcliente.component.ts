@@ -91,7 +91,7 @@ export class AuxclienteComponent implements OnInit {
                      
               if(new Date(a.fechaEmision).getTime() ===new Date(b.fechaEmision).getTime()  ){
                 
-                if((a.nombre.indexOf('FI')|| b.nombre.indexOf('FI') ) || (a.nombre.indexOf('PED') ||  b.nombre.indexOf('FI') ) ){
+                if(a.tipoDocumento==="FACTURA"|| b.nombre.tipoDocumento==="FACTURA"  ){
                 
                   return -1
                 }else{
