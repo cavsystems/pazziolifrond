@@ -79,17 +79,33 @@ export class AuxclienteComponent implements OnInit {
  this.buscarauxiliarcliente(cliente)
   }
   buscarauxiliarcliente(clientea:any){
+    this.saldo=0
+
       console.log("auxiliar")
     this.socketproduct.consultaruaxiliarcliente(clientea.codigo,`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
       (data:any)=>{
         let arrayauxiliar:any=[]
              console.log("data auxiliar",data.datosaux
 )
-                for (const element of data.datosaux
+     let arrayaux= data.datosaux.sort((a:any,b:any)=>{
+                     
+              if(new Date(a.fechaEmision).getTime() ===new Date(b.fechaEmision).getTime()  ){
+                
+                if((a.nombre.indexOf('FI')|| b.nombre.indexOf('FI') ) || (a.nombre.indexOf('PED') ||  b.nombre.indexOf('FI') ) ){
+                
+                  return -1
+                }else{
+                  return 1
+                }
+              }
+             
+              return 0
+            })
+                for (const element of arrayaux
 ){
 
     let fechadocumen=new Date(element .fechaEmision)
-    let fecha=`${fechadocumen.getFullYear()}-${(fechadocumen.getMonth()+1).toString().padStart(2,'0')}-${fechadocumen.getDate().toString().padStart(2, '0')}`
+    let fecha=`${fechadocumen.getFullYear()}-${(fechadocumen.getMonth()+1).toString().padStart(2,'0')}-${(fechadocumen.getDate()+1).toString().padStart(2, '0')}`
                 switch (element.tipoDocumento) {
 
                   case "RECIBO":
@@ -123,6 +139,8 @@ export class AuxclienteComponent implements OnInit {
   
                 }
 
+             
+          
                 this.dataSource.data=arrayauxiliar
       }
     )
