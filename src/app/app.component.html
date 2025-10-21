@@ -16,7 +16,7 @@
       <a matButton routerLink="/admin/inicial" (click)="drawer.close()" class="botones-navegacion" style="display:flex; justify-content:center;"><mat-icon>home</mat-icon>Inicio</a>
     </mat-list-item>
     <mat-list-item role="listitem" class="listitem" *ngIf="TomarPedidos">
-      <a matButton routerLink="/admin/tienda"   class="botones-navegacion" style="display:flex; justify-content:center;"><mat-icon>shopping_cart</mat-icon>Tomar pedidos</a>
+      <a matButton routerLink="/admin/tienda"   (click)="drawer.close()"  class="botones-navegacion" style="display:flex; justify-content:center;"><mat-icon>shopping_cart</mat-icon>Tomar pedidos</a>
     </mat-list-item>
     <mat-list-item role="listitem"  class="listitem" *ngIf="ConsultarCartera || CrearReciboIngreso">
       <a matButton (click)="mostrarSubItem(1)" class="botones-navegacion"  style="display:flex; justify-content:center;" ><mat-icon>wallet</mat-icon>Cartera</a>
