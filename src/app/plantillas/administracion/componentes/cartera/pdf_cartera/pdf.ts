@@ -14,23 +14,46 @@ export const generatePDFfa = (data: any): any => {
     alert('El navegador bloqueó la ventana emergente. Permite pop-ups.');
     return null;
   }
-  let item = data.respuesta[0];
+ 
+  console.log(data.respuesta)
   let contador = 0;
+   let item=data.respuesta[0]
+  let nombre=data.respuesta[0].cliente
   const tableBody: any[][] = [
     [
-      { text: 'Codigo', style: 'tableHeader' },
-      { text: 'nombre', style: 'tableHeader' },
-      { text: 'fechaEmision', style: 'tableHeader' },
-      { text: 'fechaVencimiento', style: 'tableHeader' },
-      { text: 'dias', style: 'tableHeader' },
-      { text: 'totalFactura', style: 'tableHeader' },
-      { text: 'saldo', style: 'tableHeader' },
-      { text: 'vendedor', style: 'tableHeader' },
-      { text: 'cliente', style: 'tableHeader' },
+      { text: 'Código', style: 'tableHeader' },
+      { text: 'Nombre', style: 'tableHeader' },
+      { text: 'Fecha emision', style: 'tableHeader' },
+      { text: 'Fecha vencimiento', style: 'tableHeader' },
+      { text: 'Días', style: 'tableHeader' },
+      { text: 'Total factura', style: 'tableHeader' },
+      { text: 'Saldo', style: 'tableHeader' },
+      { text: 'Vendedor', style: 'tableHeader' },
+    
     ],
   ];
 
-  tableBody.push([
+// con colspan defino cuatas seldas quiero que ocupe una y segui especificoendo las demas celdas como vacias
+     tableBody.push([
+      
+            { text: `Id:${item.identificacion}`, colSpan: 2,    bold: true, alignment: 'left', fontSize:8 },
+        {},
+        {},
+        { text:item.cliente , colSpan: 1 ,  noWrap: false,  bold: true, alignment: 'left', fontSize: 8 },
+        {},
+        {
+          text: `Tels:${item.telefonoFijo}-${item.celulares}`,
+          bold: true, alignment: 'left', fontSize: 8,colSpan: 1 
+        },
+         {},
+         { text: `Ciudad:${item.municipio}`, bold: true, alignment: 'left', fontSize: 8
+        },
+       
+      
+      
+        
+      ]);
+  /*tableBody.push([
         { text: String(item.codigo), noWrap: false, fontSize: 8 },
         { text: String(item.nombre), noWrap: false, fontSize: 8 },
         { text: String(item.fechaEmision), noWrap: false, fontSize: 8 },
@@ -48,48 +71,48 @@ export const generatePDFfa = (data: any): any => {
         },
         { text: String(item.vendedor), noWrap: false, fontSize: 8 },
         { text: String(item.cliente), noWrap: false, fontSize: 8 },
-      ]);
+      ]);*/
   data.respuesta.forEach((fact: any, index: number) => {
-    if (item.cliente !== fact.cliente) {
-    
+    console.log(fact.cliente !== nombre)
+    if (fact.cliente !== nombre) {
+
+        let clientesaldo=data.respuesta.find((item:any)=> item.cliente===nombre && item.totalSaldoCliente) 
       // Fila de factura
       tableBody.push([
-        { text: item.cliente, colSpan: 3, alignment: 'left', bold: true },
+        {text: 'Total', colSpan:5 ,bold: true, alignment: 'left', fontSize: 8 },
         {},
         {},
-        {},
-        { text: 'Total', colSpan: 2 },
+        { },
         {},
         {}, // vendedor vacío
         {
-          text: `$${item.totalSaldoCliente.toLocaleString('de-DE')}`,
-          bold: true,
+          text: `$${clientesaldo.totalSaldoCliente.toLocaleString('de-DE')}`,
+          bold: true, alignment: 'left', fontSize: 8
         },
 
         {}, // cliente vacío
       ]);
-      // Fila de resumen
+      
 
       tableBody.push([
-        { text: String(fact.codigo), noWrap: false, fontSize: 8 },
-        { text: String(fact.nombre), noWrap: false, fontSize: 8 },
-        { text: String(fact.fechaEmision), noWrap: false, fontSize: 8 },
-        { text: String(fact.fechaVencimiento), noWrap: false, fontSize: 8 },
-        { text: String(fact.dias), noWrap: false, fontSize: 8 },
+        
+        { text: `Id:${data.respuesta[index].identificacion}`, colSpan: 2, alignment: 'left', bold: true , fontSize: 8},
+        {},
+      {},
+        { text:data.respuesta[index].cliente, colSpan: 1 ,  noWrap: false, alignment: 'left', bold: true , fontSize: 8},
+        {},
+        
         {
-          text: String(`$${fact.totalFactura.toLocaleString('de-DE')}`),
-          noWrap: false,
-          fontSize: 8,
+          text: `Tels:${data.respuesta[index].telefonoFijo}-${data.respuesta[index].celulares}`,
+          bold: true, alignment: 'left', fontSize: 8,colSpan: 1 
         },
-        {
-          text: String(`$${fact.saldo.toLocaleString('de-DE')}`),
-          noWrap: false,
-          fontSize: 8,
-        },
-        { text: String(fact.vendedor), noWrap: false, fontSize: 8 },
-        { text: String(fact.cliente), noWrap: false, fontSize: 8 },
+     
+        {}, // cliente vacío
+            { text: `Mun:${data.respuesta[index].municipio}`, bold: true, alignment: 'left', fontSize: 8},
       ]);
-      
+      // Fila de resumen
+
+    nombre=fact.cliente
       item = data.respuesta[contador];
       contador++;
     } else {
@@ -111,21 +134,20 @@ export const generatePDFfa = (data: any): any => {
           noWrap: false,
           fontSize: 8,
         },
-        { text: String(fact.vendedor), noWrap: false, fontSize: 8 },
-        { text: String(fact.cliente), noWrap: false, fontSize: 8 },
+        { text: String(fact.vendedor), noWrap: false, fontSize: 6 },
+      
       ]);
       }
      
     }
   });
      tableBody.push([
-    { text: item.cliente, colSpan: 3, alignment: 'left', bold: true },
-    {},
-    {},
-    {},
-    { text: 'Total', colSpan: 2 },
-    {},
-    {}, // vendedor vacío
+      {text: 'Total', colSpan:5 ,bold: true, alignment: 'left', fontSize: 8 },
+        {},
+        {},
+        { },
+        {},
+        {}, // vendedor vacío
     {
       text: `$${item.totalSaldoCliente.toLocaleString('de-DE')}`,
       bold: true,
@@ -144,38 +166,43 @@ export const generatePDFfa = (data: any): any => {
   //Aquí se va construyendo todo el contenido que aparecerá en el PDF, paso a paso:
   //Se muestra una imagen a la izquierda (el logo) y el recibo con fecha a la derecha.
   content.push({
-    stack: [{ text: 'Pdf consulta de cartera', fontSize: 20, bold: true }],
+    stack: [{ text: 'Cartera', fontSize: 20, bold: true }],
     alignment: 'center',
   });
 
   content.push({ text: '\n' });
   //Muestra la tabla de productos con sus cantidades y totales.
   //layout: 'lightHorizontalLines' agrega líneas horizontales ligeras para separar filas.
-  content.push({
-    columns: [
-      {
-        width: 'auto',
-        table: {
-          headerRows: 1,
-          widths: [
-            'auto',
-            'auto',
-            'auto',
-            'auto',
-            'auto',
-            '*',
-            '*',
-            'auto',
-            'auto',
-          ],
-          body: tableBody,
-        },
-        alignment: 'left',
-        layout: 'lightHorizontalLines',
-        margin: [0, 10, 10, 10],
-      },
-    ],
-  });
+  //con auto las columnas toman el ancho necesario según su contenido. 
+  //con * la columna toma el espacio restante disponible.
+  //y especificando un numero en lugar de auto o * se define un ancho fijo.
+content.push({
+  columns: [
+    {
+      width: 'auto',
+     
+          table: {
+            headerRows: 0,
+            widths: [
+              20,
+              'auto',
+              'auto',
+              100,
+            20,
+              50,
+              '*',
+            80,
+            
+            ],
+            body: tableBody,
+          },
+          layout: 'lightHorizontalLines',
+          margin: [0, 10, 10, 10],
+     
+    
+    },
+  ],
+});
   //Muestra el total de la compra alineado a la derecha.
 
   content.push({

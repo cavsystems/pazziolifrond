@@ -41,10 +41,11 @@ export class CarteraComponent implements OnInit {
   public totalFactura: number = 0;
   public saldo: number = 0;
   public nivel: number = 0;
+  nombre=""
   clientef = {
     codigo: 0,
     saldo: 0 ,
-    nombre: '',
+    cliente: '',
   };
   displayedColumns: string[] = [
     'codigo',
@@ -57,6 +58,7 @@ export class CarteraComponent implements OnInit {
     'saldo',
     'estadoVencimiento',
     'Acciones',
+ 
    
     
   ];
@@ -86,9 +88,10 @@ export class CarteraComponent implements OnInit {
     return true;
   }
 
-  generarpdfitem(e:any,element:any){
+generarpdfitem(e:any,element:any){
     e.stopPropagation()
     this.servifactura.traeritemsfactura(element).subscribe( async (datos) => {
+      console.log(datos.respuesta)
       let productos=datos?.respuesta.map((item:any)=>{
                 return{
            cantidad:item.cantidad,
@@ -204,11 +207,34 @@ export class CarteraComponent implements OnInit {
     }
   }
   //esta funciones me detectaran que filas utilizar
-  isRegularRow = (row: any) => {
-    return !this.factura.data[row]?.isResumen;
+  isRegularRow = (index: number, row: any) => {
+
+    return !row?.isResumen 
+    
+    &&    !row?.isnombrecliente;
+
+  };
+  
+
+mostrarcliente(index: number, row: any){
+  if(!row.isnombrecliente){
+    console.log( "indefinido",index,row
+    )
+
+  }else{
+console.log( row.isnombrecliente)
+
+  }
+ 
+  return  row.isnombrecliente
+  }
+
+  isResumenRow = (index: number, row: any) => {
+  
+    return row.isResumen === true  &&    !row.isnombrecliente;
   };
 
-  isResumenRow = (row: any) => {
+   registronombrecliente = (row: any) => {
     return this.factura.data[row]?.isResumen === true;
   };
 
@@ -218,7 +244,7 @@ export class CarteraComponent implements OnInit {
     this.facturatodo = [];
     if (
       this.clientef.codigo !== data[0].codigo ||
-      this.clientef.nombre === data[0].cliente
+      this.clientef.cliente=== data[0].cliente
     ) {
       subtotal = this.clientef.saldo;
     } else {
@@ -243,8 +269,9 @@ export class CarteraComponent implements OnInit {
 
         this.facturatodo.push({
           isResumen: true,
-          nombre: grupoActual,
+       cliente: grupoActual,
           totalCliente: subtotal,
+            isnombrecliente: false
         });
 
         grupoActual = item.cliente;
@@ -268,15 +295,45 @@ export class CarteraComponent implements OnInit {
 
       this.facturatodo.push({
         isResumen: true,
-        nombre: grupoActual,
+         cliente: grupoActual,
         totalCliente: subtotal,
+            isnombrecliente: false
       });
 
       this.clientef.codigo = data[contador - 1].codigo;
-      this.clientef.nombre = data[contador - 1].codigo;
+      this.clientef.cliente = data[contador - 1].codigo;
       this.clientef.saldo = subtotal;
       grupoActual = null;
     }
+
+
+       let nom=""
+    this.facturatodo= this.facturatodo.reduce((acumulador: any[], item: any) => {
+  if (item.cliente !== nom) {
+    nom = item.cliente;
+
+    // primero agregas una fila de "cliente"
+    acumulador.push({
+      cliente: item.cliente,
+      identificacion:item.identificacion,
+       tels:item.telefonoFijo+"-"+item.celulares,
+       direccion:item.direccion,
+       municipio:item.municipio,
+
+      isnombrecliente: true
+    });
+  }
+
+  // luego agregas la fila normal
+  acumulador.push({
+    ...item,
+    isnombrecliente: false
+  });
+
+  return acumulador;
+}, []);
+
+console.log(this.facturatodo)
 
     return this.facturatodo;
   }
@@ -310,6 +367,12 @@ export class CarteraComponent implements OnInit {
   }
   generarpdf() {
     this.servifactura.facturapdf().subscribe((data) => {
+      generatePDFfa(data);
+    });
+  }
+
+   generarpdfid() {
+    this.servifactura. generarpdfid(this.clienteSeleccionado.codigo).subscribe((data) => {
       generatePDFfa(data);
     });
   }
@@ -349,6 +412,8 @@ export class CarteraComponent implements OnInit {
         if (data.respuesta.length > 0) {
              this.total_registros = data.nregistros;
         this.totalCartera = data.saldo;
+          
+        console.log(this.factura.data)
         this.factura.data = await  this.generafilaresume(data.respuesta)
         }
 

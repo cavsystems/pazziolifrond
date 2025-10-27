@@ -64,6 +64,12 @@ export class FacturaserviceService {
     );
   }
 
+  generarpdfid(id:number): Observable<any> {
+    return this.http.get(`${environment.api}/pdffactura?codigousuario=${id}`, {
+      withCredentials: true,
+    });
+  }
+
   traeritemsfactura(row:any):Observable<any>{
     return this.http.get(`${environment.api}/traeritemsfactura?codigo=${row.codigo}&codigoComprobante=${row.codigoComprobante}`, {
       withCredentials: true,

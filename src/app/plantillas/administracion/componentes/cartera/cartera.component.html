@@ -3,7 +3,7 @@
 </div>
 <div
   class="row loader-content"
-  style="padding-top: 20px; height: 100% !important"
+  style="padding-top: 20px; height: 100% !important ;padding-bottom: 50px;"
 >
   <!-- CLIENTES -->
   <div class="buscaliente" style="height: 100% !important">
@@ -125,6 +125,8 @@
 
           <!-- Position Column -->
 
+          
+
           <ng-container matColumnDef="codigo">
             <th mat-header-cell *matHeaderCellDef>Número</th>
             <td mat-cell *matCellDef="let element"  >{{ element.codigo }}</td>
@@ -215,9 +217,7 @@
             >
               <div class="resumen-row">
                 <div style="display: flex; justify-content: space-around">
-                  <span
-                    ><strong>{{ row.nombre }}</strong></span
-                  >
+              
                   <span><strong>Total</strong></span>
 
                   <span
@@ -230,6 +230,45 @@
             </td>
           </ng-container>
 
+            <ng-container matColumnDef="customRegistrocliente">
+            <td
+              mat-cell
+              *matCellDef="let row"
+              [attr.colspan]="displayedColumns.length"
+            >
+              <div class="resumen-row">
+                <div style="display: flex; justify-content: space-around">
+
+                    <span>
+                    <strong>
+                      Id:{{row.identificacion}}
+                    </strong>
+                  </span>
+                  <span
+                    ><strong>{{ row.cliente }}</strong></span
+                  >
+
+                
+
+                  
+                  <span>
+                    <strong>
+                     Tel: {{row.tels}}
+                    </strong>
+                  </span>
+
+                  <span>
+                    <strong>
+                      Mun:{{row.municipio}}
+                    </strong>
+                  </span>
+              
+                </div>
+              </div>
+            </td>
+          </ng-container>
+            
+
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <!--defino dos tipos de filas-->
           <tr
@@ -237,12 +276,22 @@
             *matRowDef="let row; columns: displayedColumns; when: isRegularRow"
             [ngClass]="{ 'fila-resumen': row.isResumen }"
              (click)="verificaritemsfactura(row)"
-          ></tr>
+          >    
+        </tr>
+      
           <tr
             mat-row
             *matRowDef="let row; columns: ['customResumen']; when: isResumenRow"
            
-          ></tr>
+          >
+        </tr>
+
+               <tr
+            mat-row
+            *matRowDef="let row; columns: ['customRegistrocliente']; when: mostrarcliente "
+           
+          >  
+        </tr>
         </table>
       </div>
     </div>
@@ -263,7 +312,22 @@
           aria-label="Example icon button with a delete icon"
           class="botonpdf"
           (click)="generarpdf()"
-          *ngIf="determinarnivel()"
+         *ngIf="obtenertodo"
+        >
+          <img
+            src="../../../../../assets/images/imgpdf.svg"
+            style="color: #fe676c; width: 34px; height: 36px"
+            class="imgicon"
+          />
+        </button>
+
+
+         <button
+          matFab
+          aria-label="Example icon button with a delete icon"
+          class="botonpdf"
+          (click)=" generarpdfid()"
+          *ngIf="!obtenertodo"
         >
           <img
             src="../../../../../assets/images/imgpdf.svg"

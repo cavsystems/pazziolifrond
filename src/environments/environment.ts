@@ -5,8 +5,7 @@
 export const environment = {
   production: false,
   vendedor: 'token_vendedor',
- 
-     api: 'https://pazzioliweb.cavsystems.com.co/api',
+ api: 'https://pazzioliweb.cavsystems.com.co/api',
   apisocket: 'https://pazzioliweb.cavsystems.com.co',
 };
 
