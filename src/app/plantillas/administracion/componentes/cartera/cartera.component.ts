@@ -239,7 +239,8 @@ console.log( row.isnombrecliente)
   };
 
    async generafilaresume(data: any[]):Promise<any[]> {
-    let subtotal;
+    console.log("data",data)
+    let subtotal=0;
     let grupoActual: string | null = null;
     this.facturatodo = [];
     if (
@@ -255,7 +256,7 @@ console.log( row.isnombrecliente)
    for (let i = 0; i < data.length; i++) {
       let item = data[i];
              if (grupoActual === null) {
-        this.facturatodo.push(item);
+       this.facturatodo.push(item);
 
         grupoActual = item.cliente;
         subtotal += item.saldo;

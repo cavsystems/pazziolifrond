@@ -82,7 +82,7 @@ export class AuxclienteComponent implements OnInit {
     this.saldo=0
 
       console.log("auxiliar")
-    this.socketproduct.consultaruaxiliarcliente(clientea.codigo,`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
+    this.socketproduct.consultaruaxiliarcliente(clientea.codigo,`${this.fechaInicial.getFullYear()}-${(this.fechaInicial.getMonth()+1).toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
       (data:any)=>{
         let arrayauxiliar:any=[]
              console.log("data auxiliar",data.datosaux
