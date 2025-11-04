@@ -368,13 +368,13 @@ console.log(this.facturatodo)
   }
   generarpdf() {
     this.servifactura.facturapdf().subscribe((data) => {
-      generatePDFfa(data);
+      generatePDFfa(data,this.totalCartera);
     });
   }
 
    generarpdfid() {
     this.servifactura. generarpdfid(this.clienteSeleccionado.codigo).subscribe((data) => {
-      generatePDFfa(data);
+      generatePDFfa(data,this.totalCartera);
     });
   }
   navegarpagina1() {

@@ -5,7 +5,7 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 //Esta línea asigna las fuentes cargadas a la instancia de pdfMake, necesario para que funcione correctamente.
 (pdfMake as any).vfs = pdfFonts;
 
-export const generatePDFfa = (data: any): any => {
+export const generatePDFfa = (data: any,totalCartera:number): any => {
     //Se crea el contenido de la tabla, con:
   //Una fila de encabezado (títulos).
   //Una fila por cada producto en el array recibido.
@@ -209,7 +209,7 @@ content.push({
     columns: [
       { text: '', width: '*' },
       {
-        text: `Total saldo: $ ${totalGeneral.toLocaleString('de-DE')}`,
+        text: `Total saldo: $ ${totalCartera.toLocaleString('de-DE')}`,
         style: 'total',
         alignment: 'right',
         margin: [0, 10, 0, 10],

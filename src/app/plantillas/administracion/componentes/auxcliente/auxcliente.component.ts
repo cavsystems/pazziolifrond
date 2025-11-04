@@ -10,6 +10,8 @@ import { Socket_producto } from 'src/services/socket/socket.producto.service.ts.
 export class AuxclienteComponent implements OnInit {
   saldo=0
   dataSource = new MatTableDataSource<any>([]);
+
+  
   cliente:string=''
   displayedColumns: string[] = [
     'Documento',
