@@ -142,8 +142,8 @@ export class RecibodecajaComponent implements OnInit {
     this.clienteSeleccionado.imagen = cliente.imagen || null;
     this.clienteSeleccionado.ciudad = cliente.municipio;
     this.clientes = [];
-     this.Deduccion=[];
-     this.Movimiento=[];
+   //  this.Deduccion=[];
+     //this.Movimiento=[];
      this.abono=0;
      this.bancoSeleccinado=''
      this.valor=0;
@@ -151,15 +151,15 @@ export class RecibodecajaComponent implements OnInit {
      this.totalRecibo=0
      this.totalTiposPago=0;
     this.descuento=0;
-    this.movimientoSeleccionado=''
-    this.deduccionSeleccionada=''
+    this.movimientoSeleccionado='Seleccione'
+    this.deduccionSeleccionada='Seleccione'
     this.movimientoTipoPago={
       Movimiento:'',
       valor:0,
       opcionBanco:''
 
     }
-    this.Movimiento=[]
+    //this.Movimiento=[]
     this.listadoOpcionesBancosElegido=[]
          this.servifactura
       .traerfacturas(this.pagina, this.clienteSeleccionado.codigo)

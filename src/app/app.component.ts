@@ -107,7 +107,7 @@ mostrarsubmenuitemcaja(){
       this.CrearReciboIngreso=true
       this.InventarioFisico=true
       if(!permisoscadena.includes('AUXILIAR CXC')){
-       //this.auxiliarcxc=false
+       this.auxiliarcxc=false
       }
       if(!permisoscadena.includes('MONITOR CAJA')){
         this.cuadrecaja=false

@@ -62,6 +62,8 @@ export class TiendaComponent implements OnInit {
   id_cliente_store: string = '';
   shoping_card1: boolean = false;
   shoping_card2: boolean = false;
+  separaproducto:number=0;
+  almacenSeparado:string='';
   ventana: any = null;
   videoConstraints = {
     width: { ideal: 1280 },
@@ -253,7 +255,8 @@ export class TiendaComponent implements OnInit {
              this.modificarPrecio=datos.modificarPrecio
             this.ventaNegativo=datos. ventaEnNegativo
             this.facturarPedidos=datos.facturarPedidos
-
+            this.separaproducto=datos.separarproductospedido
+            this.almacenSeparado=datos.almacenSeparado.trim()
           });
           
       } else {
@@ -1248,6 +1251,8 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
       this.openDialogAlerta(data);
       return;
     } else if (this.clienteSeleccionado.codigo <= 0) {
+
+
       const data: DatosAlerta = {
         titulo: 'ERROR',
         mensaje: 'Seleccione un cliente primero.',
@@ -1330,7 +1335,7 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
     let itemsPedidos = this.productosMostrar.map((producto) => {
       this.totalPagar += producto.total;
       return {
-        codigoProducto: producto.codigo,
+          codigoProducto: producto.codigo,
         valor: producto.precio,
         cantidad: producto.cantidad,
         nombre: producto.nombre,
@@ -1338,9 +1343,14 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
         total: producto.total,
         tasaiva: producto.tasaiva,
         referencia: producto.referencia,
-         descuento:producto.descuento,
-         costoPromedio:producto.costoPromedio,
-   codigoGrupo:producto. codigoGrupo,
+        costo: producto.costo,
+        codigoMedida: producto.codigoMedida,
+       codigoLinea:producto.codigoLinea,
+       codigoContable:producto.codigoContable,
+      presentacion:producto.presentacion,
+       descuento:producto.descuento,
+       costoPromedio:producto.costoPromedio,
+   codigoGrupo:producto.codigoGrupo,
         codigoUsuario: this.clienteSeleccionado.codigo,
       };
     });

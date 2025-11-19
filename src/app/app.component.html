@@ -35,7 +35,7 @@
         <a matButton routerLink="/admin/recibodecaja" (click)="drawer.close(); mostrarItemsCartera=false ;  mostrarItemsinventario=false" class="botones-navegacion"  style="display:flex; justify-content:center;"><mat-icon>receipt_long</mat-icon>Recibo caja</a>
       </mat-list-item>
     </div>
-    <mat-list-item role="listitem"  class="listitem"   *ngIf="InventarioFisico" > 
+    <mat-list-item role="listitem"  class="listitem"   *ngIf="InventarioFisico || consultarproductos" > 
       <a matButton   class="botones-navegacion"  (click)="mostrarsubmenuiteminventario()" style="display:flex; justify-content:center;"><mat-icon>inventory</mat-icon>Inventarios</a>
     </mat-list-item>
      <div *ngIf="mostrarItemsinventario=== true" class="subitem">

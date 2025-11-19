@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -95,6 +95,11 @@ obtenertotalpornombrefactura(nombret:string): Observable<any>{
   crearreciboingreso(data: any): Observable<any> {
     return this.http.post(`${environment.api}/crearreciboingreso`, data, {
       withCredentials: true,
+        headers: new HttpHeaders({
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
+        "Expires": "0"
+      })
     });
   }
 

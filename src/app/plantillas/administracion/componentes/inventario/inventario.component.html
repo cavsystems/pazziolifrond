@@ -55,7 +55,7 @@
   <mat-label>Choose an option</mat-label>
   <select matNativeControl  [(ngModel)]="this.bodegaSeleccionada"  (ngModelChange)="cargabodega($event)">
     <option value="" selected>Todo</option>
-    <option value="volvo" *ngFor="let item of bodegas" [value]="item.alias">{{item.alias}}</option>
+    <option  *ngFor="let item of bodegas" [value]="item.almacen">{{item.alias}}</option>
     
   </select>
 </mat-form-field>
