@@ -447,9 +447,7 @@ this.reciboscuadre=dat.datosaux[0]
                this.targetas+=Number(this.ventascuadre.ftDebito)+Number(this.ventascuadre.ftCredito)+Number(this.reciboscuadre.TDebito)+Number(this.reciboscuadre.TCredito)
                this.otros+=Number(this.ventascuadre.ftBono)+Number(this.ventascuadre.ftCheque)+Number(this.reciboscuadre.TCheque)
                this.totalglobalmetodos+=  this.efectivoglobal+this.targetas+this.otros
-               this.totalcaja+=(Number(this.ventascuadre.totalVentas))-(Number(
-                this.egresoscuadre.tEgresos
-               )+Number(this.devolucionescuadre.totalDevolucion))
+               this.totalcaja+=(Number(this.efectivoglobal))
                  console.log(this.ventascuadre.totalVentas,this.reciboscuadre.totalRecibos,this.egresoscuadre.tEgresos,this.devolucionescuadre.totalDevolucion)
               }
              )
