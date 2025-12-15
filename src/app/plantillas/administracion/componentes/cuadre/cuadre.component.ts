@@ -385,7 +385,25 @@ this.totalcaja=0;
 this.otros=0;
 }
  consultarcuadre(){
+  this.exentasventas=0     
+  this.gravadasventas=0     
+  this.ivaventas=0     
+  this.cxcventas=0   
+  this.descuentoventa=0
+     
+         this.totalventas=0    
+          this.efectivoventas=0   
+             this.creditoventas=0      
+             this.debitoventas=0     
+              this.bancosventas=0   
+               this.chequeventas=0
+          this.totaldevoluciones=0
+              
+               this.efectivoglobal=0
 
+               this.targetas=0
+               this.otros=0
+          
   console.log("fechas",this.fechaInicial,this.fechafinal)
   this.formatearvariables()
    this.socketproduct.consultarTotalesVentasXUsuarioXRangoFechas(Number(this.usuario),Number(this.almacen),`${this.fechaInicial.getFullYear()}-${(Number(this.fechaInicial.getMonth())+1).toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(Number(this.fechafinal.getMonth())+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
