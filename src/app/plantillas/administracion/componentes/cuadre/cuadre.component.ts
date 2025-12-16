@@ -385,10 +385,30 @@ this.totalcaja=0;
 this.otros=0;
 }
  consultarcuadre(){
+  this.exentasventas=0     
+  this.gravadasventas=0     
+  this.ivaventas=0     
+  this.cxcventas=0   
+  this.descuentoventa=0
+     
+         this.totalventas=0    
+          this.efectivoventas=0   
+             this.creditoventas=0      
+             this.debitoventas=0     
+              this.bancosventas=0   
+               this.chequeventas=0
+          this.totaldevoluciones=0
+              
+               this.efectivoglobal=0
+
+               this.targetas=0
+               this.otros=0
+          
+  console.log("fechas",this.fechaInicial,this.fechafinal)
   this.formatearvariables()
-   this.socketproduct.consultarTotalesVentasXUsuarioXRangoFechas(Number(this.usuario),Number(this.almacen),`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
+   this.socketproduct.consultarTotalesVentasXUsuarioXRangoFechas(Number(this.usuario),Number(this.almacen),`${this.fechaInicial.getFullYear()}-${(Number(this.fechaInicial.getMonth())+1).toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(Number(this.fechafinal.getMonth())+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
     (data:any)=>{
-      console.log("total de ventas",data.datosaux[0])
+      console.log("total de ventas",data. datosaux[0])
       this.exentasventas=Number(data.datosaux[0].ftExenta)
      this.gravadasventas=Number(data.datosaux[0].ftGravada)
      this.ivaventas=Number(data.datosaux[0].ftIva)
@@ -403,19 +423,19 @@ this.otros=0;
       this.chequeventas=Number(data.datosaux[0].ftCheque)
        
     this.ventascuadre=data.datosaux[0]
-         this.socketproduct.consultarTotalesRecibosIngresoXUsuarioXRangoFechas(Number(this.usuario),Number(this.almacen),`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
+        this.socketproduct.consultarTotalesRecibosIngresoXUsuarioXRangoFechas(Number(this.usuario),Number(this.almacen),`${this.fechaInicial.getFullYear()}-${(this.fechaInicial.getMonth()+1).toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
          (dat:any)=>{
             console.log("datos recibos",dat)
           this.totalrecibos=Number(dat.datosaux[0].totalRecibos)
           this.descuentorecibos=Number(dat.datosaux[0].TDescuentos)
 this.reciboscuadre=dat.datosaux[0]
-          this.socketproduct.consultarTotalesRecibosEgresoXUsuarioXRangoFechas(Number(this.usuario),Number(this.almacen),`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
+          this.socketproduct.consultarTotalesRecibosEgresoXUsuarioXRangoFechas(Number(this.usuario),Number(this.almacen),`${this.fechaInicial.getFullYear()}-${(this.fechaInicial.getMonth()+1).toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
             (datos:any)=>{
               console.log("datos recibos egresos",datos)
             this.totalegreso= Number(datos.datosaux[0].tEgresos)
              this.descuentoegresos=Number(datos.datosaux[0].tDescuentos)
               this.egresoscuadre=datos.datosaux[0]
-             this.socketproduct.consultarTotalesDevolucionesXUsuarioXRangoFechas(Number(this.usuario),Number(this.almacen),`${this.fechaInicial.getFullYear()}-${this.fechaInicial.getMonth().toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
+             this.socketproduct.consultarTotalesDevolucionesXUsuarioXRangoFechas(Number(this.usuario),Number(this.almacen),`${this.fechaInicial.getFullYear()}-${(this.fechaInicial.getMonth()+1).toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
               (dato:any)=>{
                 console.log("datos recibos devoluciones",dato)
                 this.totaldevoluciones=Number(datos.datosaux[0].totalDevolucion)
@@ -427,9 +447,7 @@ this.reciboscuadre=dat.datosaux[0]
                this.targetas+=Number(this.ventascuadre.ftDebito)+Number(this.ventascuadre.ftCredito)+Number(this.reciboscuadre.TDebito)+Number(this.reciboscuadre.TCredito)
                this.otros+=Number(this.ventascuadre.ftBono)+Number(this.ventascuadre.ftCheque)+Number(this.reciboscuadre.TCheque)
                this.totalglobalmetodos+=  this.efectivoglobal+this.targetas+this.otros+this.cxcventas
-               this.totalcaja+=(Number(this.ventascuadre.totalVentas)+Number(this.reciboscuadre.totalRecibos))-(Number(
-                this.egresoscuadre.tEgresos
-               )+Number(this.devolucionescuadre.totalDevolucion))
+               this.totalcaja+=(Number(this.efectivoglobal))
                  console.log(this.ventascuadre.totalVentas,this.reciboscuadre.totalRecibos,this.egresoscuadre.tEgresos,this.devolucionescuadre.totalDevolucion)
               }
              )
