@@ -266,7 +266,7 @@ otros:number=0;
  
    ngOnInit(): void {
       
-     this.fechaInicial = new Date(2000, 0, 1);
+     this.fechaInicial = new Date();
      this.fechafinal=new Date();
            this.socketproduct
                  .obtenerInfo('aws', 'pazzioli-pos-3', {

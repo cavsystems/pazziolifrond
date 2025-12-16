@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -29,6 +29,7 @@ import { Itemsinventario } from './angular-material/alertaritemsinventario';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Itemsinventariounitario } from './angular-material/alertaitemsunitario';
 import { Dialogitemscartera } from './plantillas/administracion/componentes/cartera/cartera.component';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,10 @@ import { Dialogitemscartera } from './plantillas/administracion/componentes/cart
     MatDatepickerModule,
 
   ],
-  providers: [],
+  providers: [
+     { provide: LOCALE_ID, useValue: 'es-ES' },
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

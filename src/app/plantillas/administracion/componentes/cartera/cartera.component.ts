@@ -138,6 +138,25 @@ generarpdfitem(e:any,element:any){
     })
 
   }
+
+  connectWhatsApp() {
+  const appId = '25440666145628329';
+  const redirectUri = encodeURIComponent(
+    'http://localhost:4200/admin/cartera'
+  );
+
+  ///const state = this.generateState(); // seguridad
+
+  const url = `https://www.facebook.com/v19.0/dialog/oauth?` +
+    `client_id=${appId}` +
+    `&redirect_uri=${redirectUri}` +
+    `&state=${"state"}` +
+    `&response_type=code` +
+    `&scope=whatsapp_business_management,whatsapp_business_messaging`;
+
+  window.open(url, '_blank', 'width=600,height=700');
+}
+
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       const pagina = Number(params['pagina']) || 0;
