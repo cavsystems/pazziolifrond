@@ -239,29 +239,40 @@
               <div class="resumen-row">
                 <div style="display: flex; justify-content: space-around">
 
-                    <span>
+                    <span class="spandatosc">
                     <strong>
                       Id:{{row.identificacion}}
                     </strong>
                   </span>
-                  <span
+                  <span class="spandatosc"
                     ><strong>{{ row.cliente }}</strong></span
                   >
 
                 
 
                   
-                  <span>
+                  <span class="spandatosc">
                     <strong>
                      Tel: {{row.tels}}
                     </strong>
                   </span>
 
-                  <span>
+                  <span class="spandatosc">
                     <strong>
                       Mun:{{row.municipio}}
                     </strong>
                   </span>
+
+
+                       <button
+            mat-icon-button
+            style="color: #5db5f2"
+            (click)=" enviarcorreo(row)"
+       
+          >
+            <mat-icon>forward_to_inbox</mat-icon>
+          </button>
+
               
                 </div>
               </div>

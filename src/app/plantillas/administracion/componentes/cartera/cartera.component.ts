@@ -10,6 +10,9 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { Platform } from '@ionic/angular';
 import generatePDFfactura from '../tienda/pdf/pdffactura';
 import { promise } from 'protractor';
+import { take } from 'rxjs/operators';
+import { DialogoAlerta } from 'src/app/angular-material/alerta';
+import { generatePDFfagm } from './pdf_cartera/pdfgmailcartera';
 
 @Component({
   selector: 'app-cartera',
@@ -77,6 +80,7 @@ export class CarteraComponent implements OnInit {
     private router: Router,
      private platform: Platform,
   ) {
+        this.servifactura.conectar()
     this.serviouth.obtenernivel().subscribe((data) => {
             this.nivel = data.nivel;
     });
@@ -339,7 +343,8 @@ console.log( row.isnombrecliente)
        tels:item.telefonoFijo+"-"+item.celulares,
        direccion:item.direccion,
        municipio:item.municipio,
-
+       email:item.email,
+       id:item.codigotercero,
       isnombrecliente: true
     });
   }
@@ -395,6 +400,18 @@ console.log(this.facturatodo)
     this.servifactura. generarpdfid(this.clienteSeleccionado.codigo).subscribe((data) => {
       generatePDFfa(data,this.totalCartera);
     });
+
+
+    
+  }
+
+  generarpdfidclienteselect(id:number) {
+    this.servifactura. generarpdfid(this.clienteSeleccionado.codigo).subscribe((data) => {
+      generatePDFfa(data,this.totalCartera);
+    });
+
+
+    
   }
   navegarpagina1() {
     if (!this.obtenertodo) {
@@ -452,6 +469,61 @@ console.log(this.facturatodo)
       }
     }
   }
+
+
+
+    enviarcorreo(clientec: any) {
+    console.log("cleinte actual seleccionado",clientec)
+      const dialogref = this.dialog.open(DialogoAlerta, {
+        data: {
+          boton: 'Continuar',
+          input: true,
+          boton1: 'Cancelar',
+          mensaje: 'Digite otro correo si lo desea',
+          type: 'email',
+          inputIcon: 'mail',
+          inputText: 'Ingrese correo',
+          tipo: 'info',
+        },
+        disableClose: true,
+      });
+      dialogref.afterClosed().subscribe( (data1) => {
+        if (data1) {
+             this.servifactura. generarpdfid(clientec.id).subscribe(async (data) => {
+ const pdf = await generatePDFfagm(data,this.totalCartera);
+
+ this.servifactura.enviaremailfacturapendiente({
+                
+                    cliente: {
+                      nombre:clientec.cliente ,
+                      identificacion:clientec.identificacion,
+                      email: clientec.email,
+                     
+                    },
+                    pdf: pdf,
+                    email: data1,
+                    
+                  })
+                  .pipe(take(1))
+                  .subscribe((datos) => {
+                    const dialogref = this.dialog.open(DialogoAlerta, {
+                      data: {
+                        boton: 'OK',
+                        tipo: 'done',
+                        mensaje: 'Correo enviado',
+                      },
+                      disableClose: true,
+                    });
+                    dialogref.afterClosed().subscribe((datos) => {});
+                  });
+             })
+
+        
+                
+        
+        }
+      });
+    }
 }
 
 @Component({
