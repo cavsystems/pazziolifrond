@@ -22,7 +22,11 @@ export class InicialComponent implements OnInit {
   nombrevendedor: String = '';
   identificacion: String = '';
   codigoVendedor: Number = 0;
+  public cantidadProductosTop: number = 5;
 
+  public datoFacturasSemanaFtotal:any[]=[];public topProductos: any[]=[];public datoDocumentoSemanaCantidad:any[]=[];
+  public Almacenes:any[] = [];public valorAlamcen = 'BODEGA';
+  public almacenSeleccionado='Todo';
   public datoPedidosSemanaPtotal:any[]=[]; public datoPedidosSemanaPCantidad:any[]=[]; public topProductosMasPedidos: any[]=[];
   public TPedidosVsTRecibosI:any[]=[];
   public barChartLabelsPtotal: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];// EJE X
@@ -80,7 +84,12 @@ export class InicialComponent implements OnInit {
     }
   }
 
-  public totalPedidosMes = 0;public mesActualNombre: string = '';
+  public totalPedidosMes = 0;public mesActualNombre: string = ''; 
+  public etiquetaCantidadTotalDocumento = 'Cantidad total pedidos';
+  public etiquetaGraficoUno="Total pedidos de la semana x día";
+  public etiquetaGraficoTop = "Top 5 de productos mas pedidos";
+  public etiquetaGraficoTres = "Cantidad pedidos semana x día";
+  public totalFacturasMes = 0; public totalCantidadDocumentos=0;
 
   // grafico linea
   public labels = this.TPedidosVsTRecibosI.map(d => `Semana ${d.semana}`);
@@ -167,11 +176,17 @@ seleccionardb() {
             this.identificacion = datos.identificacion;
             this.nombrevendedor = datos.nombre;
            
-                        this.cargarDatosTotalPedidosPorSemana(datos.codigoVendedor);
-            this.cargarDatosCantidadPedidosPorSemana(datos.codigoVendedor);
-            this.cargarTopProductosMasPedidos(datos.codigoVendedor,5);
-            this.cargarTotalPedidosMesVendedor(datos.codigoVendedor);
-            this.cargarTotalPedidosVsTRecibosIMes(datos.codigoVendedor);
+            if(datos.facturarPedidos == 1){
+              this.cargarAlmacenes();
+              this.cargarGraficos(this.almacenSeleccionado);
+            }else{
+              this.etiquetaGraficoUno="Total pedidos de la semana x día";
+              this.cargarDatosTotalPedidosPorSemana(datos.codigoVendedor);
+              this.cargarDatosCantidadPedidosPorSemana(datos.codigoVendedor);
+              this.cargarTopProductosMasPedidos(datos.codigoVendedor,this.cantidadProductosTop);
+              this.cargarTotalPedidosMesVendedor(datos.codigoVendedor);
+              this.cargarTotalPedidosVsTRecibosIMes(datos.codigoVendedor);
+            }
           });
       } else {
       }
@@ -249,7 +264,7 @@ seleccionardb() {
 
       }else{
         data.TopProductosSemana.forEach((datos:any,i:number) => {
-          this.topProductosMasPedidos.push(
+          this.topProductos.push(
             {
               indice:i,
               descripcionProducto: datos.descripcion_producto,
@@ -267,6 +282,7 @@ seleccionardb() {
 
       }else{
         this.totalPedidosMes=data.cantidadTotalPedidosMes[0].total_pedidos_mes;
+        this.totalCantidadDocumentos = this.totalPedidosMes;
       }
           });
   }
@@ -319,5 +335,103 @@ seleccionardb() {
         };
       }
           });
+  }
+
+  // Datos facturas en graficos
+  cargarGraficos(almacenSelect: string){
+    console.log(this.almacenSeleccionado)
+    this.cargarTotalFacturas(almacenSelect);
+    this.etiquetaGraficoUno="Total facturas de la semana x día";
+    this.cargarDatosTotalFacturasPorSemana(almacenSelect);
+    this.etiquetaGraficoTop = "Top 5 de productos mas facturados"
+    this.cargarTopProductosMasFacturados(almacenSelect,this.cantidadProductosTop);
+    this.etiquetaGraficoTres = "Cantidad facturas semana x día"
+    this.cargarDatosCantidadFacturasPorSemana(almacenSelect);
+  }
+
+  cargarTotalFacturas(almacenSelect: string){
+    this.etiquetaCantidadTotalDocumento = 'Cantidad total facturas';
+    this.socketproduct.cargarTotalFacturasMes(almacenSelect).subscribe((data) => {
+            if(!data.response){
+
+      }else{
+        this.totalFacturasMes=data.cantidadTotalFacturasMes[0].total_facturas_mes;
+        this.totalCantidadDocumentos = this.totalFacturasMes;
+      }
+    });
+  }
+
+  cargarDatosTotalFacturasPorSemana(almacenSelect: string){
+        this.socketproduct.cargarFacturasSemana(almacenSelect).subscribe((data) => {
+            if(!data.response){
+        window.location.reload();
+      }else{
+       
+        data.facturasSemana.forEach((datos:any) => {
+          
+          this.datoFacturasSemanaFtotal.push(datos.total_Facturas_Dia);
+        });
+                this.barChartDataPtotal.datasets[0].data=this.datoFacturasSemanaFtotal;
+        this.barChartDataPtotal = { ...this.barChartDataPtotal};
+        this.cdr.detectChanges();
+      }
+          });
+  }
+
+  cargarTopProductosMasFacturados(almacenSelect: string,top:Number){
+    //topProductosMasPedidos
+        this.socketproduct.cargarTopProductosFacturadosSemana(almacenSelect,top).subscribe((data) => {
+            if(!data.response){
+
+      }else{
+        data.TopProductosSemana.forEach((datos:any,i:number) => {
+          this.topProductos.push(
+            {
+              indice:i,
+              descripcionProducto: datos.descripcion_producto,
+              cantidadProducto: datos.total_facturada
+            }
+          );
+        });
+      }
+          });
+  }
+
+  cargarDatosCantidadFacturasPorSemana(almacenSelect: string){
+        this.socketproduct.cargarFacturasDeLaSemana().subscribe((data) => {
+            if(!data.response){
+        //window.location.reload();
+      }else{
+       
+        data.facturasSemana.forEach((datos:any) => {
+          
+          this.datoDocumentoSemanaCantidad.push(datos.cantidad_facturas);
+        });
+                this.barChartDataPCantidad.datasets[0].data=this.datoDocumentoSemanaCantidad;
+        this.barChartDataPCantidad = { ...this.barChartDataPCantidad};
+        this.cdr.detectChanges();
+      }
+          });
+  }
+
+  cargarAlmacenes(){
+    this.socketproduct.cargarAlmacenes().subscribe((data) => {
+            if(!data.response){
+        //window.location.reload();
+      }else{
+       
+        data.almacenes.forEach((datos:any) => {
+          
+          this.Almacenes.push(datos.almacen);
+        });
+      }
+    });
+  }
+
+  seleccionarItemAlmacen(item: string){
+      this.almacenSeleccionado = 'Todo';
+      console.log(this.almacenSeleccionado);
+
+      //this.cargarGraficos(this.almacenSeleccionado);
   }
 }
