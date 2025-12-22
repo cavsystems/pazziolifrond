@@ -112,6 +112,16 @@ obtenertotalpornombrefactura(nombret:string): Observable<any>{
     });
   }
 
+
+    public enviaremailfacturapendiente(data: any): Observable<any> {
+    return new Observable((obser: any) => {
+      this.socket.emit('pazzioli-pos-3', { metodo: 'EMAILFACTURAPEDIENTE', data });
+      this.socket.on('estadocorreoingreso', (datos: any) => {
+        obser.next(datos);
+      });
+    });
+  }
+
   public enviaremailfactura(data: any): Observable<any> {
     return new Observable((obser: any) => {
       this.socket.emit('pazzioli-pos-3', { metodo: 'EMAILFACTURA', data });

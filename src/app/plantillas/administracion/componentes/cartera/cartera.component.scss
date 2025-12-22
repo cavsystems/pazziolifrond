@@ -73,3 +73,9 @@ Esto es útil cuando en una misma fila tienes texto y elementos como íconos o b
 .botonpdf:active{
   background-color: rgba(133, 146, 158 ,0.5);
 }
+
+.spandatosc{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
