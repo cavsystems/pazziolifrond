@@ -54,8 +54,10 @@
   width: 100%;
   display: flex;
   justify-content: start;
-  padding: 8px 12px;
+  //padding: 8px 12px;
+  padding: 4px 8px;
   text-align: left;
+  min-height: 36px;
 }
 
 .top-1 .producto-btn {
@@ -76,7 +78,7 @@
   gap: 12px;
   width: 100%;
   flex-wrap: wrap;
-max-height: 30px;
+  max-height: 30px;
 }
 
 .trofeo-icon {
@@ -121,6 +123,11 @@ max-height: 30px;
   font-weight: 600;
   color: #5d6d7e;
   margin-bottom: 8px;
+  
+}
+
+.almacenlabel{
+  display: inline-block !important;
 }
 
 .total-valor {

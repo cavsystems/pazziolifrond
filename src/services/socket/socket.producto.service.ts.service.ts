@@ -264,4 +264,46 @@ consultarusuarioalmacen(codigo:number){
       { withCredentials: true }
     );
   }
+
+  cargarTotalFacturasMes(almacenSelect: string): Observable<any>{
+    return this.http.get(
+      `${environment.api}/totalFacturasMes?almacenConsulta=${almacenSelect}`,
+      { withCredentials: true }
+    );
+  }
+
+  cargarFacturasSemana(almacenSelect: string): Observable<any>{
+    return this.http.get(
+    `${environment.api}/traerFacturasPorSemana?almacenConsulta=${almacenSelect}`,
+    {
+      withCredentials: true,
+    }
+    );
+  }
+
+  cargarTopProductosFacturadosSemana(almacenSelect: string, top: Number): Observable<any>{
+    return this.http.get(
+      `${environment.api}/topProductosMasFacturadosSemana?almacenConsulta=${almacenSelect}&top=${top}`,
+      { withCredentials: true }
+    );
+  }
+
+  cargarFacturasDeLaSemana(): Observable<any>{
+    return this.http.get(
+    `${environment.api}/traerFacturasDeLaSemana`,
+    {
+      withCredentials: true,
+    }
+    );
+  }
+
+  cargarAlmacenes(): Observable<any>{
+    return this.http.get(
+      `${environment.api}/cargarAlmacenes`,
+    {
+      withCredentials: true,
+    }
+    );
+  }
+  
 }
