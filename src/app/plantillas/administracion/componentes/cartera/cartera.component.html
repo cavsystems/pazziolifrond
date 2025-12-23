@@ -113,7 +113,7 @@
     </mat-card>
     <div class="tabla-scroll" style="width: 100%; margin-top: 10px">
       <!--multiTemplateDataRows para abilitar las filas personalisables-->
-      <div style="overflow-x: auto">
+      <div style="overflow-x: auto ;max-height: 400px; " class="tablecarteradiv">
         <table
           mat-table
           [dataSource]="factura.data"
@@ -129,25 +129,64 @@
 
           <ng-container matColumnDef="codigo">
             <th mat-header-cell *matHeaderCellDef>Número</th>
-            <td mat-cell *matCellDef="let element"  >{{ element.codigo }}</td>
+            <td mat-cell *matCellDef="let element">
+         <span class="spandatosc" *ngIf="element.isnombrecliente"
+                    ><strong>Id:{{element.identificacion }}</strong></span
+                  >
+
+ 
+
+        <ng-container *ngIf="!element.isnombrecliente && !element.isResumen">
+                {{element.codigo}}
+              </ng-container>
+ <span class="spandatosc" *ngIf="element.isResumen"
+                    ></span
+                  >
+            
+  </td>
           </ng-container>
+
 
           <ng-container matColumnDef="codigoComprobante">
             <th mat-header-cell *matHeaderCellDef>Cte</th>
             <td mat-cell *matCellDef="let element" >
-              {{ element.nombre }}
+            <span class="spandatosc" *ngIf="element.isnombrecliente"
+                    ></span
+                  >
+
+           
+              <ng-container *ngIf="!element.isnombrecliente && !element.isResumen">
+                {{element.nombre }}
+              </ng-container>
+ <span class="spandatosc" *ngIf="element.isResumen"
+                    ></span
+                  >
             </td>
           </ng-container>
 
           <ng-container matColumnDef="cliente">
             <th mat-header-cell *matHeaderCellDef>Cliente</th>
-            <td mat-cell *matCellDef="let element">{{ element.cliente }}</td>
+            <td mat-cell *matCellDef="let element">
+                 <span class="spandatosc" *ngIf="element.isnombrecliente"
+                    ><strong>Id:{{element.cliente }}</strong></span
+                  >
+
+                  
+           
+            
+             <ng-container *ngIf="!element.isnombrecliente && !element.isResumen">
+                {{element.cliente}}
+              </ng-container>
+ <span class="spandatosc" *ngIf="element.isResumen"
+                    ><strong>Total:</strong></span
+                  ></td>
           </ng-container>
 
           <ng-container matColumnDef="fechaEmision">
             <th mat-header-cell *matHeaderCellDef>Emisión</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.fechaEmision }}
+                
+              {{ element.isnombrecliente ? "": element.fechaEmision }}
             </td>
           </ng-container>
 
@@ -155,7 +194,10 @@
           <ng-container matColumnDef="fechaVencimiento">
             <th mat-header-cell *matHeaderCellDef>Vencimiento</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.fechaVencimiento }}
+               <span class="spandatosc" *ngIf="element.isnombrecliente"
+                    ><strong>tels:{{element.telefonoFijo+"-"+element.celulares }}</strong></span
+                  >
+            {{ element.isnombrecliente ? "": element.fechaVencimiento }}
             </td>
           </ng-container>
 
@@ -166,15 +208,23 @@
           <ng-container matColumnDef="dias">
             <th mat-header-cell *matHeaderCellDef>Días</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.dias }}
+               {{ element.isnombrecliente ? "": element.dias }}
+               
             </td>
           </ng-container>
 
           <ng-container matColumnDef="totalFactura">
             <th mat-header-cell *matHeaderCellDef>Total factura</th>
             <td mat-cell *matCellDef="let element">
-              <ng-container *ngIf="element.totalFactura !== undefined">
-                ${{ element.totalFactura.toLocaleString("de-DE") }}
+
+                   <span class="spandatosc"  *ngIf="element.isnombrecliente">
+                    <strong>
+                      Mun:{{element.municipio}}
+                    </strong>
+                  </span>
+
+              <ng-container *ngIf="element.totalFactura !== undefined && !element.isnombrecliente">
+               ${{ element.totalFactura.toLocaleString("de-DE") }}
               </ng-container>
             </td>
           </ng-container>
@@ -182,23 +232,30 @@
           <ng-container matColumnDef="saldo">
             <th mat-header-cell *matHeaderCellDef>Saldo</th>
             <td mat-cell *matCellDef="let element">
-              <ng-container *ngIf="element.saldo !== undefined">
-                ${{ element.saldo.toLocaleString("de-DE") }}
+              <span class="spandatosc" *ngIf="element.isnombrecliente"
+                    ></span
+                  >
+ <ng-container *ngIf=" element.saldo !== undefined && !element.isnombrecliente && !element.isResumen">
+             {{element.saldo.toLocaleString("de-DE") }} 
               </ng-container>
+ <span class="spandatosc" *ngIf="element.isResumen"
+                    >   <strong>  {{element.totalCliente.toLocaleString("de-DE")}} </strong></span
+                  >
+              
             </td>
           </ng-container>
 
           <ng-container matColumnDef="estadoVencimiento">
             <th mat-header-cell *matHeaderCellDef>Estado vencimiento</th>
             <td mat-cell *matCellDef="let element">
-              <ng-container *ngIf="element.dias <= 0"> Vencida </ng-container>
+              <ng-container *ngIf="element.dias < 0 && !element.isnombrecliente"> Vencida </ng-container>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="Acciones">
             <th mat-header-cell *matHeaderCellDef>Acciones</th>
             <td mat-cell *matCellDef="let element">
-              <ng-container >   <a mat-icon-button color="socondary" >
+              <ng-container  *ngIf="!element.isnombrecliente" >   <a mat-icon-button color="socondary" >
             <img
               src="../../../../../assets/images/imgpdf.svg"
               style="color: #fe676c; width: 34px; height: 36px"
@@ -206,7 +263,15 @@
               (click)="generarpdfitem($event,element)"
             />
           </a> </ng-container>
-            </td>
+            <ng-container  *ngIf="element.isnombrecliente" > 
+     <button
+            mat-icon-button
+            style="color: #5db5f2"
+         (click)="enviarcorreo(element)"
+          >
+            <mat-icon>forward_to_inbox</mat-icon>
+          </button> </ng-container>
+           
           </ng-container>
 
           <ng-container matColumnDef="customResumen">
@@ -229,56 +294,10 @@
               </div>
             </td>
           </ng-container>
-
-            <ng-container matColumnDef="customRegistrocliente">
-            <td
-              mat-cell
-              *matCellDef="let row"
-              [attr.colspan]="displayedColumns.length"
-            >
-              <div class="resumen-row">
-                <div style="display: flex; justify-content: space-around">
-
-                    <span class="spandatosc">
-                    <strong>
-                      Id:{{row.identificacion}}
-                    </strong>
-                  </span>
-                  <span class="spandatosc"
-                    ><strong>{{ row.cliente }}</strong></span
-                  >
-
-                
-
-                  
-                  <span class="spandatosc">
-                    <strong>
-                     Tel: {{row.tels}}
-                    </strong>
-                  </span>
-
-                  <span class="spandatosc">
-                    <strong>
-                      Mun:{{row.municipio}}
-                    </strong>
-                  </span>
-
-
-                       <button
-            mat-icon-button
-            style="color: #5db5f2"
-            (click)=" enviarcorreo(row)"
-       
-          >
-            <mat-icon>forward_to_inbox</mat-icon>
-          </button>
-
               
-                </div>
-              </div>
-            </td>
-          </ng-container>
-            
+
+
+
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <!--defino dos tipos de filas-->
@@ -290,19 +309,10 @@
           >    
         </tr>
       
-          <tr
-            mat-row
-            *matRowDef="let row; columns: ['customResumen']; when: isResumenRow"
-           
-          >
-        </tr>
+        
+              
 
-               <tr
-            mat-row
-            *matRowDef="let row; columns: ['customRegistrocliente']; when: mostrarcliente "
-           
-          >  
-        </tr>
+       
         </table>
       </div>
     </div>
@@ -318,6 +328,7 @@
           >Total Saldo: $
           {{ totalCartera.toLocaleString("de-DE") }}</mat-card-title
         >
+        <div class="d-flex justify-content-center">
         <button
           matFab
           aria-label="Example icon button with a delete icon"
@@ -346,6 +357,16 @@
             class="imgicon"
           />
         </button>
+
+
+         <button
+            mat-icon-button
+            style="color: #5db5f2"
+         (click)="enviarcorreo()"
+          >
+            <mat-icon>forward_to_inbox</mat-icon>
+          </button>
+          </div>
       </div>
       <div class="col-12" style="display: flex; justify-content: center; padding-bottom: 50px;">
         <div style="display: inline-flex">
