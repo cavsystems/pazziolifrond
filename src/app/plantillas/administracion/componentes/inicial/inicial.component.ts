@@ -58,6 +58,7 @@ export class InicialComponent implements OnInit {
   };// EJE Y
 
   public barChartOptionsPtotal: ChartConfiguration<'bar'>['options'] = {
+       maintainAspectRatio: false,
     responsive: true,
     plugins: {
       legend: { display: true },
@@ -65,7 +66,10 @@ export class InicialComponent implements OnInit {
   };
 
   public barChartOptionsPCantidad: ChartConfiguration<'bar'>['options'] = {
+
     responsive: true,
+   
+        maintainAspectRatio: false,
     plugins: {
       legend: { display: true },
     }
@@ -124,6 +128,7 @@ export class InicialComponent implements OnInit {
 
   public lineChartOptions: ChartConfiguration<'line'>['options'] = {
     responsive: true,
+        maintainAspectRatio: false,
     plugins: {
       legend: {
         display: true,
@@ -326,6 +331,8 @@ seleccionardb() {
               label: 'Total Recaudo',
               fill: false,
               tension: 0.3,
+               
+     
               borderColor: '#27ae60',
               backgroundColor: '#27ae60',
               pointBackgroundColor: '#27ae60',

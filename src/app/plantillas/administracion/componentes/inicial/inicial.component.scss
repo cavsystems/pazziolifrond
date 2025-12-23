@@ -32,7 +32,7 @@
 
 .producto-button .producto-btn {
   width: 100%;
-  padding: 14px 20px;
+  padding: 14px 25px;
   text-align: left;
   display: flex;
   justify-content: space-between;
@@ -97,14 +97,16 @@
   font-weight: 500;
   word-break: break-word;
   white-space: normal;
+  line-height: 1.5;
 }
 
 .producto-cantidad {
-  font-size: 14px;
+  font-size: 13px;
   color: #2c3e50; /* Más oscuro y legible */
   font-weight: 500;
-  margin-top: 4px;
+  
   white-space: nowrap;
+  line-height:2
 }
 
 // record pedidos
