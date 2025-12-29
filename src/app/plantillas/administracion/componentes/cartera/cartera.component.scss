@@ -79,3 +79,19 @@ Esto es útil cuando en una misma fila tienes texto y elementos como íconos o b
   justify-content: center;
   flex-direction: column;
 }
+
+.tablecarteradiv table td,
+.tablecarteradiv table th {
+  white-space: nowrap !important;
+}
+
+.tablecarteradiv .mat-header-row {
+    position: sticky !important;
+  top: 0 !important;
+  background: #fff; /* Fondo para que no se vea transparente */
+  z-index: 5;      /* Para que quede por encima de las filas */
+  text-align: center;
+}
+.tablecarteradiv>table td span strong{
+  white-space:nowrap !important;
+}

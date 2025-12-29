@@ -23,6 +23,7 @@ export class CarteraComponent implements OnInit {
   cliente: string = '';
   clientes: any[] = [];
   clienteSeleccionado = {
+ 
     nombre: 'Seleccione un cliente',
     identificacion: '',
     email: '',
@@ -338,13 +339,7 @@ console.log( row.isnombrecliente)
 
     // primero agregas una fila de "cliente"
     acumulador.push({
-      cliente: item.cliente,
-      identificacion:item.identificacion,
-       tels:item.telefonoFijo+"-"+item.celulares,
-       direccion:item.direccion,
-       municipio:item.municipio,
-       email:item.email,
-       id:item.codigotercero,
+      ...item,
       isnombrecliente: true
     });
   }
@@ -364,6 +359,7 @@ console.log(this.facturatodo)
   }
 
   seleccionarCliente(cliente: any) {
+
     this.clienteSeleccionado.nombre = cliente.razonSocial;
     this.clienteSeleccionado.identificacion = cliente.identificacion;
     this.clienteSeleccionado.email = cliente.email;
@@ -436,6 +432,7 @@ console.log(this.facturatodo)
       }
       this.servifactura.traertodaslasfacturas(this.pagina).subscribe( async (data) => {
         this.clienteSeleccionado = {
+         
           nombre: 'Seleccione un cliente',
           identificacion: '',
           email: '',
@@ -472,8 +469,9 @@ console.log(this.facturatodo)
 
 
 
-    enviarcorreo(clientec: any) {
-    console.log("cleinte actual seleccionado",clientec)
+    enviarcorreo(clientec: any=null) {
+      if(clientec){
+            console.log("cleinte actual seleccionado",clientec)
       const dialogref = this.dialog.open(DialogoAlerta, {
         data: {
           boton: 'Continuar',
@@ -490,7 +488,9 @@ console.log(this.facturatodo)
       dialogref.afterClosed().subscribe( (data1) => {
         if (data1) {
              this.servifactura. generarpdfid(clientec.id).subscribe(async (data) => {
- const pdf = await generatePDFfagm(data,this.totalCartera);
+              console.log(data)
+ const pdf = await generatePDFfagm(data,data.respuesta
+[0].totalSaldoCliente);
 
  this.servifactura.enviaremailfacturapendiente({
                 
@@ -523,6 +523,10 @@ console.log(this.facturatodo)
         
         }
       });
+      }else{
+        
+      }
+   
     }
 }
 
