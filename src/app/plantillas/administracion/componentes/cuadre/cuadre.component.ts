@@ -204,7 +204,7 @@ efectivoglobal:number=0
 targetas:number=0
 cxcventas:number=0;
 totalcaja:number=0;
-
+netoventa:number=0
 otros:number=0;
    almacen:string='0'
    usuario:string='0'
@@ -285,10 +285,11 @@ otros:number=0;
           this.zone.run(() => {
           this.almacen = data.codigobodega.toString();
           
-          console.log('Actualizando bodega:', this.almacen);
+          console.log('Actualizando bodega:', this.almacen,data.codigousuario,data.nivel);
           this.cdr.detectChanges();
         });
-           if(data.nivel===4){
+        let nivel= data.nivel
+           if(data.nivel===4 || data.nivel===1){
                 this.nivel=data.nivel
                
             this.socketproduct.consultarusuario(data.codigousuario).subscribe(
@@ -299,10 +300,14 @@ otros:number=0;
                  this.usuario=data.datoscliente
            
 [0].codigo.toString()
-                this.almacenes=this.almacenes.filter((datos:any)=>{
+if( nivel!==1){
+this.almacenes=this.almacenes.filter((datos:any)=>{
                   console.log(datos.codigo===data.codigobodega,data.codigobodega)
                 return datos.codigo===Number(this.almacen)
                 })
+                console.log("almacenfiltrado",this.almacenes,nivel)
+}
+                
                 this.cdr.detectChanges(); // Forzar actualización
               }
             )
@@ -323,7 +328,7 @@ otros:number=0;
         
    }
  cargaalmacen(valor:string){
-  if(this.nivel===4){
+  if(this.nivel===4 || this.nivel===1){
      this.socketproduct.consultarusuarioalmacen(Number(valor)).subscribe(
     (data:any)=>{
       const codigousuact=this.usuario
@@ -439,6 +444,8 @@ this.reciboscuadre=dat.datosaux[0]
               (dato:any)=>{
                 console.log("datos recibos devoluciones",dato)
                 this.totaldevoluciones=Number(datos.datosaux[0].totalDevolucion)
+                this.netoventa= this.totalventas-Number(dato.datosaux[0].totalDevolucion)
+                console.log(typeof dato.datosaux[0].totalDevolucion,typeof  this.totalventas )
                this.devolucionescuadre=dato.datosaux[0]
                this.efectivoglobal+=(Number(this.ventascuadre.ftEfectivo)+Number(this.reciboscuadre.TEfectivo))-(Number(
                 this.egresoscuadre.tEgresos
