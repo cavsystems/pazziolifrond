@@ -151,6 +151,7 @@ export const generatePDFfa = (data: any,totalCartera:number): any => {
     {
       text: `$${item.totalSaldoCliente.toLocaleString('de-DE')}`,
       bold: true,
+      fontSize: 8 
     },
 
     {}, // cliente vacío
@@ -184,10 +185,10 @@ content.push({
           table: {
             headerRows: 0,
             widths: [
-              20,
+            'auto',
               'auto',
+              60,
               'auto',
-              100,
             20,
               50,
               '*',
@@ -228,7 +229,7 @@ content.push({
     },
     tableHeader: {
       bold: true,
-      fontSize: 9,
+      fontSize: 8,
       color: 'black',
     },
     total: {

@@ -110,14 +110,15 @@ mostrarsubmenuitemcaja(){
        this.auxiliarcxc=false
       }
       if(!permisoscadena.includes('MONITOR CAJA')){
-        this.cuadrecaja=false
+        //this.cuadrecaja=false
       }
       if(!permisoscadena.includes('CONSULTAR PRODUCTOS')){
         this.consultarproductos=false;
       }
       if(!permisoscadena.includes("CONSULTAR INVENTARIO FISICO")){
       this.consultarinventariofisico=false;
-      }      this.ConsultarCuadre=true;
+      }    
+        this.ConsultarCuadre=true;
 
       if(!permisoscadena.includes("TOMAR_PEDIDO")){
         this.TomarPedidos=false
@@ -136,7 +137,7 @@ mostrarsubmenuitemcaja(){
       }
 
       if(!permisoscadena.includes("CONSULTAR CUADRE")){
-        this.ConsultarCuadre=false;
+       // this.ConsultarCuadre=false;
       }
           }else{
       this.TomarPedidos=false

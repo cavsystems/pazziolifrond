@@ -289,7 +289,7 @@ otros:number=0;
           this.cdr.detectChanges();
         });
         let nivel= data.nivel
-           if(data.nivel===4 || data.nivel===1){
+           if(data.nivel===4 || data.nivel===1 ){
                 this.nivel=data.nivel
                
             this.socketproduct.consultarusuario(data.codigousuario).subscribe(

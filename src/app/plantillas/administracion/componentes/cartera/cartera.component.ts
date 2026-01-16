@@ -263,7 +263,7 @@ console.log( row.isnombrecliente)
   };
 
    async generafilaresume(data: any[]):Promise<any[]> {
-    console.log("data",data)
+    console.log("data resumen",data)
     let subtotal=0;
     let grupoActual: string | null = null;
     this.facturatodo = [];
@@ -388,6 +388,7 @@ console.log(this.facturatodo)
   }
   generarpdf() {
     this.servifactura.facturapdf().subscribe((data) => {
+      console.log("data cliente",data)
       generatePDFfa(data,this.totalCartera);
     });
   }
@@ -431,6 +432,7 @@ console.log(this.facturatodo)
         clearTimeout(timeout);
       }
       this.servifactura.traertodaslasfacturas(this.pagina).subscribe( async (data) => {
+        console.log("Todas las facturas back",data)
         this.clienteSeleccionado = {
          
           nombre: 'Seleccione un cliente',
