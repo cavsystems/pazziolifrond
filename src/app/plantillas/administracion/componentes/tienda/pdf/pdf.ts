@@ -9,7 +9,7 @@ export const generatePDFemail = async (data: any) => {
   //Se crea el contenido de la tabla, con:
   //Una fila de encabezado (títulos).
   //Una fila por cada producto en el array recibido.
-
+ console.log("trayendopedidos actuales pedidos")
   const tableBody = [
     [
       { text: 'Codigo', style: 'tableHeader' },
@@ -17,17 +17,17 @@ export const generatePDFemail = async (data: any) => {
       { text: 'Referencia', style: 'tableHeader' },
       { text: 'Presentación', style: 'tableHeader' },
       { text: 'Cant.', style: 'tableHeader' },
-      { text: 'Precio', style: 'tableHeader' },
-      { text: 'Total', style: 'tableHeader' },
+      { text: 'Precio', style: 'tableHeader',alignment: 'center' },
+      { text: 'Total', style: 'tableHeader' ,alignment: 'center'},
     ],
     ...data?.productos.map((product: any) => [
-      product.codigo,
-      product.nombre,
-      product.referencia,
-      `${product.presentacion === undefined ? '' : product.presentacion}`,
-      product.cantidad.toString(),
-      ` $${product.precio.toLocaleString('de-DE')}`,
-      `$${(product.cantidad * product.precio).toLocaleString('de-DE')}`,
+      { text: product.codigo, fontSize: 10 },
+    { text: product.nombre, fontSize: 10 },
+    { text: product.referencia, fontSize: 10 },
+    { text: `${product.presentacion ?? ''}`, fontSize: 10 },
+    { text: product.cantidad.toString(), alignment: 'center', fontSize: 10 },
+    { text: `$${product.precio.toLocaleString('de-DE')}`, alignment: 'right', fontSize: 10 },
+    { text: `$${(product.cantidad * product.precio).toLocaleString('de-DE')}`, alignment: 'right', fontSize: 10 },
     ]),
   ];
   //Se calcula la suma total de todos los productos usando reduce.
@@ -123,7 +123,7 @@ export const generatePDFemail = async (data: any) => {
     ],
   });
   //Define estilos reutilizables usados en el contenido: encabezados, subencabezados, etc.
-  const styles = {
+   const styles = {
     header: {
       fontSize: 14,
       bold: true,
@@ -134,7 +134,7 @@ export const generatePDFemail = async (data: any) => {
     },
     tableHeader: {
       bold: true,
-      fontSize: 12,
+      fontSize: 10,
       color: 'black',
     },
     total: {

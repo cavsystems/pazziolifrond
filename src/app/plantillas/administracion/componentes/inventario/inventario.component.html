@@ -35,7 +35,7 @@
                 matInput
                 placeholder=""
                 (ngModelChange)="autocompletarinputclient($event)"
-                [(ngModel)]="cliente"
+                [(ngModel)]="productchange"
               />
               <mat-icon matSuffix>search</mat-icon>
 
@@ -47,18 +47,43 @@
 
       
 
-   <mat-card-footer style="display: flex
-;
-    justify-content: center;
-    padding: 10px;">
-    <mat-form-field appearance="fill" class="classformbodega">
-  <mat-label>Choose an option</mat-label>
+   <mat-card-footer style="
+
+   
+    padding: 10px 12px 10px 12px;">
+    <div class="row mx-0  w-100 w100">
+      <div class="col-6 ">
+             <mat-form-field appearance="fill" class="classformbodega w100">
+  <mat-label>Bodega</mat-label>
   <select matNativeControl  [(ngModel)]="this.bodegaSeleccionada"  (ngModelChange)="cargabodega($event)">
     <option value="" selected>Todo</option>
     <option  *ngFor="let item of bodegas" [value]="item.almacen">{{item.alias}}</option>
     
   </select>
 </mat-form-field>
+      </div>
+      <div class="col-3">
+   <mat-form-field appearance="fill" class="classformbodega w100" >
+  <mat-label>Linea</mat-label>
+  <select matNativeControl  [(ngModel)]="this.linea"  (ngModelChange)="carlinea($event)">
+    <option value="0" selected>Todo</option>
+    <option  *ngFor="let item of lineas" [value]="item.codigo">{{item.nombre}}</option>
+    
+  </select>
+</mat-form-field>
+      </div>
+      <div class="col-3 ">
+   <mat-form-field  appearance="fill" class="classformbodega w-100 w100">
+  <mat-label>Grupo</mat-label>
+  <select matNativeControl  [(ngModel)]="this.grupo"  (ngModelChange)="cargabodega($event)">
+    <option value="0" selected>Todo</option>
+    <option  *ngFor="let item of grupos" [value]="item.codigo">{{item.nombre}}</option>
+    
+  </select>
+</mat-form-field>
+      </div>
+    </div>
+ 
    </mat-card-footer>
 
 

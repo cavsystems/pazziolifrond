@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Socket_producto } from 'src/services/socket/socket.producto.service.ts.service';
+import { generatePDFaux } from './dpfaux';
 
 @Component({
   selector: 'app-auxcliente',
@@ -78,7 +79,13 @@ export class AuxclienteComponent implements OnInit {
     this.clienteSeleccionado.ciudad = cliente.municipio;
     this.cliente=''
     this.clientes = [];
+
  this.buscarauxiliarcliente(cliente)
+  }
+  clickpdf(){
+    console.log("Cliente seleccionado producto",this.dataSource.data,this.clienteSeleccionado,this.saldo)
+
+    generatePDFaux(this.dataSource.data,this.saldo,this.clienteSeleccionado)
   }
   buscarauxiliarcliente(clientea:any){
     this.saldo=0

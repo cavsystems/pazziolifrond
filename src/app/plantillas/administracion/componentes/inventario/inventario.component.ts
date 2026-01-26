@@ -1,15 +1,28 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { Socket_producto } from 'src/services/socket/socket.producto.service.ts.service';
+interface grupos{
+  codigo:number, nombre: string
+}
+
+interface lineas{
+  codigo:number, nombre: string
+}
 
 @Component({
   selector: 'app-inventario',
   templateUrl: './inventario.component.html',
   styleUrls: ['./inventario.component.scss']
 })
+
 export class InventarioComponent implements OnInit {
   bodegas:any[]=[]
   totalpositivo:number=0;
+  linea:string="0"
+  grupo:string="0"
+  grupos:grupos[]=[]
+  lineas: lineas[]=[]
+productchange=""
   totalglobal:number=0;
 totalnegativo:number=0;
   bodegaSeleccionada:string=''
@@ -80,20 +93,43 @@ obtenertodo=false
         .subscribe((dato) => {
            console.log("BODEAS ACTULES",JSON.parse(dato).mensajePeticion)
          this.bodegas = [...JSON.parse(dato).mensajePeticion];
+
+         
+              this.socketproduct
+        .obtenerInfo('aws', 'pazzioli-pos-3', {
+          metodo: 'CONSULTAR',
+          condicion: 'lineas',
+          consulta: 'PRODUCTOS',
+          canalserver: 'aws',
+          datoCondicion: '' ,
         })
-   }
-  ngOnInit(): void {
-    //nada
-    this.obtenertodo=true
-     this.socketproduct
+           .pipe(take(1))
+        .subscribe((dato) => {
+           console.log("lineas ACTULES",JSON.parse(dato).mensajePeticion)
+             this.lineas = [...JSON.parse(dato).mensajePeticion];
+                 this.socketproduct
+        .obtenerInfo('aws', 'pazzioli-pos-3', {
+          metodo: 'CONSULTAR',
+          condicion: 'grupos',
+          consulta: 'PRODUCTOS',
+          canalserver: 'aws',
+          datoCondicion: '' ,
+        })
+           .pipe(take(1))
+        .subscribe((dato) => {
+           console.log("grupos ACTULES",JSON.parse(dato).mensajePeticion)
+            this.grupos= [...JSON.parse(dato).mensajePeticion];
+           this.socketproduct
         .obtenerInfo('aws', 'pazzioli-pos-3', {
           metodo: 'CONSULTAR',
           condicion: 'INVENTARIO',
           consulta: 'PRODUCTOS',
           canalserver: 'aws',
-          datoCondicion: 1,
+          datoCondicion:this.productchange,
           pagina:1,
-          bodega:''
+          bodega:'',
+          linea:Number(this.linea),
+          grupo:Number(this.grupo)
 
         })
        
@@ -106,6 +142,21 @@ obtenertodo=false
 
           }              
         });
+     
+        })
+
+
+        })
+        })
+
+
+
+         
+   }
+  ngOnInit(): void {
+    //nada
+    this.obtenertodo=true
+     
   }
 
 
@@ -131,7 +182,10 @@ obtenertodo=false
           consulta: 'PRODUCTOS',
           canalserver: 'aws',
           datoCondicion: valor.trim() ,
-          bodega:this.bodegaSeleccionada
+          bodega:this.bodegaSeleccionada,
+             
+           linea:Number(this.linea),
+          grupo:Number(this.grupo)
         })
           
 
@@ -157,9 +211,11 @@ cargabodega(valor: string){
           condicion: 'INVENTARIO',
           consulta: 'PRODUCTOS',
           canalserver: 'aws',
-          datoCondicion: this.pagina ,
+          datoCondicion:this.productchange ,
           pagina:this.pagina,
-          bodega:valor
+          bodega:valor,
+          linea:Number(this.linea),
+          grupo:Number(this.grupo)
 
         })
         .subscribe((dato) => {
@@ -173,15 +229,17 @@ cargabodega(valor: string){
   }else{
       this.pagina=1
     this.productos=[]
-    if(this.cliente!==""){
+    if(this.productchange!==""){
      this.socketproduct
         .obtenerInfo('aws', 'pazzioli-pos-3', {
           metodo: 'CONSULTAR',
           condicion: 'DESCRIPCIONINVENTARIO',
           consulta: 'PRODUCTOS',
           canalserver: 'aws',
-          datoCondicion:this.cliente ,
-          bodega:valor
+          datoCondicion:this.productchange ,
+          bodega:valor,
+          linea:Number(this.linea),
+          grupo:Number(this.grupo)
         })
           
 
@@ -291,7 +349,7 @@ calcularnegativo(id:number){
 }
 cargarcarteracompleta(){
   console.log(">>> Ejecutando cargarcarteracompleta()");
-  this.cliente=""
+  this.productchange=""
   this.pagina=1
   if(this.obtenertodo){
    this.socketproduct
@@ -302,7 +360,9 @@ cargarcarteracompleta(){
           canalserver: 'aws',
           datoCondicion: this.pagina ,
           pagina:this.pagina,
-          bodega:this.bodegaSeleccionada
+          bodega:this.bodegaSeleccionada,
+           linea:Number(this.linea),
+          grupo:Number(this.grupo)
 
         })
         .subscribe((dato) => {
@@ -320,6 +380,8 @@ cargarcarteracompleta(){
 }
 
 
+
+
 onScroll(event: any){
     console.log(">>> Ejecutando onScroll()");
    const element = event.target;
@@ -331,8 +393,9 @@ onScroll(event: any){
     console.log(this.pagina <= this.nregistros)
     if(this.pagina <= this.nregistros){
        this.pagina++
-       console.log("pagina actual",this.pagina)
-   const paginaactual=this.pagina+1
+       console.log("pagina actual todo",this.pagina)
+   //const paginaactual=this.pagina+1
+   const paginaactual=this.pagina
     console.log("pagina actual",paginaactual)
     console.log("Llegaste al final, traer más registros...");
     console.log("productos antes",this.productos)
@@ -345,11 +408,67 @@ onScroll(event: any){
           canalserver: 'aws',
           datoCondicion: this.pagina ,
           pagina:this.pagina,
-          bodega:this.bodegaSeleccionada
+          bodega:this.bodegaSeleccionada,
+           linea:Number(this.linea),
+          grupo:Number(this.grupo)
         })
         .subscribe((dato) => {
-            console.log("productos antes",this.productos)
+         
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
+
+          
+              JSON.parse(dato).mensajePeticion.forEach((item:any)=>{
+            const existe = pro.some(p => p.codigo === item.codigo);
+    if (!existe) {
+      pro.push(item); // 👉 agrega al array existente
+    }
+              })
+                    this.totalglobal=JSON.parse(dato).inventariototal
+         console.log("productos despues", JSON.parse(dato).mensajePeticion)  
+  this.productos=[...pro]
+  console.log(this.productos)
+ }
+                    
+          
+        });
+  }
+  
+  
+  }
+}else{
+  if ((element.scrollHeight - element.scrollTop)-1 === element.clientHeight) {
+    console.log(this.pagina <= this.nregistros)
+    if(this.pagina <= this.nregistros){
+      
+       this.pagina++
+       console.log("pagina actual",this.pagina)
+   const paginaactual=this.pagina+1
+    console.log("pagina actual",paginaactual)
+    console.log("Llegaste al final, traer más registros...");
+    console.log("productos antes",this.productos)
+    let pro=this.productos
+    this.socketproduct
+ 
+    if(this.productchange!==""){
+     this.socketproduct
+        .obtenerInfo('aws', 'pazzioli-pos-3', {
+          metodo: 'CONSULTAR',
+          condicion: 'DESCRIPCIONINVENTARIO',
+          consulta: 'PRODUCTOS',
+          canalserver: 'aws',
+          datoCondicion:this.productchange ,
+          bodega:this.bodegaSeleccionada,
+          linea:Number(this.linea),
+          grupo:Number(this.grupo)
+        })
+          
+
+        .subscribe((dato) => {
+          if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
+
+        
+        console.log("productos antes",this.productos)
+    
 
           
               JSON.parse(dato).mensajePeticion.forEach((item:any)=>{
@@ -362,19 +481,74 @@ onScroll(event: any){
          console.log("productos despues",pro)  
   this.productos=[...pro]
   console.log(this.productos)
-  return}
+  return
                     
           
+          }
         });
-  }
+        }
   
-  
   }
+}
 }
 
  
   
 }
+
+carlinea(e:any){
+  console.log("value linea",e)
+    
+ this.pagina=1
+    this.productos=[]
+  if(this.obtenertodo){
+   this.socketproduct
+        .obtenerInfo('aws', 'pazzioli-pos-3', {
+          metodo: 'CONSULTAR',
+          condicion: 'INVENTARIO',
+          consulta: 'PRODUCTOS',
+          canalserver: 'aws',
+          datoCondicion: this.productchange ,
+          pagina:this.pagina,
+          bodega:this.bodegaSeleccionada,
+           linea:Number(e),
+          grupo:Number(this.grupo)
+
+        })
+        .subscribe((dato) => {
+          if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
+                        console.log("numerregistro", JSON.parse(dato).registro)
+                        this.nregistros= JSON.parse(dato).registro
+                        this.productos = JSON.parse(dato).mensajePeticion;
+                                 this.totalglobal=JSON.parse(dato).inventariototal
+          }
+        });
+  }else{
+    this.socketproduct
+        .obtenerInfo('aws', 'pazzioli-pos-3', {
+          metodo: 'CONSULTAR',
+          condicion: 'DESCRIPCIONINVENTARIO',
+          consulta: 'PRODUCTOS',
+          canalserver: 'aws',
+          datoCondicion: this.productchange ,
+          pagina:this.pagina,
+          bodega:this.bodegaSeleccionada,
+           linea:Number(e),
+          grupo:Number(this.grupo)
+
+        })
+        .subscribe((dato) => {
+          if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
+                        console.log("numerregistro", JSON.parse(dato).registro)
+                        this.nregistros= JSON.parse(dato).registro
+                        this.productos = JSON.parse(dato).mensajePeticion;
+                                 this.totalglobal=JSON.parse(dato).inventariototal
+          }
+        });
+  }
+}
+
+
 
 
 }
