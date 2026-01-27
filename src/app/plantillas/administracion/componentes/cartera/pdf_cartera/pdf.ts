@@ -75,8 +75,9 @@ export const generatePDFfa = (data: any,totalCartera:number): any => {
   data.respuesta.forEach((fact: any, index: number) => {
     console.log(fact.cliente !== nombre)
     if (fact.cliente !== nombre) {
-
-        let clientesaldo=data.respuesta.find((item:any)=> item.cliente===nombre && item.totalSaldoCliente) 
+  console.log("entro cliente diferente",fact)
+        let clientesaldo=data.respuesta.find((item:any)=> item.cliente===nombre && item.totalSaldoCliente!==null) 
+          console.log("entro cliente diferente",fact,clientesaldo,nombre,item.cliente)
       // Fila de factura
       tableBody.push([
         {text: 'Total', colSpan:5 ,bold: true, alignment: 'left', fontSize: 8 },

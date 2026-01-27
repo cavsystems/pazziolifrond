@@ -57,15 +57,15 @@ export class FacturaserviceService {
     });
   }
 
-  traertodaslasfacturas(pagina: number): Observable<any> {
+  traertodaslasfacturas(pagina: number, ciudad: string): Observable<any> {
     return this.http.get(
-      `${environment.api}/obtenerfacturaall?pagina=${pagina}`,
+      `${environment.api}/obtenerfacturaall?pagina=${pagina}&ciudad=${ciudad}`,
       { withCredentials: true }
     );
   }
 
-  generarpdfid(id:number): Observable<any> {
-    return this.http.get(`${environment.api}/pdffactura?codigousuario=${id}`, {
+  generarpdfid(id:number,ciudad:string): Observable<any> {
+    return this.http.get(`${environment.api}/pdffactura?codigousuario=${id}&ciudad=${ciudad}`, {
       withCredentials: true,
     });
   }
@@ -76,8 +76,13 @@ export class FacturaserviceService {
     });
   }
 
-  facturapdf(): Observable<any> {
-    return this.http.get(`${environment.api}/pdffactura`, {
+  traerciudades(): Observable<any> {
+    return this.http.get(`${environment.api}/traerciudades`, {
+      withCredentials: true,
+    });
+  }
+  facturapdf(ciudad:string): Observable<any> {
+    return this.http.get(`${environment.api}/pdffactura?ciudad=${ciudad}`, {
       withCredentials: true,
     });
   }

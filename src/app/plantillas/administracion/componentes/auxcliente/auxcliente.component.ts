@@ -46,6 +46,7 @@ export class AuxclienteComponent implements OnInit {
   
  fechafinal!: Date;
   fechaInicial!: Date;
+  nomberempresa:string=''
  clientes: any[] = [];
   clienteSeleccionado = {
     nombre: 'Seleccione un cliente',
@@ -85,7 +86,7 @@ export class AuxclienteComponent implements OnInit {
   clickpdf(){
     console.log("Cliente seleccionado producto",this.dataSource.data,this.clienteSeleccionado,this.saldo)
 
-    generatePDFaux(this.dataSource.data,this.saldo,this.clienteSeleccionado)
+    generatePDFaux(this.dataSource.data,this.saldo,this.clienteSeleccionado,this.nomberempresa)
   }
   buscarauxiliarcliente(clientea:any){
     this.saldo=0
@@ -93,6 +94,8 @@ export class AuxclienteComponent implements OnInit {
       console.log("auxiliar")
     this.socketproduct.consultaruaxiliarcliente(clientea.codigo,`${this.fechaInicial.getFullYear()}-${(this.fechaInicial.getMonth()+1).toString().padStart(2,'0')}-${this.fechaInicial.getDate().toString().padStart(2, '0')} `,`${this.fechafinal.getFullYear()}-${(this.fechafinal.getMonth()+1).toString().padStart(2,'0')}-${this.fechafinal.getDate().toString().padStart(2, '0')} `).subscribe(
       (data:any)=>{
+        this.nomberempresa=data.dataempresa
+
         let arrayauxiliar:any=[]
              console.log("data auxiliar",data.datosaux
 )

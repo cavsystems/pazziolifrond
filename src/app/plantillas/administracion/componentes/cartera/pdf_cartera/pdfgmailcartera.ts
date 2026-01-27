@@ -72,7 +72,7 @@ export const generatePDFfagm = async (data: any,totalCartera:number) => {
   data.respuesta.forEach((fact: any, index: number) => {
     console.log(fact.cliente !== nombre)
     if (fact.cliente !== nombre) {
-
+       console.log("entro cliente diferente",fact)
         let clientesaldo=data.respuesta.find((item:any)=> item.cliente===nombre && item.totalSaldoCliente) 
       // Fila de factura
       tableBody.push([

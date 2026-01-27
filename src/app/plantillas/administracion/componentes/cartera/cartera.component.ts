@@ -13,6 +13,7 @@ import { promise } from 'protractor';
 import { take } from 'rxjs/operators';
 import { DialogoAlerta } from 'src/app/angular-material/alerta';
 import { generatePDFfagm } from './pdf_cartera/pdfgmailcartera';
+import { SSL_OP_NO_TLSv1_1 } from 'constants';
 
 @Component({
   selector: 'app-cartera',
@@ -34,9 +35,10 @@ export class CarteraComponent implements OnInit {
     imagen: null,
     ciudad: '',
   };
-
+  public ciudad:string='';
   public factura = new MatTableDataSource<any>([]);
   public facturatodo: any[] = [];
+  public ciudades:string[]=[]
   public codigo: number = 0;
   public codigoComprobante: number = 0;
   public fechaEmision: string = '';
@@ -81,7 +83,9 @@ export class CarteraComponent implements OnInit {
     private router: Router,
      private platform: Platform,
   ) {
+    this.traerciudades();
         this.servifactura.conectar()
+          
     this.serviouth.obtenernivel().subscribe((data) => {
             this.nivel = data.nivel;
     });
@@ -262,6 +266,18 @@ console.log( row.isnombrecliente)
     return this.factura.data[row]?.isResumen === true;
   };
 
+  async traerciudades(){
+    this.servifactura.traerciudades().subscribe( async (data) => {
+      console.log("Todas las facturas back",data)
+      data.respuesta.forEach((element:any) => {
+        this.ciudades.push( element.municipio)
+      });
+      
+
+    });
+  }
+
+
    async generafilaresume(data: any[]):Promise<any[]> {
     console.log("data resumen",data)
     let subtotal=0;
@@ -279,6 +295,7 @@ console.log( row.isnombrecliente)
     let contador = 0;
    for (let i = 0; i < data.length; i++) {
       let item = data[i];
+   
              if (grupoActual === null) {
        this.facturatodo.push(item);
 
@@ -310,6 +327,8 @@ console.log( row.isnombrecliente)
       }
       contador++;
     }
+    
+
 
     if (grupoActual !== null) {
         const result: any = await this.servifactura
@@ -387,14 +406,15 @@ console.log(this.facturatodo)
       });
   }
   generarpdf() {
-    this.servifactura.facturapdf().subscribe((data) => {
+    this.servifactura.facturapdf(this.ciudad).subscribe((data) => {
       console.log("data cliente",data)
       generatePDFfa(data,this.totalCartera);
     });
   }
 
    generarpdfid() {
-    this.servifactura. generarpdfid(this.clienteSeleccionado.codigo).subscribe((data) => {
+    console.log("cliente seleccionado",this.clienteSeleccionado)
+    this.servifactura.generarpdfid(this.clienteSeleccionado.codigo,this.ciudad).subscribe((data) => {
       generatePDFfa(data,this.totalCartera);
     });
 
@@ -403,13 +423,14 @@ console.log(this.facturatodo)
   }
 
   generarpdfidclienteselect(id:number) {
-    this.servifactura. generarpdfid(this.clienteSeleccionado.codigo).subscribe((data) => {
+    this.servifactura. generarpdfid(this.clienteSeleccionado.codigo,this.ciudad).subscribe((data) => {
       generatePDFfa(data,this.totalCartera);
     });
 
 
     
   }
+
   navegarpagina1() {
     if (!this.obtenertodo) {
       this.router.navigate(['admin/cartera'], {
@@ -417,6 +438,62 @@ console.log(this.facturatodo)
       });
     }
   }
+  async cargarconciudad(valor:string='') {
+    this.navegarpagina1()
+    this.cargarcarteracompletas(valor)
+  }
+   async cargarcarteracompletas(valor:string='') {
+    this.cliente = '';
+    this.clientes = [];
+
+    if (this.obtenertodo) {
+      let param = this.route.snapshot.queryParamMap.get('back');
+      if (param && param === '1') {
+        const timeout = setTimeout(() => {
+          this.router.navigate(['admin/cartera'], {
+            queryParams: { pagina: 1 },
+          });
+        }, 0);
+        clearTimeout(timeout);
+      }
+      this.servifactura.traertodaslasfacturas(1,this.ciudad).subscribe( async (data) => {
+        console.log("Todas las facturas back",data)
+        this.clienteSeleccionado = {
+         
+          nombre: 'Seleccione un cliente',
+          identificacion: '',
+          email: '',
+          celulares: '',
+          direccion: '',
+          telefonoFijo: '',
+          codigo: 0,
+          imagen: null,
+          ciudad: '',
+        };
+        if (data.respuesta.length > 0) {
+             this.total_registros = data.nregistros;
+        this.totalCartera = data.saldo;
+          
+        console.log(this.factura.data)
+        this.factura.data = await  this.generafilaresume(data.respuesta)
+        }
+
+       ;
+
+        // this.router.navigate(['admin/cartera'], { queryParams: { pagina: 1 } });
+      });
+    } else {
+      if (this.clienteSeleccionado.codigo === 0) {
+        this.factura.data = [];
+        this.totalCartera = 0;
+        this.total_registros = 0;
+        this.router.navigate(['admin/cartera'], {
+          queryParams: { pagina: 1 },
+        });
+      }
+    }
+  }
+
    async cargarcarteracompleta() {
     this.cliente = '';
     this.clientes = [];
@@ -431,7 +508,7 @@ console.log(this.facturatodo)
         }, 0);
         clearTimeout(timeout);
       }
-      this.servifactura.traertodaslasfacturas(this.pagina).subscribe( async (data) => {
+      this.servifactura.traertodaslasfacturas(this.pagina,this.ciudad).subscribe( async (data) => {
         console.log("Todas las facturas back",data)
         this.clienteSeleccionado = {
          
@@ -489,7 +566,7 @@ console.log(this.facturatodo)
       });
       dialogref.afterClosed().subscribe( (data1) => {
         if (data1) {
-             this.servifactura. generarpdfid(clientec.id).subscribe(async (data) => {
+             this.servifactura. generarpdfid(clientec.id ,this.ciudad).subscribe(async (data) => {
               console.log(data)
  const pdf = await generatePDFfagm(data,data.respuesta
 [0].totalSaldoCliente);

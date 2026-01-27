@@ -5,7 +5,7 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 //Esta línea asigna las fuentes cargadas a la instancia de pdfMake, necesario para que funcione correctamente.
 (pdfMake as any).vfs = pdfFonts;
 
-export const generatePDFaux = (data: any,totalCartera:number,clienteSeleccionado:any): any => {
+export const generatePDFaux = (data: any,totalCartera:number,clienteSeleccionado:any, dataempresa:any): any => {
     console.log("Cliente seleccionado producto tablaapdf",data,totalCartera)
     //Se crea el contenido de la tabla, con:
   //Una fila de encabezado (títulos).
@@ -95,17 +95,32 @@ export const generatePDFaux = (data: any,totalCartera:number,clienteSeleccionado
   });*/
   content.push({
     columns: [
-      { text: 'Movimientos cliente', width: '*', alignment:"center", fontSize: 12,bold: true, margin: [0, 0, 0, 10], },
+      { text: 'Movimientos cliente', width: '*', alignment:"center", fontSize: 12,bold: true, margin: [0, 0, 0, 0], },
+    
 
-   
+      
+
+      
     ],
   });
+    content.push({
+    columns: [
+   
+      { text: dataempresa, width: '*', alignment:"center", fontSize: 12,bold: true, margin: [0, 0, 0, 10], }
+
+      
+
+      
+    ],
+  });
+
 
    content.push({
     columns: [
     {
       text: [
         { text: 'Cliente: ', bold: true },
+    
         { text: clienteSeleccionado.nombre , fontSize: 10}
       ],
       width: '*',
