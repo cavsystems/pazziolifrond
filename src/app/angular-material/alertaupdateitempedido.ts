@@ -49,7 +49,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
       <div style="width:100%; display:flex;  justify-content:space-between; ">
       <button  (click)="onNoClick()"  mat-button
           color="basic">
-      Actulizar
+      Actualizar
       </button>
 
         <button   mat-button
