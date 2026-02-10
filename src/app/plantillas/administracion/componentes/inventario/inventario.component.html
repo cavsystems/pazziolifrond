@@ -75,7 +75,7 @@
       <div class="col-3 ">
    <mat-form-field  appearance="fill" class="classformbodega w-100 w100">
   <mat-label>Grupo</mat-label>
-  <select matNativeControl  [(ngModel)]="this.grupo"  (ngModelChange)="cargabodega($event)">
+  <select matNativeControl  [(ngModel)]="this.grupo"  (ngModelChange)="cargargrupo($event)">
     <option value="0" selected>Todo</option>
     <option  *ngFor="let item of grupos" [value]="item.codigo">{{item.nombre}}</option>
     

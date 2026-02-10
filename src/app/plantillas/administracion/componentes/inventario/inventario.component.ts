@@ -17,7 +17,8 @@ interface lineas{
 
 export class InventarioComponent implements OnInit {
   bodegas:any[]=[]
-  totalpositivo:number=0;
+  cargando: boolean = false;
+    totalpositivo:number=0;
   linea:string="0"
   grupo:string="0"
   grupos:grupos[]=[]
@@ -75,12 +76,14 @@ totalnegativo:number=0;
     const titulos=this.bodegas.find(item=> item.codigo===id)
     return titulos ? titulos.alias : ''; 
   }
+  
   pagina=1
   cliente=""
 obtenertodo=false
   constructor(
       private socketproduct: Socket_producto,private cdr: ChangeDetectorRef  ) {
-    
+    if (this.cargando) return;
+this.cargando = true;
          this.socketproduct
         .obtenerInfo('aws', 'pazzioli-pos-3', {
           metodo: 'CONSULTAR',
@@ -94,7 +97,23 @@ obtenertodo=false
            console.log("BODEAS ACTULES",JSON.parse(dato).mensajePeticion)
          this.bodegas = [...JSON.parse(dato).mensajePeticion];
 
+         /*para  tenerlo en cuenta un socket con el mismo request si se ponen en varios metodos y se 
+         jecuta en uno se puede ejecutar en otro metodo que lo aplica a la ves indirectamente 
          
+         corrección 
+         La verdad técnica (sin vueltas)
+Un socket NO se ejecuta solo en otro método
+LO QUE SE EJECUTA son otros MÉTODOS por eventos distintos, y cada uno vuelve a llamar al mismo socket
+Si tienes el mismo request de socket en varios métodos
+
+y el usuario (o Angular) dispara varios eventos
+
+cada método hace su propia llamada
+
+y las respuestas pueden llegar desordenadas
+
+👉 Parece que “se ejecutan a la vez”, pero en realidad son llamadas independientes
+por eso la variable cargando para  esperar entre solicitudes de socket y no ejecutar todas a la vez*/
               this.socketproduct
         .obtenerInfo('aws', 'pazzioli-pos-3', {
           metodo: 'CONSULTAR',
@@ -134,12 +153,16 @@ obtenertodo=false
         })
        
         .subscribe((dato) => {
+          this.cargando = false;
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
                         console.log("numerregistro", JSON.parse(dato).registro)
                         this.nregistros= JSON.parse(dato).registro
                         this.productos = JSON.parse(dato).mensajePeticion;
                      this.totalglobal=JSON.parse(dato).inventariototal
 
+          }else{
+            this.productos=[]
+            this.totalglobal=0
           }              
         });
      
@@ -163,6 +186,8 @@ obtenertodo=false
   
 
   autocompletarinputclient(valor: string){
+    if (this.cargando) return;
+this.cargando = true;
     this.pagina=1
       console.log("productos",this.productos)
     this.productos=[]
@@ -173,6 +198,7 @@ obtenertodo=false
 
       this.productos = [];
       this.totalglobal=0
+      this.cargando=false
       return;
     } else {
       this.socketproduct
@@ -190,18 +216,29 @@ obtenertodo=false
           
 
         .subscribe((dato) => {
+          this.cargando=false
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
 
-        
+         console.log( "VALOR CONDICION", valor.trim() )
          this.productos = [...JSON.parse(dato).mensajePeticion];
+         console.log("datos descriptraidos",JSON.parse(dato))
             this.totalglobal=JSON.parse(dato).inventariototal
          this.cdr.detectChanges();
+          }else{
+            
+              this.productos =[];
+        
+            this.totalglobal=0
           }
         });
     }
 
   }
 cargabodega(valor: string){
+  console.log("cargando",this.cargando)
+  if (this.cargando) return;
+  
+this.cargando = true;
   if(this.obtenertodo){
     this.pagina=1
     this.productos=[]
@@ -219,11 +256,15 @@ cargabodega(valor: string){
 
         })
         .subscribe((dato) => {
+          this.cargando=false
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
                         console.log("numerregistro", JSON.parse(dato).registro)
                         this.nregistros= JSON.parse(dato).registro
                         this.productos = JSON.parse(dato).mensajePeticion;
                            this.totalglobal=JSON.parse(dato).inventariototal
+          }else{
+            this.productos=[]
+            this.totalglobal=0
           }
         });
   }else{
@@ -244,6 +285,7 @@ cargabodega(valor: string){
           
 
         .subscribe((dato) => {
+          this.cargando=false
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
 
         
@@ -252,8 +294,15 @@ cargabodega(valor: string){
          this.totalglobal=0
     this.totalglobal=JSON.parse(dato).inventariototal
                console.log("totalglobal", this.totalglobal)
+          }else{
+            this.productos=[]
+            this.totalglobal=0
           }
         });
+        }else{
+          this.cargando=false
+           this.productos=[]
+            this.totalglobal=0
         }
   }
   
@@ -348,8 +397,10 @@ calcularnegativo(id:number){
   return contadorpositovo
 }
 cargarcarteracompleta(){
-  console.log(">>> Ejecutando cargarcarteracompleta()");
-  this.productchange=""
+  console.log("cargacompleta estado",this.cargando)
+  if (this.cargando) return;
+this.cargando = true;
+    this.productchange=""
   this.pagina=1
   if(this.obtenertodo){
    this.socketproduct
@@ -366,15 +417,22 @@ cargarcarteracompleta(){
 
         })
         .subscribe((dato) => {
+              this.cargando=false
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
+        
                         console.log("numerregistro", JSON.parse(dato).registro)
                         this.nregistros= JSON.parse(dato).registro
                         this.productos = JSON.parse(dato).mensajePeticion;
                                  this.totalglobal=JSON.parse(dato).inventariototal
+          }else{
+            this.productos=[]
+            this.totalglobal=0
           }
         });
   }else{
+         this.cargando=false
     this.productos=[]
+    this.totalglobal=0
   }
  
 }
@@ -383,13 +441,21 @@ cargarcarteracompleta(){
 
 
 onScroll(event: any){
-    console.log(">>> Ejecutando onScroll()");
-   const element = event.target;
+  
+       const element = event.target;
    console.log(element.clientHeight)
    console.log((element.scrollHeight - element.scrollTop))
+ 
   // Detecta cuando llega al final del scroll
   if(this.obtenertodo){
-  if ((element.scrollHeight - element.scrollTop)-1 === element.clientHeight) {
+   const llegoAlFinal =
+    element.scrollTop + element.clientHeight >= element.scrollHeight - 5;
+
+  if (!this.obtenertodo) return;
+  if (this.cargando) return;
+  if (!llegoAlFinal) return;
+  if (this.pagina >= this.nregistros) return;
+      this.cargando = true; 
     console.log(this.pagina <= this.nregistros)
     if(this.pagina <= this.nregistros){
        this.pagina++
@@ -397,10 +463,10 @@ onScroll(event: any){
    //const paginaactual=this.pagina+1
    const paginaactual=this.pagina
     console.log("pagina actual",paginaactual)
-    console.log("Llegaste al final, traer más registros...");
-    console.log("productos antes",this.productos)
+        console.log("productos antes",this.productos)
     let pro=this.productos
     this.socketproduct
+    
         .obtenerInfo('aws', 'pazzioli-pos-3', {
           metodo: 'CONSULTAR',
           condicion: 'INVENTARIO',
@@ -412,8 +478,9 @@ onScroll(event: any){
            linea:Number(this.linea),
           grupo:Number(this.grupo)
         })
+    
         .subscribe((dato) => {
-         
+    this.cargando=false
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
 
           
@@ -433,19 +500,22 @@ onScroll(event: any){
         });
   }
   
-  
-  }
+
 }else{
-  if ((element.scrollHeight - element.scrollTop)-1 === element.clientHeight) {
-    console.log(this.pagina <= this.nregistros)
+ const llegoAlFinal =
+    element.scrollTop + element.clientHeight >= element.scrollHeight - 5;
+  if (!this.obtenertodo) return;
+  if (this.cargando) return;
+  if (!llegoAlFinal) return;
+  if (this.pagina >= this.nregistros) return;
+    
     if(this.pagina <= this.nregistros){
-      
+       this.cargando = true;
        this.pagina++
        console.log("pagina actual",this.pagina)
    const paginaactual=this.pagina+1
     console.log("pagina actual",paginaactual)
-    console.log("Llegaste al final, traer más registros...");
-    console.log("productos antes",this.productos)
+        console.log("productos antes",this.productos)
     let pro=this.productos
     this.socketproduct
  
@@ -464,6 +534,7 @@ onScroll(event: any){
           
 
         .subscribe((dato) => {
+          this.cargando=false
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
 
         
@@ -489,14 +560,78 @@ onScroll(event: any){
         }
   
   }
-}
+
 }
 
  
   
 }
 
+
+cargargrupo(e:any){
+  if (this.cargando) return;
+this.cargando = true;
+   console.log("value linea",e)
+    
+ this.pagina=1
+    this.productos=[]
+  if(this.obtenertodo){
+   this.socketproduct
+        .obtenerInfo('aws', 'pazzioli-pos-3', {
+          metodo: 'CONSULTAR',
+          condicion: 'INVENTARIO',
+          consulta: 'PRODUCTOS',
+          canalserver: 'aws',
+          datoCondicion: this.productchange ,
+          pagina:this.pagina,
+          bodega:this.bodegaSeleccionada,
+           linea:Number(this.linea),
+          grupo:Number(e)
+
+        })
+        .subscribe((dato) => {
+          this.cargando=false
+          if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
+                        console.log("numerregistro", JSON.parse(dato).registro)
+                        this.nregistros= JSON.parse(dato).registro
+                        this.productos = JSON.parse(dato).mensajePeticion;
+                                 this.totalglobal=JSON.parse(dato).inventariototal
+          }else{
+            this.productos=[]
+            this.totalglobal=0
+          }
+        });
+  }else{
+    this.socketproduct
+        .obtenerInfo('aws', 'pazzioli-pos-3', {
+          metodo: 'CONSULTAR',
+          condicion: 'DESCRIPCIONINVENTARIO',
+          consulta: 'PRODUCTOS',
+          canalserver: 'aws',
+          datoCondicion: this.productchange ,
+          pagina:this.pagina,
+          bodega:this.bodegaSeleccionada,
+           linea:Number(this.linea),
+          grupo:Number(e)
+
+        })
+        .subscribe((dato) => {
+          this.cargando=false
+          if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
+                        console.log("numerregistro", JSON.parse(dato))
+                        this.nregistros= JSON.parse(dato).registro
+                        this.productos = JSON.parse(dato).mensajePeticion;
+                                 this.totalglobal=JSON.parse(dato).inventariototal
+          }else{
+            this.productos=[]
+            this.totalglobal=0
+          }
+        });
+  }
+}
 carlinea(e:any){
+  if (this.cargando) return;
+this.cargando = true;
   console.log("value linea",e)
     
  this.pagina=1
@@ -516,11 +651,16 @@ carlinea(e:any){
 
         })
         .subscribe((dato) => {
+               this.cargando=false
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
+       
                         console.log("numerregistro", JSON.parse(dato).registro)
                         this.nregistros= JSON.parse(dato).registro
                         this.productos = JSON.parse(dato).mensajePeticion;
                                  this.totalglobal=JSON.parse(dato).inventariototal
+          }else{
+            this.productos=[]
+            this.totalglobal=0
           }
         });
   }else{
@@ -538,11 +678,15 @@ carlinea(e:any){
 
         })
         .subscribe((dato) => {
+          this.cargando=false
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
-                        console.log("numerregistro", JSON.parse(dato).registro)
+                        console.log("numerregistro", JSON.parse(dato))
                         this.nregistros= JSON.parse(dato).registro
                         this.productos = JSON.parse(dato).mensajePeticion;
                                  this.totalglobal=JSON.parse(dato).inventariototal
+          }else{
+            this.productos=[]
+            this.totalglobal=0
           }
         });
   }
