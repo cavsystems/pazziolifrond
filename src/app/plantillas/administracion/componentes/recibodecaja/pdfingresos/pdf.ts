@@ -210,11 +210,23 @@ export const generatePDFingre = async (data: any): Promise<any> => {
     },
   ]);
   tablebody2.push([
+   {
+  colSpan: 5,
+  border: [true, true, true, true],
+   columnGap: 10, // espacio entre columnas
+  columns: [
     {
-      text: 'OBSERVACION:',
-      colSpan: 5,
-      border: [true, true, true, true],
+      width: 'auto',
+      text: 'OBSERVACIÓN:',
+      bold: true
     },
+    {
+      width: '*',
+         text: `\t\t`+data.observacion // tu variable con el texto
+    }
+ 
+  ]
+},
     {},
     {},
     {},

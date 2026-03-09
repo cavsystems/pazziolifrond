@@ -9,6 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogoAlerta } from 'src/app/angular-material/alerta';
 import { generatePDFingre } from './pdfingresos/pdf';
 import { Recibopago } from 'src/app/angular-material/alertarecibo';
+import { take } from 'rxjs/operators';
+import { DialogoAlertaob } from 'src/app/angular-material/alertaob';
 interface banco {
   codigo: number;
   nombre: string;
@@ -484,8 +486,24 @@ traercomprobantes() {
             this.servifactura
               .crearreciboingreso(datapeticion)
               .subscribe((datos) => {
+                   this.dialog
+                      .open(DialogoAlertaob, {
+                        data: {
+                          boton: 'Continuar',
+                          mensaje: 'Escribe información más detallada sobre el pedido',
+                          tipo: 'question',
+                          input: true,
+                          type: 'text',
+                          inputText: 'Ingresa observación',
+                        },
+                        disableClose: false,
+                      })
+                      .afterClosed()
+                      .pipe(take(1))
+                      .subscribe((data3) => {
+                        if (!data3) return; // Evita continuar si el usuario cerró el diálogo sin escribir
                 
-                const dialogrf = this.dialog.open(DialogoAlerta, {
+                        const dialogrf = this.dialog.open(DialogoAlerta, {
                   data: {
                     boton: 'Ok',
                     mensaje: datos.mensaje,
@@ -495,6 +513,7 @@ traercomprobantes() {
                 });
 
                 dialogrf.afterClosed().subscribe(async (data) => {
+
                   if (data) {
                     let pdf = await generatePDFingre({
                       razon: this.razon,
@@ -514,7 +533,8 @@ traercomprobantes() {
                       nombreComprobanteRI: datos.nombreComprobanteRI,
                    movimiento:this.TipoPago.data,
                    deduccion:this.descuento,
-                   comprobante:this.comprobante
+                   comprobante:this.comprobante,
+                   observacion:"         "+data3
                     });
 
                     this.servifactura
@@ -532,6 +552,10 @@ traercomprobantes() {
                       });
                   }
                 });
+
+                       
+                      });
+               
               });
           } else {
             this.snackBar.open(
