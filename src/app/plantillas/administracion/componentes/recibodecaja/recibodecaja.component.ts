@@ -68,10 +68,10 @@ export class RecibodecajaComponent implements OnInit {
   ];
   public movimientoSeleccionado: string | null = 'Seleccione';
   public Deduccion = [
-    'Descuento',
-    'Rete Iva',
-    'Rete Ica',
-    'Rete Fuente',
+    {valor: 'Descuento',descripcion:"Descuento"} ,
+    {valor: 'Rete Iva',descripcion:"Averias"},
+    {valor: 'Rete Ica',descripcion:"Fletes"},
+    {valor: 'Rete Fuente',descripcion:"Rete Fuente"},
   ];
   public opcionesBanco: banco[] = [];
   public deduccionSeleccionada:  null |string = 'Seleccione';
@@ -90,7 +90,7 @@ export class RecibodecajaComponent implements OnInit {
   public totalFactura: number = 0;
   public saldo: number = 0;
   public nivel: number = 0;
-
+  public comprobante:any[] = [];
   public totalRecibo: number = 0;
   public totalCartera: number = 0;
   public total_registros: number = 0;
@@ -103,6 +103,7 @@ export class RecibodecajaComponent implements OnInit {
   public bancoSeleccinado: string = '';
   public listadoOpcionesBancosElegido: [string, number][] = [];
   ngOnInit(): void {
+    this.traercomprobantes();
     this.servifactura.traerbancos().subscribe((datos) => {
       this.opcionesBanco = datos.respuesta;
       this.nit = datos.nit;
@@ -171,7 +172,11 @@ export class RecibodecajaComponent implements OnInit {
         }
       });
   }
-
+traercomprobantes() {
+    this.servifactura.traerparametroscomprobante().subscribe((datos) => {
+      this.comprobante = datos.respuesta
+    });
+  }
   seleccionaritem(item: string) {
     /*    console.log(this.TipoPago.data);*/
 
@@ -507,6 +512,9 @@ export class RecibodecajaComponent implements OnInit {
                       identificacion: this.clienteSeleccionado.identificacion,
                       concepto,
                       nombreComprobanteRI: datos.nombreComprobanteRI,
+                   movimiento:this.TipoPago.data,
+                   deduccion:this.descuento,
+                   comprobante:this.comprobante
                     });
 
                     this.servifactura
@@ -518,6 +526,8 @@ export class RecibodecajaComponent implements OnInit {
                       .subscribe((datos) => {
                         if (datos.estadoPeticion === 'Done') {
                           window.location.reload();
+                        }else{
+                           window.location.reload();
                         }
                       });
                   }

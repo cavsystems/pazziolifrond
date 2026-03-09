@@ -9,6 +9,34 @@ import { Horaforma } from 'src/app/utils/formatearhora';
 
 export const generatePDFingre = async (data: any): Promise<any> => {
     let pago: string = '';
+    let datamovimiento:any[] = []
+    
+    data.movimiento.forEach((element: any) => {
+      
+         data.comprobante.forEach((element2: any) => {
+          const nombreencontrado=datamovimiento.find((item) => item.nombre === element.Movimiento);
+  
+      if(!nombreencontrado){
+        if(element2.nombre.includes(element.Movimiento.toUpperCase().replace(' ', ''))){
+           datamovimiento.push({nombre:element.Movimiento,valorpuc: Number(element2.valor),valor:Math.abs(Number(element.valor))})
+        }
+        if((element2.nombre==="CUENTA_TD" || element2.nombre==="CUENTA_TC") && (element.Movimiento==="T.Debito" || element.Movimiento==="T.Credito")){
+          datamovimiento.push({nombre:element.Movimiento,valorpuc: Number(element2.valor),valor:Math.abs(Number(element.valor))})
+        }
+        
+
+      }
+   
+    })
+    })
+    datamovimiento.push({nombre:"Clientes",valorpuc:13050501,valor:data.valor})
+    data.movimiento.push({Movimiento:"Clientes",valor:data.valor})
+    //  datamovimiento.sort((a, b) => a.valorpuc - b.valorpuc);
+    console.log("movimiento deduccioddfedre", datamovimiento)
+    if( data.movimiento.length!== datamovimiento.length){
+      datamovimiento=[]
+    }
+ 
   //Se crea el contenido de la tabla, con:
   //Una fila de encabezado (títulos).
   //Una fila por cada producto en el array recibido.
@@ -61,63 +89,86 @@ export const generatePDFingre = async (data: any): Promise<any> => {
       { text: '', style: 'tableHeader' },
     ],
   ];
-
+  
   tablebody2.push([
     {
-      text: '\u200B',
+      
+      text: data.movimiento.map((item: any) => {
+        const valorpuc= datamovimiento.find((element) => element.nombre === item.Movimiento)?.valorpuc || '';
+             console.log("movimiento deduccioddfedre valorpuc", datamovimiento  , !valorpuc)
+       
+   return`${valorpuc}`;
+        
+     
+        }).join('\n'),
       colSpan: 2,
       border: [true, false, true, true],
       alignment: 'left',
       verticalAlignment: 'top',
-      lineHeight: 7,
-      height: 100, // altura fija para la celda (en puntos)
-      minHeight: 100,
+        lineHeight: 1.1,
+  minHeight: 60
     },
     {
-      text: '\u200B',
+      text:'\u200B',
       alignment: 'left',
       verticalAlignment: 'top',
-      lineHeight: 7,
-      height: 100, // altura fija para la celda (en puntos)
-      minHeight: 100,
+       lineHeight: 1.1,
+  minHeight: 60
     },
     {
-      text: '\u200B',
+      text:  data.movimiento.map((item: any) => {
+        const valorpuc= datamovimiento.find((element) => element.nombre === item.Movimiento)?.nombre || '';
+       
+  return  valorpuc.toUpperCase().replace(" ","")=== "RETEIVA" ?  "Averias": valorpuc.toUpperCase().replace(" ","")=== "RETEICA"  ? "Fletes": `${valorpuc}`;
+        
+      
+        
+        }).join('\n'),
       colSpan: 2,
       border: [true, false, true, true],
       alignment: 'left',
       verticalAlignment: 'top',
-      lineHeight: 7,
-      height: 100, // altura fija para la celda (en puntos)
-      minHeight: 100,
+        lineHeight: 1.1,
+  minHeight: 60
     },
     {
       text: '\u200B',
       alignment: 'left',
       verticalAlignment: 'top',
-      lineHeight: 7,
-      height: 100, // altura fija para la celda (en puntos)
-      minHeight: 100,
+     lineHeight: 1.1,
+  minHeight: 60
     },
     {
-      text: '\u200B',
+   text: data.movimiento.map((item: any) => {
+        const valorpuc= datamovimiento.find((element) => element.nombre === item.Movimiento)?.valor || '';
+           const valorcreditos= datamovimiento.find((element) => element.nombre === item.Movimiento) || '';
+      if(valorcreditos.nombre!=="Clientes"){
+       return `${valorpuc.toLocaleString('de-DE')}`;
+      }
+        return '';
+        }).join('\n'),
       colSpan: 1,
       border: [true, false, true, true],
       alignment: 'left',
       verticalAlignment: 'top',
-      lineHeight: 7,
-      height: 100, // altura fija para la celda (en puntos)
-      minHeight: 100,
+        lineHeight: 1.1,
+  minHeight: 60
     },
     {
-      text: '\u200B',
+     text: data.movimiento.map((item: any) => {
+        const valorpuc= datamovimiento.find((element) => element.nombre === item.Movimiento)?.valor || '';
+           const valorcreditos= datamovimiento.find((element) => element.nombre === item.Movimiento) || '';
+      if(valorcreditos.nombre=="Clientes"){
+       return `${valorpuc.toLocaleString('de-DE')}`;
+      }
+       return ''; 
+        }).join('\n'),
       colSpan: 1,
       border: [true, false, true, true],
       alignment: 'left',
       verticalAlignment: 'top',
-      lineHeight: 7,
-      height: 100, // altura fija para la celda (en puntos)
-      minHeight: 100,
+      lineHeight: 1.1,
+  minHeight: 60
     },
 
     {
@@ -205,7 +256,7 @@ export const generatePDFingre = async (data: any): Promise<any> => {
         {
           text: data.fechaIngreso.substring(0, data.fechaIngreso.indexOf('T')),
           margin: [30, 0, 0, 0],
-          fontSize: 8,
+          fontSize: 12,
         },
       ],
     }, // columna 0
@@ -216,6 +267,7 @@ export const generatePDFingre = async (data: any): Promise<any> => {
     {},
     {
       text: `VALOR:$${data.valor.toLocaleString('de-DE')}`,
+        fontSize: 12,
       colSpan: 3,
       alignment: 'right',
     }, // columna 5
@@ -241,7 +293,7 @@ export const generatePDFingre = async (data: any): Promise<any> => {
             '  ' +
             data.identificacion,
           margin: [50, 0, 0, 0],
-          fontSize: 8,
+          fontSize: 12,
         },
       ],
     }, // columna 0
@@ -267,8 +319,9 @@ export const generatePDFingre = async (data: any): Promise<any> => {
         { text: 'SUMA DE', bold: true },
         {
           text: numeroALetras(data.valor),
+       
           margin: [50, 0, 0, 0],
-          fontSize: 8,
+          fontSize: 12,
         },
       ],
     }, // columna 0
@@ -294,7 +347,7 @@ export const generatePDFingre = async (data: any): Promise<any> => {
         {
           text: data.concepto,
           margin: [50, 0, 0, 0],
-          fontSize: 8,
+          fontSize: 12,
         },
       ],
     }, // columna 0

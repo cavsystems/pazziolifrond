@@ -441,10 +441,10 @@ this.cargando = true;
 
 
 onScroll(event: any){
-  
+  console.log("cargando scroll",this.cargando)
        const element = event.target;
-   console.log(element.clientHeight)
-   console.log((element.scrollHeight - element.scrollTop))
+  // console.log(element.clientHeight)
+  // console.log((element.scrollHeight - element.scrollTop))
  
   // Detecta cuando llega al final del scroll
   if(this.obtenertodo){
@@ -456,14 +456,13 @@ onScroll(event: any){
   if (!llegoAlFinal) return;
   if (this.pagina >= this.nregistros) return;
       this.cargando = true; 
-    console.log(this.pagina <= this.nregistros)
+   
     if(this.pagina <= this.nregistros){
        this.pagina++
-       console.log("pagina actual todo",this.pagina)
+   
    //const paginaactual=this.pagina+1
    const paginaactual=this.pagina
-    console.log("pagina actual",paginaactual)
-        console.log("productos antes",this.productos)
+   
     let pro=this.productos
     this.socketproduct
     
@@ -480,9 +479,9 @@ onScroll(event: any){
         })
     
         .subscribe((dato) => {
-    this.cargando=false
+    
           if (JSON.parse(dato).estadoPeticion === 'SUCCESS') {
-
+this.cargando=false
           
               JSON.parse(dato).mensajePeticion.forEach((item:any)=>{
             const existe = pro.some(p => p.codigo === item.codigo);
@@ -491,9 +490,12 @@ onScroll(event: any){
     }
               })
                     this.totalglobal=JSON.parse(dato).inventariototal
-         console.log("productos despues", JSON.parse(dato).mensajePeticion)  
+         
   this.productos=[...pro]
-  console.log(this.productos)
+ 
+ }else{
+
+
  }
                     
           
@@ -508,9 +510,9 @@ onScroll(event: any){
   if (this.cargando) return;
   if (!llegoAlFinal) return;
   if (this.pagina >= this.nregistros) return;
-    
-    if(this.pagina <= this.nregistros){
        this.cargando = true;
+    if(this.pagina <= this.nregistros){
+    
        this.pagina++
        console.log("pagina actual",this.pagina)
    const paginaactual=this.pagina+1
@@ -599,6 +601,7 @@ this.cargando = true;
           }else{
             this.productos=[]
             this.totalglobal=0
+          
           }
         });
   }else{
