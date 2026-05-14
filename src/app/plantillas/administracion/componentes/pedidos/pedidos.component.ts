@@ -53,6 +53,9 @@ export class PedidosComponent implements OnInit {
 
   obtenerregistros(busqueda: string = '', estado: string = '') {
     this.productser.obtenernregistros(busqueda, estado).subscribe((data) => {
+      
+        console.log("numerooooooooooooooooooooooooooooooo registros actuales",data.nregistros.nregistros)
+       
       if (!data.response) {
         window.location.reload();
       } else {
