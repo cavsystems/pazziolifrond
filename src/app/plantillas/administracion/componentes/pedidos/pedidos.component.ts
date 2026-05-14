@@ -56,6 +56,7 @@ export class PedidosComponent implements OnInit {
       if (!data.response) {
         window.location.reload();
       } else {
+        console.log("numerooooooooooooooooooooooooooooooo registros actuales",data.nregistros.nregistros)
         this.total_registros = data.nregistros.nregistros;
       }
     });
