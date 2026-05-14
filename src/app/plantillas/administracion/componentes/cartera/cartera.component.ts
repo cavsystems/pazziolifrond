@@ -100,7 +100,7 @@ export class CarteraComponent implements OnInit {
 generarpdfitem(e:any,element:any){
     e.stopPropagation()
     this.servifactura.traeritemsfactura(element).subscribe( async (datos) => {
-      console.log(datos.respuesta)
+      console.log("dekforjfi",datos.respuesta,element)
       let productos=datos?.respuesta.map((item:any)=>{
                 return{
            cantidad:item.cantidad,

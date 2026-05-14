@@ -95,12 +95,17 @@ export class TiendaComponent implements OnInit {
   @ViewChild('inCodigo') inCodigo!: ElementRef;
   @ViewChild(MatAutocompleteTrigger, { read: MatAutocompleteTrigger })
   inDescripcion!: MatAutocompleteTrigger;
+  @ViewChild(MatAutocompleteTrigger)
+autocomplete!: MatAutocompleteTrigger;
   fechahora: string = '';
+
   @ViewChild('inCantidad') inCantidad!: ElementRef;
   @ViewChild('inPrecio') inPrecio!: ElementRef;
   @ViewChild('descripcion') descripcion!: ElementRef;
    ventaNegativo:number=0;
   clientes: any[] = [];
+  listaprecios:any[]=[];
+  lista:number=1;
   clientesIniciales: any[] = [];
   productinico: PRODUCTO[] = [];
   productos: PRODUCTO[] = [
@@ -231,10 +236,17 @@ export class TiendaComponent implements OnInit {
   ) {
     this.facturaservice.conectar()
   }
-
+    async  traerlistaprecios (){
+      console.log("trallendo lista precios")
+await this.repuestaproductos('KEYS',0,false)
+   }
   ngOnInit(): void {
     this.serviauth.mode.value = 'side';
     this.seleccionardb();
+this.traerlistaprecios()
+   
+
+    
 
   }
 
@@ -334,8 +346,11 @@ export class TiendaComponent implements OnInit {
       cantidaddisponible:this.productinico[indexproduct]?.cantidaddisponible,
       descripcion:this.productinico[indexproduct]?.nombre,
        cantidad:_producto.cantidad,
+       codigo:_producto.codigo,
         precio:_producto.precio,
+        listasprecios:this.listaprecios,
         modificarPrecio:this.modificarPrecio
+        
 
     },
     disableClose:true
@@ -359,6 +374,7 @@ export class TiendaComponent implements OnInit {
   }
 
   async buscarProductos(key: any, campo: string) {
+    console.log("buscando por descripcion", this.buscarDescripcion.value)
     await this.repuestaproductos(
       'DESCRIPCION',
       this.buscarDescripcion.value,
@@ -1098,11 +1114,29 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
       this.loader = false;
     });
   }
+
+
+ async establecerproductprecio(e:string){
+ 
+   const repuestaproducto= await this.repuestaproductos(
+      'DESCRIPCION',
+      this.buscarDescripcion.value.nombre,
+      true,
+      e
+    );
+  this.autocomplete.closePanel();
+  
+    
+
+
+  }
   async repuestaproductos(
     condicion: string = '',
     datoCondicion: string | undefined | number,
-    buscartodo: boolean = false
+    buscartodo: boolean = false,
+    lischange:string=""
   ): Promise<void> {
+    console.log("datacondion actual",  condicion)
     return new Promise((resolve, reject) => {
       this.socketServices.escucha = this.socketproduct.obtenerInfo(
         'aws',
@@ -1112,6 +1146,7 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
           condicion,
           consulta: 'productos',
           datoCondicion,
+          precio: !this.modificarPrecio ?  lischange && lischange!==""  ? lischange:this.lista:'1',
           sede: localStorage.getItem('sede'),
         }
       );
@@ -1129,8 +1164,20 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
           switch (info.tipoConsulta) {
             case 'PRODUCTO':
               if (info.estadoPeticion === 'SUCCESS') {
-                this.procesarproductos(info, true, buscartodo);
+                if(condicion==="KEYS"){
+                   console.log("info key actulas",info.mensajePeticion)
+                   let listnumero=info.mensajePeticion.map((item:any)=>{
+                    console.log("item consolelog",item.campos)
+                         return Number(item.campos.slice(-1))
+                   })
+                   this.listaprecios=listnumero;
+                    console.log("info key actulas",listnumero)
+                   
+                }else{
+                   this.procesarproductos(info, true, buscartodo);
                 resolve();
+                }
+               
               } else {
                 resolve();
               }
@@ -1143,6 +1190,14 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
               if (info.estadoPeticion === 'SUCCESS') {
               }
               break;
+            case 'KEYS':
+                if (info.estadoPeticion === 'SUCCESS') {
+             
+                resolve();
+              } else {
+                resolve();
+              }
+            break;
             default:
               break;
           }
@@ -1172,8 +1227,18 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
    descuento:producto.descuento,
    costoPromedio:producto.costoPromedio,
    codigoGrupo:producto. codigoGrupo
-        };
+        }; 
       });
+      if(this.productoActual.codigoContable!=="000" ){
+        console.log("precio mayor cero",this.productoActual.precio)
+        this.productoActual =this.productos.find(item=> this.productoActual.codigo===item.codigo) ||    this.productoActual
+        if( this.productos.find(item=> this.productoActual.codigo===item.codigo)){
+          let precioact= this.productos.find(item=> this.productoActual.codigo===item.codigo)
+             this.precio =precioact?.precio ?? 0
+
+        }
+       
+      }
       this.productinico = this.productos;
       if (this.almacen === 'BODEGA') {
         this.cantidadproducto = 'cantidad';
