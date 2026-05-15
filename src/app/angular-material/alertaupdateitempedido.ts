@@ -1,8 +1,9 @@
 import { Component, Inject } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { take } from "rxjs/operators";
 import { Socket_producto } from "src/services/socket/socket.producto.service.ts.service";
 import { SocketService } from "src/services/socket/socket.service";
+import { DialogoAlerta } from "./alerta";
 
 @Component({
   selector: 'dialogo-alerta',
@@ -102,6 +103,7 @@ export class DialogoAlertaitemspedido{
   constructor(
     public dialogRef: MatDialogRef<DialogoAlertaitemspedido>,
     @Inject(MAT_DIALOG_DATA) public data:any,
+     public dialog: MatDialog,
     private socketproduct: Socket_producto,
     private  socketServices: SocketService
   ) {
@@ -136,13 +138,41 @@ console.log("info actual traido",)
 
 }
     onNoClick(): void {
-    this.dialogRef.close({
+
+      if(this.precio<=0){
+         this.openDialogAlerta({
+        boton: 'Ok',
+        mensaje: 'Precio debe ser mayor a cero',
+        tipo: 'error',
+      })
+      }else{
+        this.dialogRef.close({
     precio: Number(this.precio),
     cantidad: this.cantidad
-
+    
   })
+      }
+           
+
+
+      
+
 
     
+  }
+
+  openDialogAlerta(data: any) {
+  const dialogRef = this.dialog.open(DialogoAlerta, {
+      data: data,
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((resultado) => {
+   
+
+     
+
+    });
   }
 
 }
