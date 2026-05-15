@@ -116,7 +116,7 @@ export class DialogoAlertaitemspedido{
   }
 
 establecerproductprecio(lis:string){
-  if(!this.modificarPrecio){
+
 this.socketServices.escucha = this.socketproduct.obtenerInfo(
         'aws',
         'pazzioli-pos-3',
@@ -133,7 +133,7 @@ this.socketServices.escucha .pipe(take(1)).subscribe((info)=>{
 console.log("info actual traido",)
  this.precio=JSON.parse(info).mensajePeticion[0].precio
 })
-  }
+  
 
 
 }

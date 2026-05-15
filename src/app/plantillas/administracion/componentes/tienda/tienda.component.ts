@@ -1146,7 +1146,7 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
           condicion,
           consulta: 'productos',
           datoCondicion,
-          precio: !this.modificarPrecio ?  lischange && lischange!==""  ? lischange:this.lista:'1',
+          precio:lischange && lischange!==""  ? lischange:this.lista,
           sede: localStorage.getItem('sede'),
         }
       );
