@@ -132,20 +132,43 @@ export class PedidosComponent implements OnInit {
     this.productser
       .obteneritemspedido(pedido.codigo_pedido)
       .subscribe((datos) => {
-        generarpdf({
+
+
+        this.productser.obtenerInfo(
+        'terceros', 'pazzioli-pos-3',
+        {
+          metodo: 'CONSULTAR',
+          condicion:'id',
+      consulta: 'TERCEROS',
+          canalserver: 'terceros',
+          datoCondicion:pedido.codigotercero,
+        
+        }
+      ).pipe(take(1)).subscribe( async (data)=>{
+         console.log("pedidos actulaes pdf",pedido,data,datos)
+
+             generarpdf({
           cliente: {
-            nombre: pedido.razonsocial_clientes,
-            identificacion: pedido.identificacion,
-            email: pedido.email,
-            telefonoFijo: pedido.telefonoFijo,
-          },
+            nombre: JSON.parse(data).mensajePeticion.razonSocial,
+            identificacion:JSON.parse(data).mensajePeticion[0].identificacion,
+            email: JSON.parse(data).mensajePeticion[0].email,
+            telefonoFijo: JSON.parse(data).mensajePeticion[0].telefonoFijo,
+            ciudad:JSON.parse(data).mensajePeticion[0].municipio,
+            departamento:JSON.parse(data).mensajePeticion[0].departamento,
+            codigotercero:JSON.parse(data).mensajePeticion[0].codigo
+            },
+          pdfsinprecio:JSON.parse(data).pdfsinprecio,
           numero: pedido.codigo_pedido,
           productos: datos.result,
           fecha_actual: pedido.fecha_creacion,
           horaActual: Horaforma(pedido.hora),
           config: datos.config,
           nombre: datos.vendedor,
+          observaciones:pedido.observacion
         });
+      })
+       
+    
       });
   }
 
@@ -164,12 +187,83 @@ export class PedidosComponent implements OnInit {
       },
       disableClose: true,
     });
-    dialogref.afterClosed().subscribe((data) => {
-      if (data) {
-        this.productser
+    dialogref.afterClosed().subscribe((datas) => {
+      if (datas) {
+      
+
+             this.productser
           .obteneritemspedido(pedido.codigo_pedido)
           .subscribe(async (datos) => {
-            if (datos) {
+
+               this.productser.obtenerInfo(
+        'terceros', 'pazzioli-pos-3',
+        {
+          metodo: 'CONSULTAR',
+          condicion:'id',
+      consulta: 'TERCEROS',
+          canalserver: 'terceros',
+          datoCondicion:pedido.codigotercero,
+        
+        }
+      ).pipe(take(1)).subscribe( async (data)=>{
+
+
+         console.log("pedidos actulaes pdf",pedido,data,datos)
+        
+          if (datos) {
+              const pdf = await generatePDFemail({
+               cliente: {
+            nombre: JSON.parse(data).mensajePeticion.razonSocial,
+            identificacion:JSON.parse(data).mensajePeticion[0].identificacion,
+            email: JSON.parse(data).mensajePeticion[0].email,
+            telefonoFijo: JSON.parse(data).mensajePeticion[0].telefonoFijo,
+            ciudad:JSON.parse(data).mensajePeticion[0].municipio,
+            departamento:JSON.parse(data).mensajePeticion[0].departamento,
+            codigotercero:JSON.parse(data).mensajePeticion[0].codigo
+            },
+               pdfsinprecio:JSON.parse(data).pdfsinprecio,
+                numero: pedido.codigo_pedido,
+                productos: datos.result,
+                fecha_actual: pedido.fecha_creacion,
+                horaActual: Horaforma(pedido.hora),
+                config: datos.config,
+                nombre: datos.vendedor,
+                 observaciones:pedido.observacion
+              });
+
+              this.productser
+                .enviaremail({
+                  idpedido: pedido.codigo_pedido,
+                  itemspedido: datos.result,
+                  cliente: {
+                    nombre: pedido.razonsocial_clientes,
+                    identificacion: pedido.identificacion,
+                    email: pedido.email,
+                    telefonoFijo: pedido.telefonoFijo,
+                    direccion: pedido.direccion,
+                  },
+                  pdf: pdf,
+                  email: datas,
+                  fecha: horfecha,
+                })
+                .pipe(take(1))
+                .subscribe((datos) => {
+                  console.log("pedddddddddddddddddddddddddddddddddd",datos)
+                  const dialogref = this.dialog.open(DialogoAlerta, {
+                    data: {
+                      boton: 'OK',
+                      tipo: 'done',
+                      mensaje: 'Correo enviado',
+                    },
+                    disableClose: true,
+                  });
+                  dialogref.afterClosed().subscribe((datos) => {});
+                });
+            }
+        })
+          
+          });
+         /*   if (datos) {
               const pdf = await generatePDFemail({
                 cliente: {
                   nombre: pedido.razonsocial_clientes,
@@ -212,8 +306,8 @@ export class PedidosComponent implements OnInit {
                   });
                   dialogref.afterClosed().subscribe((datos) => {});
                 });
-            }
-          });
+            }*/
+        
       }
     });
   }

@@ -222,6 +222,7 @@ autocomplete!: MatAutocompleteTrigger;
   basedatosactual: string = '';
   configuracion!: any;
   devices!: MediaDeviceInfo[];
+  pdfsinpresio:number=0;
   selectedDevice!: MediaDeviceInfo;
   constructor(
     private _snackBar: MatSnackBar,
@@ -235,6 +236,7 @@ autocomplete!: MatAutocompleteTrigger;
     private facturaservice: FacturaserviceService,
   ) {
     this.facturaservice.conectar()
+   
   }
     async  traerlistaprecios (){
       console.log("trallendo lista precios")
@@ -269,6 +271,9 @@ this.traerlistaprecios()
             this.facturarPedidos=datos.facturarPedidos
             this.separaproducto=datos.separarproductospedido
             this.almacenSeparado=datos.almacenSeparado.trim()
+            this.pdfsinpresio=datos.pdfsinprecio
+
+            console.log("datos traiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",datos)
           });
           
       } else {
@@ -1385,7 +1390,7 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
       .pipe(take(1))
       .subscribe((data) => {
         if (!data) return; // Evita continuar si el usuario cerró el diálogo sin escribir
-
+          
         this.enviarPedidoConObservacion(data);
       });
   }
@@ -1449,7 +1454,7 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
       .subscribe((inf) => {
         try {
           if (inf.estadoPeticion === 'SUCCESS') {
-            this.openDialogFactura();
+            this.openDialogFactura(observacion);
           } else if (JSON.parse(inf).estadoPeticion === 'ERROR') {
             const sqlMsg = JSON.parse(inf).mensajePeticion.original.sqlMessage;
             if (sqlMsg.includes('Data too long for column')) {
@@ -1537,8 +1542,29 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
     });
   }
 
-  async openDialogFactura() {
-    let numerofactura: number = 0;
+  async openDialogFactura(observacion:string='') {
+  
+
+
+
+
+       this.socketServices.escucha = this.socketproduct.obtenerInfo(
+        'terceros', 'pazzioli-pos-3',
+        {
+          metodo: 'CONSULTAR',
+          condicion:'id',
+      consulta: 'TERCEROS',
+          canalserver: 'terceros',
+          datoCondicion:this.clienteSeleccionado.codigo,
+        
+        }
+      );
+     
+
+        this.socketServices.escucha.pipe(take(1)).subscribe( async (data)=>{
+          console.log("tercero para generar pdf",JSON.parse(data), this.productosMostrar)
+
+            let numerofactura: number = 0;
     const { diaActual, horaActual } = this.obtenerFechaHora();
     this.loader = true;
     const obtenerpedido: Promise<number> = new Promise((resolve, reject) => {
@@ -1548,10 +1574,13 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
     });
 
     numerofactura = await obtenerpedido;
-
-    const pdf = await generatePDF({
+                const pdf = await generatePDF({
       productos: this.productosMostrar,
-      cliente: this.clienteSeleccionado,
+      cliente:{
+       ...this.clienteSeleccionado,
+       departamento:JSON.parse(data).mensajePeticion[0].departamento,
+         codigotercero:JSON.parse(data).mensajePeticion[0].codigo
+      } ,
       total: this.totalPagar,
       infoEmpresa: this.clienteSeleccionado,
       fecha_actual: diaActual,
@@ -1560,6 +1589,8 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
       numero: numerofactura,
       nombre: this.nombrevendedor,
       identificacion: this.identificacion,
+     pdfsinprecio:this.pdfsinpresio,
+     observaciones:observacion
     });
     this.pdf = pdf;
     this.socketproduct
@@ -1579,6 +1610,9 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
         }
 
       });
+        })
+
+ 
     /*const dialogRef = this.dialog.open(DialogFactura, {
       data: {
         productos: this.productosMostrar,
