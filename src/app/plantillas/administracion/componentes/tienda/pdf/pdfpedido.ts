@@ -57,9 +57,9 @@ if (mostrarPrecio) {
     const row: any[] = [
       { text: product.codigoContable ?? '', fontSize: 10 },
       { text: product.nombre ?? '', fontSize: 10 },
-   
+       { text: product.referencia ?? '', fontSize: 10 },
          { text: product.presentacion ?? '', fontSize: 10 },
-             { text: product.referencia ?? '', fontSize: 10 },
+         
      
    
       {
