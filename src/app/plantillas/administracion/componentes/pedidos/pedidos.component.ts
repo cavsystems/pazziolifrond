@@ -145,11 +145,11 @@ export class PedidosComponent implements OnInit {
         
         }
       ).pipe(take(1)).subscribe( async (data)=>{
-         console.log("pedidos actulaes pdf",pedido,data,datos)
+         console.log("pedidos actulaes pdf",pedido)
 
              generarpdf({
           cliente: {
-            nombre: JSON.parse(data).mensajePeticion.razonSocial,
+            nombre: JSON.parse(data).mensajePeticion[0].razonSocial,
             identificacion:JSON.parse(data).mensajePeticion[0].identificacion,
             email: JSON.parse(data).mensajePeticion[0].email,
             telefonoFijo: JSON.parse(data).mensajePeticion[0].telefonoFijo,
@@ -163,7 +163,7 @@ export class PedidosComponent implements OnInit {
           fecha_actual: pedido.fecha_creacion,
           horaActual: Horaforma(pedido.hora),
           config: datos.config,
-          nombre: datos.vendedor,
+          nombre: pedido.nombrevendedor ?? "",
           observaciones:pedido.observacion
         });
       })
@@ -208,12 +208,12 @@ export class PedidosComponent implements OnInit {
       ).pipe(take(1)).subscribe( async (data)=>{
 
 
-         console.log("pedidos actulaes pdf",pedido,data,datos)
+         console.log("pedidos actulaes pdf",JSON.parse(data),"pkkkkkkkkkkkkkkkkkkkk")
         
           if (datos) {
               const pdf = await generatePDFemail({
                cliente: {
-            nombre: JSON.parse(data).mensajePeticion.razonSocial,
+            nombre: JSON.parse(data).mensajePeticion[0].razonSocial,
             identificacion:JSON.parse(data).mensajePeticion[0].identificacion,
             email: JSON.parse(data).mensajePeticion[0].email,
             telefonoFijo: JSON.parse(data).mensajePeticion[0].telefonoFijo,
@@ -248,7 +248,7 @@ export class PedidosComponent implements OnInit {
                 })
                 .pipe(take(1))
                 .subscribe((datos) => {
-                  console.log("pedddddddddddddddddddddddddddddddddd",datos)
+               
                   const dialogref = this.dialog.open(DialogoAlerta, {
                     data: {
                       boton: 'OK',
