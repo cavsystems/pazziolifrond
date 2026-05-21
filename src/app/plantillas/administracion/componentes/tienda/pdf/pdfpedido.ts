@@ -104,7 +104,7 @@ if (mostrarPrecio) {
 
     const cantidadtotales = data.productos.reduce(
     (sum: number, product: any) =>
-      sum + (product.cantidad || 0),
+      sum + Number(product.cantidad || 0),
     0
   );
 
