@@ -38,6 +38,8 @@ export class PedidosComponent implements OnInit {
     'razonsocial_clientes',
     'fecha creacion',
     'totalpedido',
+    'Codigofactura',
+    'Totalfactura',
     'acciones',
   ];
 
@@ -54,12 +56,12 @@ export class PedidosComponent implements OnInit {
   obtenerregistros(busqueda: string = '', estado: string = '') {
     this.productser.obtenernregistros(busqueda, estado).subscribe((data) => {
       
-        console.log("numerooooooooooooooooooooooooooooooo registros actuales",data.nregistros.nregistros)
+        console.log("numerooooooooooooooooooooooooooooooo registros actuales",data.nregistros.nregistros,data)
        
       if (!data.response) {
         window.location.reload();
       } else {
-        console.log("numerooooooooooooooooooooooooooooooo registros actuales",data.nregistros.nregistros)
+        console.log("numerooooooooooooooooooooooooooooooo registros actuales",data.nregistros.nregistros,data)
         this.total_registros = data.nregistros.nregistros;
       }
     });
@@ -96,6 +98,7 @@ export class PedidosComponent implements OnInit {
       this.productser
         .obtenerpedidos_realizados(this.pagina, this.descripcio, this.estado2)
         .subscribe((data) => {
+          console.log("pedidos actuales",data.pedidos)
           this.pedido = data.pedidos;
           this.obtenerregistros(this.descripcio, this.estado2);
         });

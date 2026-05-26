@@ -98,7 +98,7 @@ if (mostrarPrecio) {
 
   const totalGeneral = data.productos.reduce(
     (sum: number, product: any) =>
-      sum + (product.cantidad || 0) * (product.precio || 0),
+      sum + Number(product.cantidad || 0) * Number(product.precio || 0),
     0
   );
 

@@ -78,9 +78,22 @@
       </ng-container>
 
       <ng-container matColumnDef="totalpedido">
-        <th mat-header-cell *matHeaderCellDef>Total</th>
-        <td mat-cell *matCellDef="let element">
+        <th mat-header-cell *matHeaderCellDef>Total pedido</th>
+        <td mat-cell *matCellDef="let element" style="white-space:nowrap;">
           ${{ element.totalpedido.toLocaleString("de-DE") }}
+        </td>
+      </ng-container>
+       <ng-container matColumnDef="Codigofactura">
+        <th mat-header-cell *matHeaderCellDef>Codigo factura</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.codigofa}}
+        </td>
+      </ng-container>
+
+         <ng-container matColumnDef="Totalfactura">
+        <th mat-header-cell *matHeaderCellDef>Total factura</th>
+        <td mat-cell *matCellDef="let element" style="white-space:nowrap;">
+        {{ element.totalfactura ? '$ ' + element.totalfactura.toLocaleString('de-DE') : '' }}
         </td>
       </ng-container>
 
