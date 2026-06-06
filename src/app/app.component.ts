@@ -13,6 +13,7 @@ import { Socket_producto } from 'src/services/socket/socket.producto.service.ts.
 import { AuthService } from 'src/services/auth/auth.service';
 import { serviciodb } from 'src/services/serviciosdbs/serviciodb.service';
 import { Console, log } from 'console';
+import { SeoService } from 'src/services/seo/seo.service';
 
 @Component({
   selector: 'app-root',
@@ -41,9 +42,11 @@ export class AppComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private crypt: CryptService,
     private socketproduct: Socket_producto,
-    private serviciodb: serviciodb
+    private serviciodb: serviciodb,
+    private seo: SeoService
   ) {}
   ngOnInit(): void {
+    this.seo.init();
     this.mode.value = this.serviauth.mode.value;
     this.serviciodb.tienesedeselccionada().subscribe((data) => {
       this.data = data;

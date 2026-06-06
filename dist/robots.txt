@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /auth/login
+Disallow: /admin/
+
+Sitemap: https://pazzioliweb.cavsystems.com.co/sitemap.xml

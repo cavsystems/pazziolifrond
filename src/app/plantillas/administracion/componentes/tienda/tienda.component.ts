@@ -272,7 +272,7 @@ this.traerlistaprecios()
             this.separaproducto=datos.separarproductospedido
             this.almacenSeparado=datos.almacenSeparado.trim()
             this.pdfsinpresio=datos.pdfsinprecio
-
+            this.lista=datos.precio
             console.log("datos traiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",datos)
           });
           
