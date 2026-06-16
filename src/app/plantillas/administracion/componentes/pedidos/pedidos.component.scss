@@ -1,10 +1,37 @@
 .usuario_pedido{
     font-size: 2rem;
     display: flex;
-
 }
 .container{
     display: flex;
-   
+}
+
+.filtros-pedidos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+
+  > div {
+    flex: 1 1 140px;
+    min-width: 0;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+
+  // El bloque Estado + botón limpiar no crece demasiado
+  > div:last-child {
+    flex: 1 1 140px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    mat-form-field {
+      flex: 1;
+      min-width: 0;
+    }
+  }
 }
 

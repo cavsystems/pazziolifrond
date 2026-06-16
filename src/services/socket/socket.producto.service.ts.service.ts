@@ -88,10 +88,12 @@ export class Socket_producto {
   public obtenerpedidos_realizados(
     paginas: number,
     busqueda: string = '',
-    estado: string = ''
+    estado: string = '',
+    fechaInicio: string = '',
+    fechaFin: string = ''
   ): Observable<any> {
     return this.http.get(
-      `${environment.api}/obtenerpedidos?pagina=${paginas}&busqueda=${busqueda}&estado=${estado}`,
+      `${environment.api}/obtenerpedidos?pagina=${paginas}&busqueda=${busqueda}&estado=${estado}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
       {
         withCredentials: true,
       }
@@ -170,10 +172,12 @@ consultarrecibosxusuario(codigofa:number,codigocom:number):Observable<any>{
 
   obtenernregistros(
     busqueda: string = '',
-    estado: string = ''
+    estado: string = '',
+    fechaInicio: string = '',
+    fechaFin: string = ''
   ): Observable<any> {
     return this.http.get(
-      `${environment.api}/obtenernregistros?busqueda=${busqueda}&estado=${estado}`,
+      `${environment.api}/obtenernregistros?busqueda=${busqueda}&estado=${estado}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
       {
         withCredentials: true,
       }

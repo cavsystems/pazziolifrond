@@ -28,7 +28,9 @@ export class PedidosComponent implements OnInit {
   public pagina: number = 0;
   public descripcio: string = '';
   public esta: string = '';
-  
+  public fechaInicio: Date | null = null;
+  public fechaFin: Date | null = null;
+
   public estado = ['PENDIENTE', 'FACTURADO', 'ANULADO', 'TODO'];
   public estado2: string = '';
   displayedColumns: string[] = [
@@ -53,8 +55,18 @@ export class PedidosComponent implements OnInit {
     this.obtenerregistros();
   }
 
+  private formatFecha(date: Date | null): string {
+    if (!date) return '';
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
   obtenerregistros(busqueda: string = '', estado: string = '') {
-    this.productser.obtenernregistros(busqueda, estado).subscribe((data) => {
+    const fi = this.formatFecha(this.fechaInicio);
+    const ff = this.formatFecha(this.fechaFin);
+    this.productser.obtenernregistros(busqueda, estado, fi, ff).subscribe((data) => {
       
         console.log("numerooooooooooooooooooooooooooooooo registros actuales",data.nregistros.nregistros,data)
        
@@ -94,33 +106,39 @@ export class PedidosComponent implements OnInit {
     this.buscarpedido();
   }
   cargarPedidos() {
-    if (this.descripcio === '') {
-      this.productser
-        .obtenerpedidos_realizados(this.pagina, this.descripcio, this.estado2)
-        .subscribe((data) => {
-          console.log("pedidos actuales",data.pedidos)
-          this.pedido = data.pedidos;
-          this.obtenerregistros(this.descripcio, this.estado2);
-        });
-    } else {
-      this.productser
-        .obtenerpedidos_realizados(this.pagina, this.descripcio, this.estado2)
-        .subscribe((data) => {
-          this.pedido = data.pedidos;
-          this.obtenerregistros(this.descripcio, this.estado2);
-        });
-    }
+    const fi = this.formatFecha(this.fechaInicio);
+    const ff = this.formatFecha(this.fechaFin);
+    this.productser
+      .obtenerpedidos_realizados(this.pagina, this.descripcio, this.estado2, fi, ff)
+      .subscribe((data) => {
+        console.log('pedidos actuales', data.pedidos);
+        this.pedido = data.pedidos;
+        this.obtenerregistros(this.descripcio, this.estado2);
+      });
   }
 
   buscarpedido() {
     this.pagina = 1;
-
+    const fi = this.formatFecha(this.fechaInicio);
+    const ff = this.formatFecha(this.fechaFin);
     this.productser
-      .obtenerpedidos_realizados(this.pagina, this.descripcio, this.estado2)
+      .obtenerpedidos_realizados(this.pagina, this.descripcio, this.estado2, fi, ff)
       .subscribe((data) => {
         this.pedido = data.pedidos;
         this.obtenerregistros(this.descripcio, this.estado2);
       });
+  }
+
+  aplicarFiltroFecha() {
+    this.pagina = 1;
+    this.buscarpedido();
+  }
+
+  limpiarFechas() {
+    this.fechaInicio = null;
+    this.fechaFin = null;
+    this.pagina = 1;
+    this.buscarpedido();
   }
   verdetalles() {
     const dialogref = this.dialog.open(Dialogdetalles, {
