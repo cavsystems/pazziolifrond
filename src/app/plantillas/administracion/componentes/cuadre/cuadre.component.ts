@@ -278,7 +278,7 @@ console.log("datos almacen empresa",datos)
   this.etiquetabono=datos.config.ETIQUETA_BONO
   this.etiquetcheque=datos.config.ETIQUETA_CHEQUE
 
-  console.log("datos", datos);
+  console.log("datosSSSSSSSSS", datos);
 }
    ngOnInit(): void {
       
