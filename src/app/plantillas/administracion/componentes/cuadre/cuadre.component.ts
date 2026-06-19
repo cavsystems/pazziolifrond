@@ -272,11 +272,11 @@ otros:number=0;
     .obteneralmacen()
     .pipe(take(1))
     .toPromise();
-
-  this.etiquetTcredito=datos.etiquetaTcredito
-  this.etiquteaTdebito=datos.etiquetaTdebito
-  this.etiquetabono=datos.etiquetabono
-  this.etiquetcheque=datos. etiquetacheque
+console.log("datos almacen empresa",datos)
+  this.etiquetTcredito=datos.config.ETIQUETA_TCREDITO
+  this.etiquteaTdebito=datos.config.ETIQUETA_TDEBITO
+  this.etiquetabono=datos.config.ETIQUETA_BONO
+  this.etiquetcheque=datos.config.ETIQUETA_CHEQUE
 
   console.log("datos", datos);
 }
