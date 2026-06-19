@@ -47,6 +47,8 @@ export class CarteraComponent implements OnInit {
   public totalFactura: number = 0;
   public saldo: number = 0;
   public nivel: number = 0;
+  etiquetTcredito: string = '';
+  etiquteaTdebito: string = '';
   nombre=""
   clientef = {
     codigo: 0,
@@ -83,11 +85,16 @@ export class CarteraComponent implements OnInit {
     private router: Router,
      private platform: Platform,
   ) {
+
+
     this.traerciudades();
         this.servifactura.conectar()
           
     this.serviouth.obtenernivel().subscribe((data) => {
             this.nivel = data.nivel;
+
+           
+          
     });
   }
   determinarnivel() {
@@ -96,6 +103,8 @@ export class CarteraComponent implements OnInit {
     }
     return true;
   }
+
+
 
 generarpdfitem(e:any,element:any){
     e.stopPropagation()

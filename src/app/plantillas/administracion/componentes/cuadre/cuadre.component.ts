@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { take } from 'rxjs/operators';
 import { serviciodb } from 'src/services/serviciosdbs/serviciodb.service';
 import { Socket_producto } from 'src/services/socket/socket.producto.service.ts.service';
+
 interface ventas{
 ftBono
 : string
@@ -96,7 +97,8 @@ string,
 
 
 export class CuadreComponent implements OnInit {
-
+  etiquetTcredito: string = '';
+  etiquteaTdebito: string = '';
 
   ventascuadre:ventas={
 
@@ -258,16 +260,31 @@ otros:number=0;
      imagen: null,
      ciudad: '',
    };
+   etiquetabono:string ="";
+   etiquetcheque:string="";
    constructor( private socketproduct: Socket_producto,private serviciod:serviciodb,  private cdr: ChangeDetectorRef,
     private zone: NgZone
    ) { 
 
    }
- 
+ async cargarDatosempresa() {
+   const datos = await this.socketproduct
+    .obteneralmacen()
+    .pipe(take(1))
+    .toPromise();
+
+  this.etiquetTcredito=datos.etiquetaTcredito
+  this.etiquteaTdebito=datos.etiquetaTdebito
+  this.etiquetabono=datos.etiquetabono
+  this.etiquetcheque=datos. etiquetacheque
+
+  console.log("datos", datos);
+}
    ngOnInit(): void {
       
      this.fechaInicial = new Date();
      this.fechafinal=new Date();
+
            this.socketproduct
                  .obtenerInfo('aws', 'pazzioli-pos-3', {
                    metodo: 'CONSULTAR',
@@ -277,7 +294,8 @@ otros:number=0;
                    datoCondicion: '' ,
                  })
                     .pipe(take(1))
-                 .subscribe((dato) => {
+                 .subscribe(async(dato) => { 
+                  await this.cargarDatosempresa()
                  // this.socketproduct.consultarusuario()
                     console.log("BODEAS ACTULES",JSON.parse(dato).mensajePeticion)
                   this.almacenes = [...JSON.parse(dato).mensajePeticion];

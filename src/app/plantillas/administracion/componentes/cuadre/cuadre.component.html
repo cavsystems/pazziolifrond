@@ -238,10 +238,15 @@
                   Efectivo
                 </th>
                     <th *ngIf="creditoventas>0">
-                  T.credito
+                  {{
+                    etiquetTcredito && etiquetTcredito !== '' ? etiquetTcredito : 'T.credito'
+                  }}
                 </th>
                     <th *ngIf="debitoventas>0">
-                 T.debito
+                      {{
+                        etiquteaTdebito && etiquteaTdebito !== '' ? etiquteaTdebito : 'T.debito'
+                      }}
+              
                 </th>
                     <th *ngIf="bancosventas>0">
                  Bancos
@@ -251,7 +256,7 @@
                  Cartera
                 </th>
                     <th *ngIf="chequeventas>0">
-                 Cheques
+               {{this.etiquetcheque && this.etiquetcheque !== '' ? this.etiquetcheque : 'Cheque'}}
                 </th>
                  <th>
                 Total
