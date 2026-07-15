@@ -150,6 +150,28 @@ export class PedidosComponent implements OnInit {
     dialogref.afterClosed().subscribe((datos) => {});
   }
   pdf(pedido: any) {
+    if (pedido.estadopedido === 'FACTURADO') {
+      const dialogref = this.dialog.open(DialogoAlerta, {
+        data: {
+          boton: 'Pedido',
+          boton1: 'Factura',
+          mensaje: 'Que desea imprimir?',
+          tipo: 'question',
+        },
+      });
+
+      dialogref.afterClosed().subscribe((dato) => {
+        if (dato) {
+          this.generarPdfPedido(pedido);
+        }
+      });
+      return;
+    }
+
+    this.generarPdfPedido(pedido);
+  }
+
+  private generarPdfPedido(pedido: any) {
     this.productser
       .obteneritemspedido(pedido.codigo_pedido)
       .subscribe((datos) => {
