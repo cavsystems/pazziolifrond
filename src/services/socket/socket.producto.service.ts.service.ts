@@ -107,6 +107,13 @@ export class Socket_producto {
     );
   }
 
+  public obtenerfacturapedidos(numerocomprobante: any, numerofactura: any): Observable<any> {
+    return this.http.get(
+      `${environment.api}/obtenerfacturapedidos?numerocomprobante=${numerocomprobante}&numerofactura=${numerofactura}`,
+      { withCredentials: true }
+    );
+  }
+
   reservarpedidos(pedido: any): Observable<any> {
     return this.http.post(`${environment.api}/reservarpedido`, pedido, {
       withCredentials: true,

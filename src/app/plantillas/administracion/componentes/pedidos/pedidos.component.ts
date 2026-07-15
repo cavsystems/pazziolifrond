@@ -163,6 +163,12 @@ export class PedidosComponent implements OnInit {
       dialogref.afterClosed().subscribe((dato) => {
         if (dato) {
           this.generarPdfPedido(pedido);
+        } else {
+          this.productser
+            .obtenerfacturapedidos(pedido.comprobante, pedido.codigofactura)
+            .subscribe((resultado) => {
+              console.log('resultado obtenerfacturapedidos', resultado);
+            });
         }
       });
       return;
