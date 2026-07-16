@@ -501,7 +501,7 @@ traercomprobantes() {
                       .afterClosed()
                       .pipe(take(1))
                       .subscribe((data3) => {
-                        if (!data3) return; // Evita continuar si el usuario cerró el diálogo sin escribir
+                        if (data3 === undefined) return; // Evita continuar si el usuario cerró el diálogo sin confirmar
                 
                         const dialogrf = this.dialog.open(DialogoAlerta, {
                   data: {

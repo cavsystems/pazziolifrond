@@ -99,7 +99,7 @@ export interface DatosAlertaob {
           mat-flat-button
           [color]="color"
           [disabled]="!valorInput.valid && input"
-          [mat-dialog-close]="valorInput.value || true"
+          [mat-dialog-close]="input ? valorInput.value : true"
         >
           {{ boton }}
         </button>
@@ -145,7 +145,9 @@ export class DialogoAlertaob {
       this.inputText = data.inputText;
     }
 
-    this.valorInput.setValue(data.valorInicialInput);
+    if (data.valorInicialInput !== undefined) {
+      this.valorInput.setValue(data.valorInicialInput);
+    }
 
     if (data.boton) {
       this.ocultarBoton = false;

@@ -106,6 +106,13 @@ export class PedidosComponent implements OnInit {
     };
   }
 
+  private obtenerObservacion(valor: any): string {
+    if (valor === true || valor === 'true' || valor === undefined || valor === null) {
+      return '';
+    }
+    return valor;
+  }
+
   private formatFecha(date: Date | null): string {
     if (!date) return '';
     const y = date.getFullYear();
@@ -271,7 +278,7 @@ export class PedidosComponent implements OnInit {
           horaActual: Horaforma(pedido.hora),
           config: datos.config,
           nombre: pedido.nombrevendedor ?? "",
-          observaciones:pedido.observacion
+          observaciones: this.obtenerObservacion(pedido.observacion)
         });
       })
        
@@ -335,7 +342,7 @@ export class PedidosComponent implements OnInit {
                 horaActual: Horaforma(pedido.hora),
                 config: datos.config,
                 nombre: datos.vendedor,
-                 observaciones:pedido.observacion
+                 observaciones: this.obtenerObservacion(pedido.observacion)
               });
 
               this.productser

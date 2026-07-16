@@ -909,7 +909,7 @@ facturarPedido(){
       .afterClosed()
       .pipe(take(1))
       .subscribe((data) => {
-        if (!data) return; // Evita continuar si el usuario cerró el diálogo sin escribir
+        if (data === undefined) return; // Evita continuar si el usuario cerró el diálogo sin confirmar
 
         this.enviarFacturaObservacion(data);
       });
@@ -1389,8 +1389,8 @@ base64ToBlob(base64: string, contentType = "application/pdf"): Blob {
       .afterClosed()
       .pipe(take(1))
       .subscribe((data) => {
-        if (!data) return; // Evita continuar si el usuario cerró el diálogo sin escribir
-          
+        if (data === undefined) return; // Evita continuar si el usuario cerró el diálogo sin confirmar
+
         this.enviarPedidoConObservacion(data);
       });
   }
