@@ -9,6 +9,7 @@ import { serviciodb } from 'src/services/serviciosdbs/serviciodb.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Socket_producto } from 'src/services/socket/socket.producto.service.ts.service';
 import generarpdf from '../tienda/pdf/pdfpedido';
+import generarPdfFacturaPedido from '../tienda/pdf/pdffacturapedido';
 import { Horaforma } from 'src/app/utils/formatearhora';
 import { generatePDFemail } from '../tienda/pdf/pdf';
 import { DialogoAlerta } from 'src/app/angular-material/alerta';
@@ -167,7 +168,16 @@ export class PedidosComponent implements OnInit {
           this.productser
             .obtenerfacturapedidos(pedido.comprobante, pedido.codigofactura)
             .subscribe((resultado) => {
-              console.log('resultado obtenerfacturapedidos', resultado);
+              this.productser
+                .obteneritemspedido(pedido.codigo_pedido)
+                .subscribe((datos) => {
+                  generarPdfFacturaPedido({
+                    items: resultado.respuesta,
+                    numerofactura: pedido.codigofactura,
+                    numerocomprobante: pedido.comprobante,
+                    config: datos.config,
+                  });
+                });
             });
         }
       });
