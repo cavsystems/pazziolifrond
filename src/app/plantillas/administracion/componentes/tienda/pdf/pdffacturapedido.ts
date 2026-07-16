@@ -239,14 +239,17 @@ const generarPdfFacturaPedido = async (data: any) => {
   content.push({
     stack: [
       { text: data.config?.RAZON_SOCIAL || '', style: 'header' },
-      { text: data.config?.NIT || '', style: 'subheader' },
-      { text: `DIRECCION. ${data.config?.DIRECCION || ''}`, style: 'subheader' },
-      { text: `CONTACTO. ${data.config?.TELEFONO || ''}`, style: 'subheader' },
-      { text: `CODIGO POSTAL. ${data.config?.CODIGO_POSTAL || ''}`, style: 'subheader' },
-      { text: 'CORREO.', style: 'subheader' },
-      { text: data.config?.CORREO || '', style: 'subheader' },
-      { text: '\n' },
-      { text: `${data.config?.MUNICIPIO || ''} - COLOMBIA`, style: 'subheader' },
+      { text: data.config?.NIT || '', style: 'lineaEmpresa' },
+      { text: `DIRECCION. ${data.config?.DIRECCION || ''}`, style: 'lineaEmpresa' },
+      { text: `CONTACTO. ${data.config?.TELEFONO || ''}`, style: 'lineaEmpresa' },
+      { text: `CODIGO POSTAL. ${data.config?.CODIGO_POSTAL || ''}`, style: 'lineaEmpresa' },
+      { text: 'CORREO.', style: 'lineaEmpresa' },
+      { text: data.config?.CORREO || '', style: 'lineaEmpresa' },
+      {
+        text: `${data.config?.MUNICIPIO || ''} - COLOMBIA`,
+        style: 'lineaEmpresa',
+        margin: [0, 8, 0, 0],
+      },
     ],
     alignment: 'center',
   });
@@ -323,6 +326,11 @@ const generarPdfFacturaPedido = async (data: any) => {
     subheader: {
       fontSize: 10,
       margin: [0, 3, 0, 3],
+    },
+    lineaEmpresa: {
+      fontSize: 10,
+      margin: [0, 0, 0, 0],
+      lineHeight: 1.1,
     },
     tableHeader: {
       bold: true,
