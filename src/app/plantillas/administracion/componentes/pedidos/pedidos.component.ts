@@ -98,6 +98,11 @@ export class PedidosComponent implements OnInit {
         'CORREO_ENVIO',
       ]),
       MUNICIPIO: this.valorEmpresa('MUNICIPIO'),
+      ETIQUETA_RETEICA: this.valorEmpresa('ETIQUETA_RETEICA') || 'ReteIca',
+      ETIQUETA_RETEIVA: this.valorEmpresa('ETIQUETA_RETEIVA') || 'ReteIva',
+      ETIQUETA_TCREDITO: this.valorEmpresa('ETIQUETA_TCREDITO') || 'Tarjeta Crédito',
+      ETIQUETA_TDEBITO: this.valorEmpresa('ETIQUETA_TDEBITO') || 'Tarjeta Débito',
+      TITULO_DOCUMENTO: this.valorEmpresa('TITULO_DOCUMENTO') || 'Factura',
     };
   }
 
@@ -217,6 +222,8 @@ export class PedidosComponent implements OnInit {
                 items: resultado.respuesta,
                 numerofactura: pedido.codigofactura,
                 numerocomprobante: pedido.comprobante,
+                numeropedido: pedido.codigo_pedido,
+                prefijo: resultado.prefijo,
                 config: this.construirConfigEncabezado(),
               });
             });

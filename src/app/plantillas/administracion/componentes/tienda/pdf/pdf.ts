@@ -153,10 +153,6 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
             text: `Departamento: ${data.cliente?.departamento || ''}`,
             style: 'subheader',
           },
-          {
-            text: `Codigo tercero: ${data.cliente?.codigotercero || ''}`,
-            style: 'subheader',
-          },
         ],
       },
       {

@@ -41,6 +41,10 @@ const generarPdfFacturaPedido = async (data: any) => {
   const items: any[] = data.items || [];
   const primero = items[0] || {};
   const fechaVencimiento = primero.fechaVencimiento ?? primero.fechadeVencimiento;
+  const prefijo =
+    data.prefijo !== undefined && data.prefijo !== null && data.prefijo !== ''
+      ? data.prefijo
+      : primero.prefijocomprobante || '';
 
   // =========================
   // TABLA INFORMACION DEL ADQUIRIENTE
@@ -66,7 +70,7 @@ const generarPdfFacturaPedido = async (data: any) => {
         style: 'valor',
       },
       { text: formatearHora(primero.fechaCreacion), style: 'valor', alignment: 'center' },
-      { text: '', style: 'valor' },
+      { text: 'Fecha Firma', style: 'tableHeader', alignment: 'center' },
     ],
     [
       { text: 'Correo:', style: 'campo' },
@@ -75,9 +79,9 @@ const generarPdfFacturaPedido = async (data: any) => {
       { text: '', style: 'valor' },
     ],
     [
-      { text: 'Factura:', style: 'campo' },
+      { text: 'No Pedido:', style: 'campo' },
       {
-        text: `${primero.prefijocomprobante || ''}${data.numerofactura || ''}`,
+        text: `${data.numeropedido || ''}`,
         style: 'valor',
       },
       { text: 'VENDEDOR', style: 'tableHeader', colSpan: 2, alignment: 'center' },
@@ -178,8 +182,8 @@ const generarPdfFacturaPedido = async (data: any) => {
 
   const formasPago = [
     { label: 'Efectivo', valor: primero.efectivo },
-    { label: 'Tarjeta Crédito', valor: primero.targetacredito },
-    { label: 'Tarjeta Débito', valor: primero.targetadebito },
+    { label: data.config?.ETIQUETA_TCREDITO || 'Tarjeta Crédito', valor: primero.targetacredito },
+    { label: data.config?.ETIQUETA_TDEBITO || 'Tarjeta Débito', valor: primero.targetadebito },
     { label: 'Cheque', valor: primero.cheque },
     { label: 'Bono', valor: primero.bono },
     { label: 'CXC', valor: primero.cxc },
@@ -200,8 +204,8 @@ const generarPdfFacturaPedido = async (data: any) => {
     ['Base Gravada', `$${totalGravada.toLocaleString('de-DE')}`],
     ['Iva', `$${totalIva.toLocaleString('de-DE')}`],
     ['ReteFuente', `$${totalRetefuente.toLocaleString('de-DE')}`],
-    ['ReteIca', `$${totalReteica.toLocaleString('de-DE')}`],
-    ['ReteIva', `$${totalReteiva.toLocaleString('de-DE')}`],
+    [data.config?.ETIQUETA_RETEICA || 'ReteIca', `$${totalReteica.toLocaleString('de-DE')}`],
+    [data.config?.ETIQUETA_RETEIVA || 'ReteIva', `$${totalReteiva.toLocaleString('de-DE')}`],
     ['Total Factura', `$${totalFactura.toLocaleString('de-DE')}`],
   ];
 
@@ -237,21 +241,38 @@ const generarPdfFacturaPedido = async (data: any) => {
   const content: any[] = [];
 
   content.push({
-    stack: [
-      { text: data.config?.RAZON_SOCIAL || '', style: 'header' },
-      { text: data.config?.NIT || '', style: 'lineaEmpresa' },
-      { text: `DIRECCION. ${data.config?.DIRECCION || ''}`, style: 'lineaEmpresa' },
-      { text: `CONTACTO. ${data.config?.TELEFONO || ''}`, style: 'lineaEmpresa' },
-      { text: `CODIGO POSTAL. ${data.config?.CODIGO_POSTAL || ''}`, style: 'lineaEmpresa' },
-      { text: 'CORREO.', style: 'lineaEmpresa' },
-      { text: data.config?.CORREO || '', style: 'lineaEmpresa' },
+    columns: [
+      { width: 150, text: '' },
       {
-        text: `${data.config?.MUNICIPIO || ''} - COLOMBIA`,
-        style: 'lineaEmpresa',
-        margin: [0, 8, 0, 0],
+        width: '*',
+        stack: [
+          { text: data.config?.RAZON_SOCIAL || '', style: 'header' },
+          { text: data.config?.NIT || '', style: 'lineaEmpresa' },
+          { text: `DIRECCION. ${data.config?.DIRECCION || ''}`, style: 'lineaEmpresa' },
+          { text: `CONTACTO. ${data.config?.TELEFONO || ''}`, style: 'lineaEmpresa' },
+          { text: `CODIGO POSTAL. ${data.config?.CODIGO_POSTAL || ''}`, style: 'lineaEmpresa' },
+          { text: 'CORREO.', style: 'lineaEmpresa' },
+          { text: data.config?.CORREO || '', style: 'lineaEmpresa' },
+          {
+            text: `${data.config?.MUNICIPIO || ''} - COLOMBIA`,
+            style: 'lineaEmpresa',
+            margin: [0, 8, 0, 0],
+          },
+        ],
+        alignment: 'center',
+      },
+      {
+        width: 150,
+        stack: [
+          { text: data.config?.TITULO_DOCUMENTO || 'Factura', style: 'header' },
+          {
+            text: `No. ${prefijo}${data.numerofactura || ''}`,
+            style: 'header',
+          },
+        ],
+        alignment: 'center',
       },
     ],
-    alignment: 'center',
   });
 
   content.push({ text: '\n' });
