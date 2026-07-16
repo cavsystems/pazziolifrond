@@ -46,6 +46,9 @@ export class PedidosComponent implements OnInit {
     'acciones',
   ];
 
+  public empresaConfig: any = {};
+  public empresaConfigComprobante: any = {};
+
   constructor(
     private dialog: MatDialog,
     private sedeselect: serviciodb,
@@ -54,6 +57,48 @@ export class PedidosComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.obtenerregistros();
+    this.sedeselect.tienesedeselccionada().subscribe((resp: any) => {
+      this.empresaConfig = resp?.config || {};
+      this.empresaConfigComprobante = resp?.configcomprobante || {};
+    });
+  }
+
+  private valorEmpresa(campo: string, alternativos: string[] = []): string {
+    const enComprobante = this.empresaConfigComprobante?.[campo];
+    if (enComprobante !== undefined && enComprobante !== null && enComprobante !== '') {
+      return enComprobante;
+    }
+
+    const enConfig = this.empresaConfig?.[campo];
+    if (enConfig !== undefined && enConfig !== null && enConfig !== '') {
+      return enConfig;
+    }
+
+    for (const alterno of alternativos) {
+      const valor =
+        this.empresaConfigComprobante?.[alterno] ?? this.empresaConfig?.[alterno];
+      if (valor !== undefined && valor !== null && valor !== '') {
+        return valor;
+      }
+    }
+
+    return '';
+  }
+
+  private construirConfigEncabezado() {
+    return {
+      RAZON_SOCIAL: this.valorEmpresa('RAZON_SOCIAL'),
+      NIT: this.valorEmpresa('NIT'),
+      DIRECCION: this.valorEmpresa('DIRECCION'),
+      TELEFONO: this.valorEmpresa('TELEFONO', ['TELEFONOS', 'TELEFONO_PRINCIPAL']),
+      CODIGO_POSTAL: this.valorEmpresa('CODIGO_POSTAL'),
+      CORREO: this.valorEmpresa('CORREO', [
+        'CORREO_ENVIO_PEDIDO',
+        'CORREO_ENVIO_PRINCIPAL',
+        'CORREO_ENVIO',
+      ]),
+      MUNICIPIO: this.valorEmpresa('MUNICIPIO'),
+    };
   }
 
   private formatFecha(date: Date | null): string {
@@ -168,16 +213,12 @@ export class PedidosComponent implements OnInit {
           this.productser
             .obtenerfacturapedidos(pedido.comprobante, pedido.codigofactura)
             .subscribe((resultado) => {
-              this.productser
-                .obteneritemspedido(pedido.codigo_pedido)
-                .subscribe((datos) => {
-                  generarPdfFacturaPedido({
-                    items: resultado.respuesta,
-                    numerofactura: pedido.codigofactura,
-                    numerocomprobante: pedido.comprobante,
-                    config: datos.config,
-                  });
-                });
+              generarPdfFacturaPedido({
+                items: resultado.respuesta,
+                numerofactura: pedido.codigofactura,
+                numerocomprobante: pedido.comprobante,
+                config: this.construirConfigEncabezado(),
+              });
             });
         }
       });

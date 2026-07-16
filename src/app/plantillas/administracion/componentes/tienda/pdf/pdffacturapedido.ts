@@ -5,6 +5,7 @@ import type {
 
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import * as pdfMake from 'pdfmake/build/pdfmake';
+import { numeroALetras } from 'src/app/utils/convertiraletras';
 
 (pdfMake as any).vfs = (pdfFonts as any).vfs;
 
@@ -101,15 +102,15 @@ const generarPdfFacturaPedido = async (data: any) => {
     { text: 'Cant.', style: 'tableHeader', alignment: 'center' },
     { text: 'Precio U.', style: 'tableHeader', alignment: 'right' },
     { text: 'Iva', style: 'tableHeader', alignment: 'center' },
-    { text: 'Descuento', style: 'tableHeader', alignment: 'right' },
+    { text: 'Descuento', style: 'tableHeader', alignment: 'center' },
     { text: 'Total', style: 'tableHeader', alignment: 'right' },
   ];
 
   const productosBody = items.map((item: any, index: number) => {
     const cantidad = Number(item.cantidadvendida || 0);
     const precio = Number(item.preciovendido || 0);
-    const descuento = Number(item.descuentoproducto || 0);
-    const totalItem = cantidad * precio - descuento;
+    const descuentoPorcentaje = Number(item.descuentoproducto || 0);
+    const totalItem = Number(item.totalitem ?? cantidad * precio * (1 - descuentoPorcentaje / 100));
 
     return [
       { text: String(index + 1), alignment: 'center', fontSize: 9 },
@@ -118,7 +119,7 @@ const generarPdfFacturaPedido = async (data: any) => {
       { text: cantidad.toString(), alignment: 'center', fontSize: 9 },
       { text: `$${precio.toLocaleString('de-DE')}`, alignment: 'right', fontSize: 9 },
       { text: `${Number(item.tasaiva || 0)}%`, alignment: 'center', fontSize: 9 },
-      { text: `$${descuento.toLocaleString('de-DE')}`, alignment: 'right', fontSize: 9 },
+      { text: `${descuentoPorcentaje}%`, alignment: 'center', fontSize: 9 },
       { text: `$${totalItem.toLocaleString('de-DE')}`, alignment: 'right', fontSize: 9 },
     ];
   });
@@ -130,15 +131,14 @@ const generarPdfFacturaPedido = async (data: any) => {
   // =========================
 
   const subtotal = items.reduce((sum: number, item: any) => {
-    const base = Number(item.cantidadvendida || 0) * Number(item.preciovendido || 0);
-    const descuento = Number(item.descuentoproducto || 0);
-    return sum + (base - descuento);
+    const cantidad = Number(item.cantidadvendida || 0);
+    const precio = Number(item.preciovendido || 0);
+    const descuentoPorcentaje = Number(item.descuentoproducto || 0);
+    const totalItem = Number(item.totalitem ?? cantidad * precio * (1 - descuentoPorcentaje / 100));
+    return sum + totalItem;
   }, 0);
 
-  const totalDescuento = items.reduce(
-    (sum: number, item: any) => sum + Number(item.descuentoproducto || 0),
-    0
-  );
+  const totalDescuento = Number(primero.descuentopiepagina || 0);
 
   const totalIva = items.reduce((sum: number, item: any) => {
     const base = Number(item.cantidadvendida || 0) * Number(item.preciovendido || 0);
@@ -167,20 +167,10 @@ const generarPdfFacturaPedido = async (data: any) => {
 
   const totalFactura = subtotal - totalRetenciones;
 
-  const totalesBody = [
-    ['Subtotal', `$${subtotal.toLocaleString('de-DE')}`],
-    ['Descuento', `$${totalDescuento.toLocaleString('de-DE')}`],
-    ['Base Exenta', `$${totalExenta.toLocaleString('de-DE')}`],
-    ['Base Gravada', `$${totalGravada.toLocaleString('de-DE')}`],
-    ['Iva', `$${totalIva.toLocaleString('de-DE')}`],
-    ['ReteFuente', `$${totalRetefuente.toLocaleString('de-DE')}`],
-    ['ReteIca', `$${totalReteica.toLocaleString('de-DE')}`],
-    ['ReteIva', `$${totalReteiva.toLocaleString('de-DE')}`],
-    [
-      { text: 'Total Factura', style: 'campo', bold: true },
-      { text: `$${totalFactura.toLocaleString('de-DE')}`, style: 'valor', bold: true },
-    ],
-  ];
+  const totalCantidad = items.reduce(
+    (sum: number, item: any) => sum + Number(item.cantidadvendida || 0),
+    0
+  );
 
   // =========================
   // FORMA DE PAGO
@@ -200,6 +190,47 @@ const generarPdfFacturaPedido = async (data: any) => {
     : '';
 
   // =========================
+  // TABLA OBSERVACIONES + TOTALES
+  // =========================
+
+  const totalesColumna = [
+    ['Subtotal', `$${subtotal.toLocaleString('de-DE')}`],
+    ['Descuento', `$${totalDescuento.toLocaleString('de-DE')}`],
+    ['Base Exenta', `$${totalExenta.toLocaleString('de-DE')}`],
+    ['Base Gravada', `$${totalGravada.toLocaleString('de-DE')}`],
+    ['Iva', `$${totalIva.toLocaleString('de-DE')}`],
+    ['ReteFuente', `$${totalRetefuente.toLocaleString('de-DE')}`],
+    ['ReteIca', `$${totalReteica.toLocaleString('de-DE')}`],
+    ['ReteIva', `$${totalReteiva.toLocaleString('de-DE')}`],
+    ['Total Factura', `$${totalFactura.toLocaleString('de-DE')}`],
+  ];
+
+  // La columna de observaciones fusiona las filas 2 a 6 (vacías) en una sola
+  // celda con rowSpan, para no repetir cuadros en blanco.
+  const observacionesColumna: any[] = [
+    { text: 'Observaciones:', style: 'campo', bold: true },
+    { text: primero.observaciones || '', style: 'valor', rowSpan: 5 },
+    {},
+    {},
+    {},
+    {},
+    { text: `Total Productos Facturados: ${totalCantidad.toFixed(1)}`, style: 'valor' },
+    { text: `Metodo de Pago: ${formaPagoTexto}`, style: 'valor' },
+    { text: `Son: ${numeroALetras(totalFactura)}.`, style: 'valor' },
+  ];
+
+  const observacionesYTotalesBody = observacionesColumna.map((celda, index) => {
+    const [label, valor] = totalesColumna[index];
+    const esTotalFinal = index === observacionesColumna.length - 1;
+
+    return [
+      celda,
+      { text: label, style: 'campo', bold: esTotalFinal },
+      { text: valor, style: 'valor', alignment: 'right', bold: esTotalFinal },
+    ];
+  });
+
+  // =========================
   // CONTENT
   // =========================
 
@@ -209,6 +240,13 @@ const generarPdfFacturaPedido = async (data: any) => {
     stack: [
       { text: data.config?.RAZON_SOCIAL || '', style: 'header' },
       { text: data.config?.NIT || '', style: 'subheader' },
+      { text: `DIRECCION. ${data.config?.DIRECCION || ''}`, style: 'subheader' },
+      { text: `CONTACTO. ${data.config?.TELEFONO || ''}`, style: 'subheader' },
+      { text: `CODIGO POSTAL. ${data.config?.CODIGO_POSTAL || ''}`, style: 'subheader' },
+      { text: 'CORREO.', style: 'subheader' },
+      { text: data.config?.CORREO || '', style: 'subheader' },
+      { text: '\n' },
+      { text: `${data.config?.MUNICIPIO || ''} - COLOMBIA`, style: 'subheader' },
     ],
     alignment: 'center',
   });
@@ -246,22 +284,10 @@ const generarPdfFacturaPedido = async (data: any) => {
   content.push({ text: '\n' });
 
   content.push({
-    columns: [
-      {
-        width: '*',
-        stack: [
-          { text: 'Observaciones:', style: 'campo' },
-          { text: primero.observaciones || '', style: 'valor' },
-        ],
-      },
-      {
-        width: 220,
-        table: {
-          widths: ['*', 100],
-          body: totalesBody,
-        },
-      },
-    ],
+    table: {
+      widths: ['*', 100, 100],
+      body: observacionesYTotalesBody,
+    },
   });
 
   content.push({ text: '\n\n' });
